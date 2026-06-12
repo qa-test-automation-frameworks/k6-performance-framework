@@ -11,7 +11,7 @@ JWT_SECRET=ci-only-performance-secret bun run db:generate
 JWT_SECRET=ci-only-performance-secret bun run db:push
 JWT_SECRET=ci-only-performance-secret bun run build
 env -u RUNNER_TRACKING_ID JWT_SECRET=ci-only-performance-secret HOST=127.0.0.1 PORT=3000 \
-  node .output/server/index.mjs >"${RUNNER_TEMP}/realworld-api.log" 2>&1 &
+  bun .output/server/index.mjs >"${RUNNER_TEMP}/realworld-api.log" 2>&1 &
 server_pid=$!
 ready=false
 
