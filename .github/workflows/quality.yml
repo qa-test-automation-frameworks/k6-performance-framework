@@ -1,0 +1,31 @@
+name: Quality
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm run test:unit
+      - run: npm run build
+      - name: Prove the regression fixture is rejected
+        run: |
+          if CANDIDATE_FILE=tests/fixtures/regression-candidate.json npm run baseline:compare; then
+            echo "Expected the inflated fixture to fail" >&2
+            exit 1
+          fi
