@@ -1,14 +1,60 @@
 # k6 Performance Framework
 
-> **Work in progress:** This repository is under active development and is excluded from the current portfolio review order, repository evidence matrix, and release-readiness claims. APIs, documentation, CI evidence, and performance baselines may change until the first reviewed release is published.
+[![PR smoke](https://github.com/qa-test-automation-frameworks/k6-performance-framework/actions/workflows/pr-smoke.yml/badge.svg)](https://github.com/qa-test-automation-frameworks/k6-performance-framework/actions/workflows/pr-smoke.yml)
+[![Quality](https://github.com/qa-test-automation-frameworks/k6-performance-framework/actions/workflows/quality.yml/badge.svg)](https://github.com/qa-test-automation-frameworks/k6-performance-framework/actions/workflows/quality.yml)
+[![Security](https://github.com/qa-test-automation-frameworks/k6-performance-framework/actions/workflows/security.yml/badge.svg)](https://github.com/qa-test-automation-frameworks/k6-performance-framework/actions/workflows/security.yml)
+[![k6](https://img.shields.io/badge/k6-2.0.0-purple)](https://grafana.com/docs/k6/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-strict-blue)](https://www.typescriptlang.org/)
 
-[![Node.js](https://img.shields.io/badge/node-%3E%3D20.0.0-brightgreen)](https://nodejs.org/)
-[![TypeScript](https://img.shields.io/badge/typescript-5.4%2B-blue)](https://www.typescriptlang.org/)
-[![k6](https://img.shields.io/badge/k6-0.55%2B-purple)](https://k6.io/)
+Typed k6 performance automation for the RealWorld API, with controlled CI targets, SLO-based
+thresholds, regression baselines, Grafana/InfluxDB observability, OpenTelemetry, and six workload
+types.
 
-k6 + TypeScript performance test automation framework in development for the Conduit RealWorld API.
+## Architecture
+
+```mermaid
+flowchart LR
+  T["k6 test entry points"] --> S["Reusable scenarios"]
+  S --> A["Typed API services"]
+  A --> H["Tagged HTTP client"]
+  H --> R["RealWorld API"]
+  T --> O["JSON and Markdown summaries"]
+  T --> I["InfluxDB v2"]
+  T --> C["OpenTelemetry Collector"]
+  I --> G["Grafana dashboard"]
+  O --> P["CI gates and GitHub Pages"]
+```
+
+Tests never call `k6/http` directly. Endpoint services own paths, payload envelopes, authentication,
+and stable metric names. Write-heavy tests reject non-local targets unless explicitly overridden.
+
+## Test Types
+
+| Type | Purpose | Default target | Command |
+|---|---|---|---|
+| Smoke | Fast API and SLO validation | Hosted API, read-only | `npm run smoke` |
+| Load | Expected traffic and user journeys | Controlled local API | `npm run load` |
+| Stress | Progressive degradation | Controlled local API | `npm run stress` |
+| Spike | Sudden traffic and recovery | Controlled local API | `npm run spike` |
+| Soak | Long-duration stability | Controlled local API | `npm run soak` |
+| Breakpoint | Capacity boundary | Controlled local API | `npm run breakpoint` |
+
+## Service Objectives
+
+| Endpoint group | p95 | p99 | Error rate |
+|---|---:|---:|---:|
+| Authentication | < 800 ms | < 1500 ms | < 1% |
+| Article reads | < 500 ms | < 1000 ms | < 1% |
+| Article writes | < 1000 ms | < 2000 ms | < 2% |
+| Comments | < 750 ms | < 1500 ms | < 2% |
+| Profiles | < 500 ms | < 1000 ms | < 1% |
+| Tags | < 300 ms | < 750 ms | < 1% |
+
+See [performance SLOs](docs/performance-slos.md) for enforcement details.
 
 ## Quick Start
+
+Prerequisites: Node.js 20+, k6 2.0+, Docker Desktop, and Docker Compose.
 
 ```bash
 npm ci
@@ -18,4 +64,50 @@ npm run test:unit
 npm run build
 ```
 
-Full setup, observability, CI/CD, and test execution documentation will be completed in later roadmap phases.
+Run the read-only validation profile:
+
+```bash
+TARGET_ENV=staging TEST_PROFILE=validation SUMMARY_NAME=smoke npm run smoke
+```
+
+Start observability and run a local observed load:
+
+```bash
+npm run docker:up
+npm run docker:health
+npm run load:observed
+```
+
+Grafana is available at `http://localhost:3001` with local credentials `admin` / `admin`.
+
+Authenticated scenarios require runtime tokens:
+
+```bash
+export K6_USER_TOKENS='["token-one","token-two"]'
+export TARGET_ENV=local
+export BASE_URL=http://localhost:3000/api
+export TEST_PROFILE=validation
+npm run load:journey
+```
+
+## CI and Evidence
+
+- PR smoke posts an aggregate Markdown summary to same-repository pull requests.
+- Main load, regression, and soak workflows provision a pinned RealWorld backend.
+- Regression checks combine absolute k6 thresholds with a 20% p95/p99 baseline tolerance.
+- Security CI runs npm audit, creates a CycloneDX SBOM, and scans the lockfile with OSV.
+- [Published performance reports](https://qa-test-automation-frameworks.github.io/k6-performance-framework/)
+
+## Documentation
+
+- [Architecture](docs/architecture.md)
+- [Contributor onboarding](docs/onboarding.md)
+- [Architecture decisions](docs/adr/README.md)
+- [Portfolio self-assessment](docs/portfolio-self-assessment.md)
+- [Release notes](docs/releases/v0.1.0.md)
+
+## Safety
+
+Public endpoints are restricted to short read-only checks. Authenticated writes and sustained load
+default to a local target and require `ALLOW_NON_LOCAL_LOAD=true` elsewhere. Tokens, generated
+runtime reports, and unreviewed baseline captures are excluded from version control.

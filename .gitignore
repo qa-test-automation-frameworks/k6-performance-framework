@@ -1,11 +1,15 @@
 node_modules/
+.npm-cache/
 dist/
 .codegraph/
 .idea/
 reports/*
 !reports/.gitkeep
 baseline/*.json
+!baseline/load-summary.json
 sbom.json
+artifacts/
+site/
 *.log
 *.tmp
 .env

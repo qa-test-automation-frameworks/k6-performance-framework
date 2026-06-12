@@ -1,6 +1,7 @@
 import { check } from 'k6';
 import type { Options } from 'k6/options';
 import { createApi } from '../../src/api';
+import { createSummary } from '../../src/helpers';
 
 export const options: Options = { vus: 1, iterations: 1 };
 
@@ -13,3 +14,5 @@ export default function (): void {
     'articles endpoint is reachable': () => articles.status === 200,
   });
 }
+
+export const handleSummary = createSummary;

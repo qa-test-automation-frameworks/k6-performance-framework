@@ -1,0 +1,49 @@
+# Contributor Onboarding
+
+## Workstation
+
+Install Node.js 20+, npm, k6 2.0+, Docker Desktop, and Git. Then run:
+
+```bash
+npm ci
+npm run typecheck
+npm run lint
+npm run test:unit
+npm run build
+```
+
+## Local Observability
+
+```bash
+npm run docker:up
+npm run docker:health
+```
+
+Grafana: `http://localhost:3001`  
+InfluxDB: `http://localhost:8086`  
+OTLP gRPC/HTTP: `localhost:4317` / `localhost:4318`
+
+Use `npm run docker:down` when finished. The command removes local observability volumes.
+
+## Add a Scenario
+
+1. Add endpoint behavior to a typed service when required.
+2. Compose the business journey under `src/scenarios/`.
+3. Add a k6 entry point under the relevant `tests/` workload directory.
+4. Export `handleSummary = createSummary`.
+5. Apply stable endpoint names and appropriate thresholds.
+6. Add unit tests for parsing, helpers, and service calls.
+7. Validate with `TEST_PROFILE=validation` before running full duration.
+
+## Credentials and Targets
+
+Provide tokens only through `K6_USER_TOKENS`. Do not commit `.env` files or generated reports.
+Write and high-volume scenarios run locally by default. Set `ALLOW_NON_LOCAL_LOAD=true` only after
+confirming authorization and capacity for the selected environment.
+
+## Troubleshooting
+
+- Missing `docker_engine`: launch Docker Desktop and wait for the Linux engine.
+- Missing summaries: set `SUMMARY_NAME` and ensure `reports/` is writable.
+- Authentication failure: verify the token array is valid JSON and tokens match the target.
+- Regression failure: inspect both summaries before proposing a baseline change.
