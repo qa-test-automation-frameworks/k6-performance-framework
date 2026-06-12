@@ -1,5 +1,9 @@
 # Performance Baseline
 
-This directory will store captured baseline performance data once regression detection is implemented.
+This directory stores a reviewed aggregate baseline produced from at least three full controlled
+load runs.
 
-Do not update baseline values casually. Baseline changes should only follow an intentional performance change and should be reviewed with the related k6 summary output.
+The regression workflow rejects missing, bootstrap, or single-sample baselines. Generate candidate
+summaries with the controlled local RealWorld target, aggregate them with
+`scripts/aggregate-baseline.cjs`, and review the source summaries before committing
+`baseline/load-summary.json`.

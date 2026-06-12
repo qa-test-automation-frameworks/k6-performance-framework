@@ -2,6 +2,7 @@ import type { Options } from 'k6/options';
 import { stressThresholds } from '../../config/thresholds/stress';
 import { concurrentReaders } from '../../src/scenarios';
 import { createSummary } from '../../src/helpers';
+import { summaryTrendStats } from '../../src/types/config.types';
 
 const validation = __ENV.TEST_PROFILE === 'validation';
 export const options: Options = {
@@ -13,6 +14,7 @@ export const options: Options = {
         { duration: '2m', target: 0 },
       ],
   thresholds: stressThresholds,
+  summaryTrendStats,
 };
 export default concurrentReaders;
 export const handleSummary = createSummary;
