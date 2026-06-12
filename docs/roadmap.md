@@ -9,10 +9,10 @@
 |-------|-------------------------------|------------|------------|
 | 0     | Inception & Repository Setup  | Days 1-3   | Completed  |
 | 1     | Core Infrastructure           | Days 4-7   | Completed  |
-| 2     | API Service Layer             | Days 8-11  | Planned    |
-| 3     | Smoke & Load Tests            | Days 12-15 | Planned    |
-| 4     | Advanced Scenarios            | Days 16-21 | Planned    |
-| 5     | Observability Stack           | Days 22-25 | Planned    |
+| 2     | API Service Layer             | Days 8-11  | Implemented |
+| 3     | Smoke & Load Tests            | Days 12-15 | Implemented |
+| 4     | Advanced Scenarios            | Days 16-21 | Implemented |
+| 5     | Observability Stack           | Days 22-25 | Implemented |
 | 6     | CI/CD Integration             | Days 26-30 | Planned    |
 | 7     | Security & Quality Gates      | Days 31-33 | Planned    |
 | 8     | Documentation & Polish        | Days 34-38 | Planned    |
@@ -80,11 +80,11 @@
 **Goal:** Typed service objects for all Conduit endpoints; the test layer never calls `k6/http` directly.
 
 **Deliverables:**
-- [ ] API service objects for auth, articles, comments, profiles, and tags
-- [ ] API barrel export
-- [ ] Auth, check, and data factory helpers
-- [ ] User and article fixtures
-- [ ] `docs/adr/004-target-application.md`
+- [x] API service objects for auth, articles, comments, profiles, and tags
+- [x] API barrel export
+- [x] Auth, check, and data factory helpers
+- [x] User and article fixtures
+- [x] `docs/adr/004-target-application.md`
 
 **Acceptance Criteria:**
 - All service methods return typed responses (zero `any`)
@@ -103,11 +103,11 @@
 **Goal:** CI-ready smoke tests and realistic load scenarios with SLO-enforced thresholds.
 
 **Deliverables:**
-- [ ] Health check and smoke test
-- [ ] Articles load and user journey load tests
-- [ ] Browse articles and authenticated CRUD scenarios
-- [ ] `docs/performance-slos.md`
-- [ ] npm scripts: `smoke`, `smoke:ci`, `load`
+- [x] Health check and smoke test
+- [x] Articles load and user journey load tests
+- [x] Browse articles and authenticated CRUD scenarios
+- [x] `docs/performance-slos.md`
+- [x] npm scripts: `smoke`, `smoke:ci`, `load`
 
 **Acceptance Criteria:**
 - `npm run smoke:ci` passes against staging
@@ -126,9 +126,9 @@
 **Goal:** Full coverage of all six k6 test types.
 
 **Deliverables:**
-- [ ] Stress, auth stress, spike, soak, and breakpoint tests
-- [ ] Concurrent readers scenario
-- [ ] Shell scripts in `scripts/`
+- [x] Stress, auth stress, spike, soak, and breakpoint tests
+- [x] Concurrent readers scenario
+- [x] Shell scripts in `scripts/`
 
 **Acceptance Criteria:**
 - Stress test demonstrates a degradation curve
@@ -147,11 +147,14 @@
 **Goal:** One-command local observability: `npm run docker:up` to Grafana at localhost:3001 with live k6 dashboards.
 
 **Deliverables:**
-- [ ] Docker Compose stack for InfluxDB v2, Grafana, OTEL Collector, and k6 profile
-- [ ] Auto-provisioned Grafana datasource and k6 dashboard
-- [ ] InfluxDB and OTEL config
-- [ ] Local setup and baseline capture scripts
-- [ ] Load tests runnable with InfluxDB output
+- [x] Docker Compose stack for InfluxDB v2, Grafana, OTEL Collector, and k6 profile
+- [x] Auto-provisioned Grafana datasource and k6 dashboard
+- [x] InfluxDB and OTEL config
+- [x] Local setup and baseline capture scripts
+- [x] Load tests runnable with InfluxDB output
+
+**Validation note:** Phase 3-5 source deliverables are implemented. Runtime acceptance remains pending
+until Docker Desktop, k6, a local RealWorld target, and authentication tokens are available.
 
 **Acceptance Criteria:**
 - Local load run produces live Grafana metrics
