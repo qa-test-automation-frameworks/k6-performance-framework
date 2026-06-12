@@ -1,14 +1,19 @@
 import type { Options } from 'k6/options';
 import { loadThresholds } from '../../config/thresholds/load';
+import { constantArrivalRate, getWorkloadProfile, perVuIterations } from '../../config/workloads';
 import { browseArticles } from '../../src/scenarios';
 import { createSummary } from '../../src/helpers';
+import { summaryTrendStats } from '../../src/types/config.types';
 
-const validation = __ENV.TEST_PROFILE === 'validation';
+const profile = getWorkloadProfile();
 export const options: Options = {
-  stages: validation
-    ? [{ duration: '5s', target: 2 }, { duration: '5s', target: 0 }]
-    : [{ duration: '2m', target: 20 }, { duration: '5m', target: 20 }, { duration: '1m', target: 0 }],
+  scenarios: {
+    article_readers: profile.validation
+      ? perVuIterations(2, 2, '15s', '5s')
+      : constantArrivalRate(profile, '8m'),
+  },
   thresholds: loadThresholds,
+  summaryTrendStats,
 };
 export default browseArticles;
 export const handleSummary = createSummary;

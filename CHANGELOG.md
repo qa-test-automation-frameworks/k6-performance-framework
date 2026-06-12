@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Prepared the v0.2.0 evidence-focused release with measured-baseline workflows, executable endpoint
+  SLOs, business metrics, executor diversity, strict configuration, and contributor guardrails.
 - Added controlled PR smoke, main load, regression, scheduled soak, quality, security, and Pages workflows.
 - Added aggregate JSON/Markdown summaries, baseline comparison, and static performance reports.
 - Upgraded vulnerable development tooling and reached zero moderate-or-higher npm audit findings.

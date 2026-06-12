@@ -5,17 +5,17 @@
 
 ## Overview
 
-| Phase | Title                         | Duration   | Status     |
-|-------|-------------------------------|------------|------------|
-| 0     | Inception & Repository Setup  | Days 1-3   | Completed  |
-| 1     | Core Infrastructure           | Days 4-7   | Completed  |
-| 2     | API Service Layer             | Days 8-11  | Implemented |
-| 3     | Smoke & Load Tests            | Days 12-15 | Implemented |
-| 4     | Advanced Scenarios            | Days 16-21 | Implemented |
-| 5     | Observability Stack           | Days 22-25 | Implemented |
-| 6     | CI/CD Integration             | Days 26-30 | Planned    |
-| 7     | Security & Quality Gates      | Days 31-33 | Planned    |
-| 8     | Documentation & Polish        | Days 34-38 | Planned    |
+| Phase | Title                        | Duration   | Status      |
+| ----- | ---------------------------- | ---------- | ----------- |
+| 0     | Inception & Repository Setup | Days 1-3   | Completed   |
+| 1     | Core Infrastructure          | Days 4-7   | Completed   |
+| 2     | API Service Layer            | Days 8-11  | Implemented |
+| 3     | Smoke & Load Tests           | Days 12-15 | Implemented |
+| 4     | Advanced Scenarios           | Days 16-21 | Implemented |
+| 5     | Observability Stack          | Days 22-25 | Implemented |
+| 6     | CI/CD Integration            | Days 26-30 | Implemented |
+| 7     | Security & Quality Gates     | Days 31-33 | Implemented |
+| 8     | Documentation & Polish       | Days 34-38 | Implemented |
 
 ---
 
@@ -24,12 +24,13 @@
 **Goal:** An empty-but-opinionated skeleton that can receive code without configuration thrash.
 
 **Deliverables:**
+
 - [x] GitHub repo `k6-performance-framework` created under `qa-test-automation-frameworks` org
 - [x] `package.json` with all devDependencies and npm scripts
 - [x] `tsconfig.json` (strict mode, k6 types)
 - [x] `esbuild.config.js` (glob-based build)
 - [x] `.eslintrc.js` + `.prettierrc` + `.editorconfig`
-- [x] `.gitignore` (node_modules, dist, reports, *.json output)
+- [x] `.gitignore` (node_modules, dist, reports, \*.json output)
 - [x] `LICENSE` (MIT with Attribution)
 - [x] `README.md` stub (badges, description, quick-start placeholder)
 - [x] `CONTRIBUTING.md` + `CHANGELOG.md`
@@ -39,6 +40,7 @@
 - [x] `docs/adr/002-bundler-esbuild.md`
 
 **Acceptance Criteria:**
+
 - `npm ci` completes without errors
 - `npm run typecheck` exits 0 on empty stubs
 - `npm run lint` exits 0
@@ -53,6 +55,7 @@
 **Goal:** Foundational building blocks that every test file will import.
 
 **Deliverables:**
+
 - [x] `src/types/config.types.ts`, `api.types.ts`, `scenario.types.ts`
 - [x] `config/environments/local.ts`, `staging.ts`, `production.ts`
 - [x] `config/thresholds/smoke.ts`, `load.ts`, `stress.ts`, `soak.ts`
@@ -63,6 +66,7 @@
 - [x] `docs/adr/003-observability-stack.md`
 
 **Acceptance Criteria:**
+
 - `npm run build` produces `dist/` with zero TypeScript errors
 - `http-client.ts` unit-verified: request tags appear in k6 output
 - Config resolver correctly returns local vs staging configs via `TARGET_ENV`
@@ -80,6 +84,7 @@
 **Goal:** Typed service objects for all Conduit endpoints; the test layer never calls `k6/http` directly.
 
 **Deliverables:**
+
 - [x] API service objects for auth, articles, comments, profiles, and tags
 - [x] API barrel export
 - [x] Auth, check, and data factory helpers
@@ -87,6 +92,7 @@
 - [x] `docs/adr/004-target-application.md`
 
 **Acceptance Criteria:**
+
 - All service methods return typed responses (zero `any`)
 - Every request carries a named tag for Grafana grouping
 - SharedArray token pattern works across VUs
@@ -103,6 +109,7 @@
 **Goal:** CI-ready smoke tests and realistic load scenarios with SLO-enforced thresholds.
 
 **Deliverables:**
+
 - [x] Health check and smoke test
 - [x] Articles load and user journey load tests
 - [x] Browse articles and authenticated CRUD scenarios
@@ -110,6 +117,7 @@
 - [x] npm scripts: `smoke`, `smoke:ci`, `load`
 
 **Acceptance Criteria:**
+
 - `npm run smoke:ci` passes against staging
 - Load test produces p95/p99 data
 - All groups visible in k6 summary output
@@ -126,11 +134,13 @@
 **Goal:** Full coverage of all six k6 test types.
 
 **Deliverables:**
+
 - [x] Stress, auth stress, spike, soak, and breakpoint tests
 - [x] Concurrent readers scenario
 - [x] Shell scripts in `scripts/`
 
 **Acceptance Criteria:**
+
 - Stress test demonstrates a degradation curve
 - Spike test captures recovery time
 - Breakpoint test aborts on threshold breach and reports failure rate
@@ -147,6 +157,7 @@
 **Goal:** One-command local observability: `npm run docker:up` to Grafana at localhost:3001 with live k6 dashboards.
 
 **Deliverables:**
+
 - [x] Docker Compose stack for InfluxDB v2, Grafana, OTEL Collector, and k6 profile
 - [x] Auto-provisioned Grafana datasource and k6 dashboard
 - [x] InfluxDB and OTEL config
@@ -157,6 +168,7 @@
 until Docker Desktop, k6, a local RealWorld target, and authentication tokens are available.
 
 **Acceptance Criteria:**
+
 - Local load run produces live Grafana metrics
 - Dashboard shows VUs, RPS, p95, and error rate
 - OTEL collector receives metrics
@@ -173,15 +185,17 @@ until Docker Desktop, k6, a local RealWorld target, and authentication tokens ar
 **Goal:** Automated performance gates.
 
 **Deliverables:**
-- [ ] PR smoke workflow
-- [ ] Main-merge load workflow
-- [ ] Scheduled soak workflow
-- [ ] Performance regression workflow
-- [ ] Initial baseline data
-- [ ] CODEOWNERS, PR template, Dependabot
-- [ ] `docs/adr/005-ci-test-strategy.md`
+
+- [x] PR smoke workflow
+- [x] Main-merge load workflow
+- [x] Scheduled soak workflow
+- [x] Performance regression workflow
+- [x] Measured-baseline capture workflow
+- [x] CODEOWNERS, PR template, Dependabot
+- [x] `docs/adr/005-ci-test-strategy.md`
 
 **Acceptance Criteria:**
+
 - All workflows pass on a clean run
 - PR comment shows k6 summary table
 - Soak cron does not run on PR
@@ -198,13 +212,15 @@ until Docker Desktop, k6, a local RealWorld target, and authentication tokens ar
 **Goal:** Production-grade security posture consistent with sibling repos.
 
 **Deliverables:**
-- [ ] `npm audit` passing with zero moderate+ vulnerabilities
-- [ ] CycloneDX SBOM generation
-- [ ] OSV scan in CI
-- [ ] Strict typecheck and lint gates
-- [ ] No explicit `any`
+
+- [x] `npm audit` passing with zero moderate+ vulnerabilities
+- [x] CycloneDX SBOM generation
+- [x] OSV and secret scanning in CI
+- [x] Strict typecheck, lint, and format gates
+- [x] No explicit `any`
 
 **Acceptance Criteria:**
+
 - CI includes security scan
 - SBOM artifact uploaded in CI
 - TypeScript strict mode has zero errors
@@ -221,14 +237,14 @@ until Docker Desktop, k6, a local RealWorld target, and authentication tokens ar
 **Goal:** Recruiter-ready, self-documenting, immediately impressive repository.
 
 **Deliverables:**
-- [ ] Complete README with badges, Mermaid architecture diagram, SLO table, test type table, and quick start
-- [ ] Architecture and onboarding docs
-- [ ] All five ADRs complete and cross-linked from README
-- [ ] v0.1.0 release notes
-- [ ] GitHub Pages report hosting
-- [ ] Repository topics
-- [ ] Org profile README updated
-- [ ] Final self-assessment against the 10/10 checklist
+
+- [x] Complete README with badges, architecture diagram, SLO table, test table, and quick start
+- [x] Architecture, onboarding, and results interpretation docs
+- [x] All five ADRs complete and cross-linked from README
+- [x] v0.1.0 release notes
+- [x] GitHub Pages report hosting
+- [x] Release automation for version tags
+- [x] Evidence-based capability status
 
 **Estimated Effort:** 6-8 hours
 

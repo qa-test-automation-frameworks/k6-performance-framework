@@ -6,5 +6,5 @@ export const stagingConfig: EnvConfig = {
   timeouts: { http: 30_000, connect: 10_000 },
   rps: { target: 50, max: 400 },
   tags: { env: 'staging', app: 'conduit' },
-  readOnly: false,
+  readOnly: true,
 };

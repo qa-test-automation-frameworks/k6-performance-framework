@@ -1,0 +1,63 @@
+name: Distributed controlled load
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_url:
+        description: Authorized controlled target URL
+        required: true
+        type: string
+      scenario:
+        description: Bundled scenario path under dist
+        required: true
+        default: load/articles-load.js
+        type: choice
+        options:
+          - load/articles-load.js
+          - stress/articles-stress.js
+          - spike/traffic-spike.js
+
+permissions:
+  contents: read
+
+jobs:
+  segment:
+    if: startsWith(inputs.target_url, 'https://') || startsWith(inputs.target_url, 'http://')
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - segment: 0:1/2
+            name: segment-1
+          - segment: 1/2:1
+            name: segment-2
+    runs-on: [self-hosted, performance]
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
+        with:
+          node-version: 20
+          cache: npm
+      - uses: grafana/setup-k6-action@db07bd9765aac508ef18982e52ab937fe633a065
+        with:
+          k6-version: 2.0.0
+      - run: npm ci
+      - run: npm run build
+      - name: Run execution segment
+        run: >-
+          k6 run
+          --execution-segment '${{ matrix.segment }}'
+          --tag segment=${{ matrix.name }}
+          dist/${{ inputs.scenario }}
+        env:
+          TARGET_ENV: production
+          BASE_URL: ${{ inputs.target_url }}
+          ALLOW_NON_LOCAL_LOAD: 'true'
+          TEST_PROFILE: full
+          SUMMARY_NAME: ${{ matrix.name }}
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        if: always()
+        with:
+          name: ${{ matrix.name }}-results
+          path: reports/

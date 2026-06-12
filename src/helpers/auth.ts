@@ -12,5 +12,5 @@ const tokens = new SharedArray<string>('user tokens', () => {
 
 export function tokenForVu(vu = __VU): string {
   if (tokens.length === 0) throw new Error('K6_USER_TOKENS is required for authenticated tests');
-  return tokens[(vu - 1) % tokens.length];
+  return tokens[(vu - 1) % tokens.length]!;
 }
