@@ -1,10 +1,12 @@
 # k6 Performance Framework
 
+> **Work in progress:** This repository is under active development and is excluded from the current portfolio review order, repository evidence matrix, and release-readiness claims. APIs, documentation, CI evidence, and performance baselines may change until the first reviewed release is published.
+
 [![Node.js](https://img.shields.io/badge/node-%3E%3D20.0.0-brightgreen)](https://nodejs.org/)
 [![TypeScript](https://img.shields.io/badge/typescript-5.4%2B-blue)](https://www.typescriptlang.org/)
 [![k6](https://img.shields.io/badge/k6-0.55%2B-purple)](https://k6.io/)
 
-Production-grade k6 + TypeScript performance test automation framework for the Conduit RealWorld API.
+k6 + TypeScript performance test automation framework in development for the Conduit RealWorld API.
 
 ## Quick Start
 
