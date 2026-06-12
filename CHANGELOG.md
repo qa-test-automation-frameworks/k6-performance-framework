@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Added controlled PR smoke, main load, regression, scheduled soak, quality, security, and Pages workflows.
+- Added aggregate JSON/Markdown summaries, baseline comparison, and static performance reports.
+- Upgraded vulnerable development tooling and reached zero moderate-or-higher npm audit findings.
+- Added CycloneDX SBOM generation, OSV scanning, CODEOWNERS, Dependabot, and a PR template.
+- Completed architecture, onboarding, ADR index, release notes, and portfolio self-assessment docs.
 - Added typed service objects for every RealWorld API endpoint group.
 - Added SharedArray token distribution, checks, target guards, and generated fixtures.
 - Added smoke, load, stress, spike, soak, breakpoint, and authenticated CRUD scenarios.
