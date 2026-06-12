@@ -39,7 +39,7 @@ jobs:
         with:
           name: smoke-results
           path: reports/
-      - uses: actions/github-script@d746ffe35508b1917358783b479e04febd2b8f71
+      - uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3
         if: always() && hashFiles('reports/smoke-summary.md') != '' && github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
         with:
           script: |
