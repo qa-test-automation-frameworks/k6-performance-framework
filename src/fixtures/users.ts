@@ -1,5 +1,5 @@
 import type { RegisterRequest } from '../types';
-import { uniqueSuffix } from '../helpers';
+import { uniqueSuffix } from '../helpers/data-factory';
 
 export function userFixture(): RegisterRequest {
   const suffix = uniqueSuffix();

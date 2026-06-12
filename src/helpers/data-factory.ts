@@ -2,5 +2,7 @@ let sequence = 0;
 
 export function uniqueSuffix(): string {
   sequence += 1;
-  return `${Date.now()}-${__VU ?? 0}-${__ITER ?? 0}-${sequence}`;
+  const vu = typeof __VU === 'number' ? __VU : 0;
+  const iteration = typeof __ITER === 'number' ? __ITER : 0;
+  return `${Date.now()}-${vu}-${iteration}-${sequence}`;
 }
