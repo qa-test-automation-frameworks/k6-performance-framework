@@ -30,9 +30,11 @@ jobs:
         with:
           k6-version: 2.0.0
       - run: npm ci
-      - run: bash .github/scripts/start-realworld.sh
       - run: npm run build
-      - run: k6 run dist/soak/endurance-soak.js
+      - name: Run controlled soak test
+        run: |
+          bash .github/scripts/start-realworld.sh
+          k6 run dist/soak/endurance-soak.js
         env:
           TARGET_ENV: local
           BASE_URL: http://localhost:3000/api
