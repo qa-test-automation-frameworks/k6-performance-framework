@@ -34,3 +34,5 @@ jobs:
         with:
           scan-args: |-
             --lockfile=package-lock.json
+      - name: Scan repository for secrets
+        uses: gitleaks/gitleaks-action@dcedce43c6f43de0b836d1fe38946645c9c638dc

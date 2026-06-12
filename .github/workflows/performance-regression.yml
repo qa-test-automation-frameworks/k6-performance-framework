@@ -17,6 +17,8 @@ jobs:
           node-version: 20
           cache: npm
       - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6
+        with:
+          bun-version: 1.2.15
       - uses: grafana/setup-k6-action@db07bd9765aac508ef18982e52ab937fe633a065
         with:
           k6-version: 2.0.0
@@ -29,10 +31,13 @@ jobs:
         env:
           TARGET_ENV: local
           BASE_URL: http://localhost:3000/api
-          TEST_PROFILE: validation
+          TEST_PROFILE: full
           SUMMARY_NAME: load
       - name: Compare candidate with baseline
-        run: npm run baseline:compare | tee regression.md
+        shell: bash
+        run: |
+          set -o pipefail
+          npm run baseline:compare 2>&1 | tee regression.md
       - run: cat regression.md >> "$GITHUB_STEP_SUMMARY"
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         if: always()

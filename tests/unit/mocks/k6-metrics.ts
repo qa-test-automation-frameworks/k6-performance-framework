@@ -3,6 +3,11 @@ class Metric {
     public readonly name: string,
     public readonly isTime = false,
   ) {}
+
+  add(value: number | boolean, tags?: Record<string, string>): void {
+    void value;
+    void tags;
+  }
 }
 
 export class Trend extends Metric {}

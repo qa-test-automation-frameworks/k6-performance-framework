@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { getConfig } from '../../config';
+import { getWorkloadProfile } from '../../config/workloads';
 import { setTestEnv } from './setup';
 
 describe('getConfig', () => {
@@ -28,5 +29,16 @@ describe('getConfig', () => {
 
   it('rejects unknown environments', () => {
     expect(() => getConfig('qa')).toThrow('Unknown TARGET_ENV');
+  });
+
+  it('validates and applies workload overrides', () => {
+    setTestEnv({ TARGET_RPS: '12', MAX_VUS: '40', THINK_TIME_SECONDS: '0.5' });
+    expect(getWorkloadProfile()).toMatchObject({
+      targetRps: 12,
+      maxVus: 40,
+      thinkTimeSeconds: 0.5,
+    });
+    setTestEnv({ TARGET_RPS: '0' });
+    expect(() => getWorkloadProfile()).toThrow('TARGET_RPS must be a positive number');
   });
 });
