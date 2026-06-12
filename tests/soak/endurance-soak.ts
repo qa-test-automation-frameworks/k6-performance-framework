@@ -2,6 +2,7 @@ import type { Options } from 'k6/options';
 import { soakThresholds } from '../../config/thresholds/soak';
 import { concurrentReaders } from '../../src/scenarios';
 import { createSummary } from '../../src/helpers';
+import { summaryTrendStats } from '../../src/types/config.types';
 
 const validation = __ENV.TEST_PROFILE === 'validation';
 export const options: Options = {
@@ -9,6 +10,7 @@ export const options: Options = {
     ? [{ duration: '5s', target: 2 }, { duration: '10s', target: 2 }, { duration: '5s', target: 0 }]
     : [{ duration: '5m', target: 20 }, { duration: '2h', target: 20 }, { duration: '5m', target: 0 }],
   thresholds: soakThresholds,
+  summaryTrendStats,
 };
 export default concurrentReaders;
 export const handleSummary = createSummary;

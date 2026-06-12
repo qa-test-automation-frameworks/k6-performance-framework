@@ -18,3 +18,5 @@ export interface EnvConfig {
 }
 
 export type ThresholdSet = Record<string, Threshold[]>;
+
+export const summaryTrendStats = ['avg', 'min', 'med', 'max', 'p(90)', 'p(95)', 'p(99)'];

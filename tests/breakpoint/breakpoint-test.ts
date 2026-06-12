@@ -1,6 +1,7 @@
 import type { Options } from 'k6/options';
 import { concurrentReaders } from '../../src/scenarios';
 import { createSummary } from '../../src/helpers';
+import { summaryTrendStats } from '../../src/types/config.types';
 
 const validation = __ENV.TEST_PROFILE === 'validation';
 export const options: Options = {
@@ -14,6 +15,7 @@ export const options: Options = {
     http_req_failed: [{ threshold: 'rate<0.10', abortOnFail: true, delayAbortEval: '10s' }],
     http_req_duration: [{ threshold: 'p(95)<3000', abortOnFail: true, delayAbortEval: '10s' }],
   },
+  summaryTrendStats,
 };
 export default concurrentReaders;
 export const handleSummary = createSummary;

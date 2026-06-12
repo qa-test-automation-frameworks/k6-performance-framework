@@ -32,7 +32,7 @@ jobs:
         env:
           TARGET_ENV: local
           BASE_URL: http://localhost:3000/api
-          TEST_PROFILE: validation
+          TEST_PROFILE: full
           SUMMARY_NAME: load
       - run: cat reports/load-summary.md >> "$GITHUB_STEP_SUMMARY"
         if: always()
