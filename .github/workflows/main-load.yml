@@ -24,13 +24,14 @@ jobs:
         with:
           k6-version: 2.0.0
       - run: npm ci
-      - run: bash .github/scripts/start-realworld.sh
       - run: npm run build
       - name: Run controlled load test
-        run: k6 run dist/load/articles-load.js
+        run: |
+          source .github/scripts/start-realworld.sh
+          k6 run dist/load/articles-load.js
         env:
           TARGET_ENV: local
-          BASE_URL: http://127.0.0.1:3000/api
+          BASE_URL: http://localhost:3000/api
           TEST_PROFILE: validation
           SUMMARY_NAME: load
       - run: cat reports/load-summary.md >> "$GITHUB_STEP_SUMMARY"

@@ -30,12 +30,14 @@ jobs:
         with:
           k6-version: 2.0.0
       - run: npm ci
-      - run: bash .github/scripts/start-realworld.sh
       - run: npm run build
-      - run: k6 run dist/soak/endurance-soak.js
+      - name: Run controlled soak test
+        run: |
+          source .github/scripts/start-realworld.sh
+          k6 run dist/soak/endurance-soak.js
         env:
           TARGET_ENV: local
-          BASE_URL: http://127.0.0.1:3000/api
+          BASE_URL: http://localhost:3000/api
           TEST_PROFILE: ${{ inputs.profile == 'validation' && 'validation' || '' }}
           SUMMARY_NAME: soak
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a

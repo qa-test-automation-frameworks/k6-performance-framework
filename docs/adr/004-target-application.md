@@ -8,7 +8,7 @@ Accepted
 
 ## Decision
 Use the RealWorld API contract for all service objects. Read-only smoke checks may target the
-public API at `https://api.realworld.io/api`. Authenticated writes and sustained load default to
+public API at `https://api.realworld.show/api`. Authenticated writes and sustained load default to
 the local environment and require `ALLOW_NON_LOCAL_LOAD=true` elsewhere.
 
 Authentication data is supplied at runtime as a JSON string array in `K6_USER_TOKENS` and shared
