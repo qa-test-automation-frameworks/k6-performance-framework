@@ -28,7 +28,11 @@ jobs:
           TARGET_ENV: staging
           TEST_PROFILE: validation
           SUMMARY_NAME: smoke
-      - run: cat reports/smoke-summary.md >> "$GITHUB_STEP_SUMMARY"
+      - name: Publish smoke summary
+        run: |
+          if [ -f reports/smoke-summary.md ]; then
+            cat reports/smoke-summary.md >> "$GITHUB_STEP_SUMMARY"
+          fi
         if: always()
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         if: always()
@@ -36,7 +40,7 @@ jobs:
           name: smoke-results
           path: reports/
       - uses: actions/github-script@d746ffe35508b1917358783b479e04febd2b8f71
-        if: always() && github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+        if: always() && hashFiles('reports/smoke-summary.md') != '' && github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
         with:
           script: |
             const fs = require('fs');

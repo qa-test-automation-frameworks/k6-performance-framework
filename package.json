@@ -1,6 +1,7 @@
 {
   "name": "k6-performance-framework",
   "version": "0.1.0",
+  "packageManager": "npm@10.9.4",
   "description": "Production-grade k6 TypeScript performance test automation framework for Conduit RealWorld API",
   "homepage": "https://qa-test-automation-frameworks.github.io/k6-performance-framework/",
   "repository": "github:qa-test-automation-frameworks/k6-performance-framework",
