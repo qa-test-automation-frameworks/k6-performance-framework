@@ -4,7 +4,18 @@ import { createApi } from '../../src/api';
 import { createSummary } from '../../src/helpers';
 import { summaryTrendStats } from '../../src/types/config.types';
 
-export const options: Options = { vus: 1, iterations: 1, summaryTrendStats };
+export const options: Options = {
+  scenarios: {
+    health_check: {
+      executor: 'per-vu-iterations',
+      vus: 1,
+      iterations: 1,
+      maxDuration: '30s',
+      gracefulStop: '5s',
+    },
+  },
+  summaryTrendStats,
+};
 
 export default function (): void {
   const api = createApi();
