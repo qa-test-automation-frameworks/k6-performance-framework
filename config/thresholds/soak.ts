@@ -7,4 +7,5 @@ export const soakThresholds: ThresholdSet = {
   ],
   http_req_failed: [{ threshold: 'rate<0.01', abortOnFail: false }],
   custom_business_errors_total: ['count<10'],
+  iterations: ['rate>5'],
 };

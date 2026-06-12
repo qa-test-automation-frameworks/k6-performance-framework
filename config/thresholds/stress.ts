@@ -7,4 +7,5 @@ export const stressThresholds: ThresholdSet = {
   ],
   http_req_failed: [{ threshold: 'rate<0.05', abortOnFail: false }],
   custom_business_errors_total: ['count<50'],
+  iterations: ['rate>5'],
 };

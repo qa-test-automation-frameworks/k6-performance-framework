@@ -9,4 +9,6 @@ export const loadThresholds: ThresholdSet = {
   custom_article_read_duration_ms: ['p(95)<500', 'p(99)<1000'],
   custom_business_errors_total: ['count<1'],
   iterations: ['rate>1'],
+  dropped_iterations: ['count<1'],
+  http_reqs: ['rate>5'],
 };
