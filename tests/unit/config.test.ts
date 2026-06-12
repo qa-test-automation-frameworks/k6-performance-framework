@@ -13,7 +13,7 @@ describe('getConfig', () => {
 
   it('selects staging through TARGET_ENV', () => {
     setTestEnv({ TARGET_ENV: 'staging' });
-    expect(getConfig().baseUrl).toBe('https://conduit.realworld.how/api');
+    expect(getConfig().baseUrl).toBe('https://api.realworld.io/api');
   });
 
   it('applies BASE_URL overrides', () => {
