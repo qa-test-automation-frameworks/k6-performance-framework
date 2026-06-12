@@ -94,7 +94,8 @@ npm run load:journey
 
 - PR smoke posts an aggregate Markdown summary to same-repository pull requests.
 - Main load, regression, and soak workflows provision a pinned RealWorld backend.
-- Regression checks combine absolute k6 thresholds with a 20% p95/p99 baseline tolerance.
+- Regression checks always enforce absolute k6 thresholds and add a 20% p95/p99 comparison when a
+  reviewed measured baseline is available.
 - Security CI runs npm audit, creates a CycloneDX SBOM, and scans the lockfile with OSV.
 - [Published performance reports](https://qa-test-automation-frameworks.github.io/k6-performance-framework/)
 
