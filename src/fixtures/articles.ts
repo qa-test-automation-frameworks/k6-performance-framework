@@ -1,5 +1,5 @@
 import type { ArticlePayload } from '../types';
-import { uniqueSuffix } from '../helpers';
+import { uniqueSuffix } from '../helpers/data-factory';
 
 export function articleFixture(): ArticlePayload {
   const suffix = uniqueSuffix();
