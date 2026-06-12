@@ -1,0 +1,14 @@
+{
+  "title": "k6 Performance Overview",
+  "uid": "k6-performance",
+  "schemaVersion": 41,
+  "version": 1,
+  "refresh": "5s",
+  "tags": ["k6", "performance"],
+  "panels": [
+    {"type":"timeseries","title":"Virtual Users","gridPos":{"h":8,"w":6,"x":0,"y":0},"datasource":{"uid":"influxdb-k6"},"targets":[{"query":"from(bucket: \"k6\") |> range(start: -15m) |> filter(fn: (r) => r._measurement == \"vus\")"}]},
+    {"type":"timeseries","title":"Requests per Second","gridPos":{"h":8,"w":6,"x":6,"y":0},"datasource":{"uid":"influxdb-k6"},"targets":[{"query":"from(bucket: \"k6\") |> range(start: -15m) |> filter(fn: (r) => r._measurement == \"http_reqs\") |> aggregateWindow(every: 10s, fn: sum)"}]},
+    {"type":"timeseries","title":"HTTP Duration p95","gridPos":{"h":8,"w":6,"x":12,"y":0},"datasource":{"uid":"influxdb-k6"},"targets":[{"query":"from(bucket: \"k6\") |> range(start: -15m) |> filter(fn: (r) => r._measurement == \"http_req_duration\") |> aggregateWindow(every: 10s, fn: (tables=<-, column) => tables |> quantile(q: 0.95, column: column))"}]},
+    {"type":"timeseries","title":"Error Rate","gridPos":{"h":8,"w":6,"x":18,"y":0},"datasource":{"uid":"influxdb-k6"},"targets":[{"query":"from(bucket: \"k6\") |> range(start: -15m) |> filter(fn: (r) => r._measurement == \"http_req_failed\") |> aggregateWindow(every: 10s, fn: mean)"}]}
+  ]
+}
