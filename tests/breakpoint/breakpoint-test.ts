@@ -27,6 +27,7 @@ export const options: Options = {
       { threshold: 'p(95)<3000', abortOnFail: true, delayAbortEval: '10s' },
       { threshold: 'p(99)<5000', abortOnFail: true, delayAbortEval: '10s' },
     ],
+    iterations: ['rate>5'],
   },
   summaryTrendStats,
 };

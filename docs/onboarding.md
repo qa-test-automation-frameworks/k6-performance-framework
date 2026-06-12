@@ -28,6 +28,12 @@ Use `npm run docker:down` when finished. The command removes local observability
 Observed runs add Grafana start/end annotations and bounded run tags through
 `npm run load:observed`.
 
+## Segmented Execution
+
+The `Distributed controlled load` workflow partitions an authorized target across two self-hosted
+runners labeled `performance`. It is manual-only and requires an explicit controlled target URL.
+Increase the execution-segment matrix only after confirming runner capacity and target authorization.
+
 ## Add a Scenario
 
 1. Add endpoint behavior to a typed service when required.
