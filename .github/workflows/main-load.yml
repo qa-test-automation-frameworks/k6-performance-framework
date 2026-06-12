@@ -27,7 +27,7 @@ jobs:
       - run: npm run build
       - name: Run controlled load test
         run: |
-          bash .github/scripts/start-realworld.sh
+          source .github/scripts/start-realworld.sh
           k6 run dist/load/articles-load.js
         env:
           TARGET_ENV: local
