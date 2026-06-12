@@ -1,0 +1,19 @@
+{
+  "generatedAt": "2026-06-12T00:00:00.000Z",
+  "metadata": {
+    "status": "bootstrap",
+    "sampleCount": 0,
+    "targetCommit": "c8c66858a436a6e07f445fffe2253a65ff6dcb58",
+    "k6Version": "2.0.0",
+    "note": "Replace with the median of three controlled main-load workflow runs before enabling the required regression check."
+  },
+  "metrics": {
+    "http_req_duration": {
+      "p(95)": 1000,
+      "p(99)": 2000
+    },
+    "http_req_failed": {
+      "rate": 0.02
+    }
+  }
+}
