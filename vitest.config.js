@@ -11,6 +11,7 @@ module.exports = defineConfig({
     alias: {
       'k6/http': path.resolve(__dirname, 'tests/unit/mocks/k6-http.ts'),
       'k6/metrics': path.resolve(__dirname, 'tests/unit/mocks/k6-metrics.ts'),
+      'k6/data': path.resolve(__dirname, 'tests/unit/mocks/k6-data.ts'),
       k6: path.resolve(__dirname, 'tests/unit/mocks/k6.ts'),
     },
   },

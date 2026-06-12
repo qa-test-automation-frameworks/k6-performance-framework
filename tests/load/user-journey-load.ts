@@ -1,6 +1,7 @@
 import type { Options } from 'k6/options';
 import { loadThresholds } from '../../config/thresholds/load';
 import { authenticatedCrud } from '../../src/scenarios';
+import { createSummary } from '../../src/helpers';
 
 const validation = __ENV.TEST_PROFILE === 'validation';
 export const options: Options = {
@@ -10,3 +11,4 @@ export const options: Options = {
   thresholds: loadThresholds,
 };
 export default authenticatedCrud;
+export const handleSummary = createSummary;
