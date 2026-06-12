@@ -8,7 +8,7 @@ cd "$target_dir"
 bun install --frozen-lockfile
 JWT_SECRET=ci-only-performance-secret bun run db:generate
 JWT_SECRET=ci-only-performance-secret bun run db:push
-JWT_SECRET=ci-only-performance-secret NITRO_HOST=127.0.0.1 NITRO_PORT=3000 \
+JWT_SECRET=ci-only-performance-secret NITRO_PORT=3000 \
   nohup bun run dev >"${RUNNER_TEMP}/realworld-api.log" 2>&1 &
 server_pid=$!
 
@@ -18,7 +18,7 @@ for attempt in {1..90}; do
     cat "${RUNNER_TEMP}/realworld-api.log"
     exit 1
   fi
-  if curl --fail --silent --max-time 2 "http://127.0.0.1:3000/api/articles?limit=1" >/dev/null; then
+  if curl --fail --silent --max-time 2 "http://localhost:3000/api/articles?limit=1" >/dev/null; then
     echo "RealWorld API is ready"
     exit 0
   fi
