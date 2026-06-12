@@ -51,6 +51,7 @@ function recordBusinessMetrics(method: HttpMethod, endpointName: string, respons
   }
 }
 
+/** Shared tagged HTTP transport with target safety, retries, and business metric recording. */
 export class HttpClient {
   constructor(private readonly config: EnvConfig = getConfig()) {}
 

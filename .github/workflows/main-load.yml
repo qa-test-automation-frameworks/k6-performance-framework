@@ -19,7 +19,7 @@ jobs:
           cache: npm
       - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6
         with:
-          bun-version: latest
+          bun-version: 1.2.15
       - uses: grafana/setup-k6-action@db07bd9765aac508ef18982e52ab937fe633a065
         with:
           k6-version: 2.0.0

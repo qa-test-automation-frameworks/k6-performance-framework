@@ -1,4 +1,5 @@
 import type { Options } from 'k6/options';
+import { rampingVus } from '../../config/workloads';
 import { concurrentReaders } from '../../src/scenarios';
 import { createSummary } from '../../src/helpers';
 import { summaryTrendStats } from '../../src/types/config.types';
@@ -6,10 +7,8 @@ import { summaryTrendStats } from '../../src/types/config.types';
 const validation = __ENV.TEST_PROFILE === 'validation';
 export const options: Options = {
   scenarios: {
-    traffic_spike: {
-      executor: 'ramping-vus',
-      startVUs: 0,
-      stages: validation
+    traffic_spike: rampingVus(
+      validation
         ? [
             { duration: '3s', target: 2 },
             { duration: '3s', target: 20 },
@@ -23,9 +22,7 @@ export const options: Options = {
             { duration: '3m', target: 10 },
             { duration: '1m', target: 0 },
           ],
-      gracefulRampDown: '30s',
-      gracefulStop: '30s',
-    },
+    ),
   },
   thresholds: {
     http_req_failed: ['rate<0.10'],

@@ -19,6 +19,12 @@
 5. `handleSummary` writes aggregate JSON and Markdown artifacts.
 6. CI compares aggregate latency metrics with the reviewed baseline and publishes evidence.
 
+## Metric Cardinality
+
+Metric tags are restricted to bounded values: environment, run identifier, workload type, stable
+endpoint name, and HTTP status. Raw URLs, article slugs, usernames, tokens, and generated fixture
+identifiers must never be used as tags. Local InfluxDB data expires after seven days by default.
+
 ## Target Policy
 
 The hosted RealWorld API is used only by the short read-only smoke workflow. Main load, regression,

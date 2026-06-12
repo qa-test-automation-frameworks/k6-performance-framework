@@ -1,0 +1,5 @@
+[
+  { "name": "quick-reader", "weight": 50, "articleLimit": 5, "inspectArticle": false },
+  { "name": "article-reader", "weight": 35, "articleLimit": 10, "inspectArticle": true },
+  { "name": "deep-reader", "weight": 15, "articleLimit": 20, "inspectArticle": true }
+]

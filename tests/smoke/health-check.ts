@@ -1,18 +1,13 @@
 import { check } from 'k6';
 import type { Options } from 'k6/options';
+import { perVuIterations } from '../../config/workloads';
 import { createApi } from '../../src/api';
 import { createSummary } from '../../src/helpers';
 import { summaryTrendStats } from '../../src/types/config.types';
 
 export const options: Options = {
   scenarios: {
-    health_check: {
-      executor: 'per-vu-iterations',
-      vus: 1,
-      iterations: 1,
-      maxDuration: '30s',
-      gracefulStop: '5s',
-    },
+    health_check: perVuIterations(1, 1, '30s', '5s'),
   },
   summaryTrendStats,
 };

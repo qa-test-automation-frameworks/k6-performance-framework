@@ -1,4 +1,5 @@
 import type { Threshold } from 'k6/options';
+import type { ScenarioOptions } from './scenario.types';
 
 export type EnvironmentName = 'local' | 'staging' | 'production';
 
@@ -27,3 +28,5 @@ export interface WorkloadProfile {
   maxVus: number;
   thinkTimeSeconds: number;
 }
+
+export type WorkloadScenario = ScenarioOptions;

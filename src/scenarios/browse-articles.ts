@@ -1,17 +1,19 @@
 import { group, sleep } from 'k6';
 import { getWorkloadProfile } from '../../config/workloads';
 import { createApi } from '../api';
+import { browseBehavior } from '../fixtures';
 import { checkStatus, requireData } from '../helpers';
 
 const thinkTimeSeconds = getWorkloadProfile().thinkTimeSeconds;
 
 export function browseArticles(): void {
   const api = createApi();
-  group('browse articles', () => {
-    const list = api.articles.list({ limit: 10, offset: 0 });
+  const behavior = browseBehavior();
+  group(`browse articles: ${behavior.name}`, () => {
+    const list = api.articles.list({ limit: behavior.articleLimit, offset: 0 });
     checkStatus(list, 200, 'list articles');
     const first = requireData(list, 'list articles').articles[0];
-    if (first) {
+    if (first && behavior.inspectArticle) {
       checkStatus(api.articles.get(first.slug), 200, 'get article');
       checkStatus(api.comments.list(first.slug), 200, 'list comments');
       checkStatus(api.profiles.get(first.author.username), 200, 'get profile');

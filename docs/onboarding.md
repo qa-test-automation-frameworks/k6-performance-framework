@@ -10,6 +10,7 @@ npm run typecheck
 npm run lint
 npm run test:unit
 npm run build
+npm run hooks:install
 ```
 
 ## Local Observability
@@ -24,6 +25,8 @@ InfluxDB: `http://localhost:8086`
 OTLP gRPC/HTTP: `localhost:4317` / `localhost:4318`
 
 Use `npm run docker:down` when finished. The command removes local observability volumes.
+Observed runs add Grafana start/end annotations and bounded run tags through
+`npm run load:observed`.
 
 ## Add a Scenario
 
