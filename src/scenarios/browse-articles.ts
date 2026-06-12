@@ -1,6 +1,9 @@
 import { group, sleep } from 'k6';
+import { getWorkloadProfile } from '../../config/workloads';
 import { createApi } from '../api';
 import { checkStatus, requireData } from '../helpers';
+
+const thinkTimeSeconds = getWorkloadProfile().thinkTimeSeconds;
 
 export function browseArticles(): void {
   const api = createApi();
@@ -15,5 +18,5 @@ export function browseArticles(): void {
     }
     checkStatus(api.tags.list(), 200, 'list tags');
   });
-  sleep(1);
+  sleep(thinkTimeSeconds);
 }

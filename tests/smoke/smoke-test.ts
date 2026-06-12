@@ -5,8 +5,15 @@ import { createSummary } from '../../src/helpers';
 import { summaryTrendStats } from '../../src/types/config.types';
 
 export const options: Options = {
-  vus: 1,
-  duration: __ENV.TEST_PROFILE === 'validation' ? '5s' : '30s',
+  scenarios: {
+    smoke_reader: {
+      executor: 'per-vu-iterations',
+      vus: 1,
+      iterations: __ENV.TEST_PROFILE === 'validation' ? 1 : 3,
+      maxDuration: '1m',
+      gracefulStop: '10s',
+    },
+  },
   thresholds: smokeThresholds,
   summaryTrendStats,
 };

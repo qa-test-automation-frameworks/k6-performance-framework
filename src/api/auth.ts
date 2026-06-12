@@ -1,4 +1,10 @@
-import type { HttpResponse, LoginRequest, RegisterRequest, UserResponse, UserUpdatePayload } from '../types';
+import type {
+  HttpResponse,
+  LoginRequest,
+  RegisterRequest,
+  UserResponse,
+  UserUpdatePayload,
+} from '../types';
 import { HttpClient } from '../utils/http-client';
 
 const envelope = <T>(key: string, value: T): Record<string, T> => ({ [key]: value });
@@ -19,7 +25,9 @@ export class AuthService {
   }
 
   update(token: string, payload: UserUpdatePayload): HttpResponse<UserResponse> {
-    return this.client.put('/user', 'PUT /user', envelope('user', payload), { params: auth(token) });
+    return this.client.put('/user', 'PUT /user', envelope('user', payload), {
+      params: auth(token),
+    });
   }
 }
 

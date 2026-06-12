@@ -20,6 +20,7 @@ function response(status: number, data: unknown = { ok: true }) {
     body: JSON.stringify(data),
     headers: { 'Content-Type': 'application/json' },
     json: () => data,
+    timings: { duration: 25 },
   };
 }
 
@@ -60,9 +61,7 @@ describe('HttpClient', () => {
     const client = new HttpClient(config);
 
     expect(client.post('/articles', 'POST /articles', {}).attempts).toBe(1);
-    expect(
-      client.post('/articles', 'POST /articles', {}, { retryUnsafe: true }).attempts,
-    ).toBe(2);
+    expect(client.post('/articles', 'POST /articles', {}, { retryUnsafe: true }).attempts).toBe(2);
   });
 
   it('does not retry a 4xx response', () => {
@@ -72,7 +71,8 @@ describe('HttpClient', () => {
 
   it('blocks writes in read-only production configuration', () => {
     const production = { ...config, environment: 'production', readOnly: true } as EnvConfig;
-    expect(() => new HttpClient(production).delete('/articles/test', 'DELETE /articles/:slug'))
-      .toThrow('blocked in the production environment');
+    expect(() =>
+      new HttpClient(production).delete('/articles/test', 'DELETE /articles/:slug'),
+    ).toThrow('blocked in the production environment');
   });
 });

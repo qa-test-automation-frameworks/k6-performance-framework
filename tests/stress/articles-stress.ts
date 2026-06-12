@@ -6,13 +6,26 @@ import { summaryTrendStats } from '../../src/types/config.types';
 
 const validation = __ENV.TEST_PROFILE === 'validation';
 export const options: Options = {
-  stages: validation
-    ? [{ duration: '5s', target: 5 }, { duration: '5s', target: 0 }]
-    : [
-        { duration: '2m', target: 25 }, { duration: '3m', target: 50 },
-        { duration: '3m', target: 100 }, { duration: '3m', target: 150 },
-        { duration: '2m', target: 0 },
-      ],
+  scenarios: {
+    stress_readers: {
+      executor: 'ramping-vus',
+      startVUs: 0,
+      stages: validation
+        ? [
+            { duration: '5s', target: 5 },
+            { duration: '5s', target: 0 },
+          ]
+        : [
+            { duration: '2m', target: 25 },
+            { duration: '3m', target: 50 },
+            { duration: '3m', target: 100 },
+            { duration: '3m', target: 150 },
+            { duration: '2m', target: 0 },
+          ],
+      gracefulRampDown: '30s',
+      gracefulStop: '30s',
+    },
+  },
   thresholds: stressThresholds,
   summaryTrendStats,
 };

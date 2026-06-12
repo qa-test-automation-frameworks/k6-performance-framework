@@ -4,7 +4,9 @@ const path = require('node:path');
 const inputs = process.argv.slice(2);
 const output = process.env.BASELINE_OUTPUT || 'baseline/load-summary.json';
 if (inputs.length < 3) {
-  throw new Error('usage: node scripts/aggregate-baseline.cjs <summary-1.json> <summary-2.json> <summary-3.json> [...]');
+  throw new Error(
+    'usage: node scripts/aggregate-baseline.cjs <summary-1.json> <summary-2.json> <summary-3.json> [...]',
+  );
 }
 
 function readMetric(file, metric, key) {
