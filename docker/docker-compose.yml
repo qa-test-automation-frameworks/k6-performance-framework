@@ -1,7 +1,7 @@
 services:
   influxdb:
     image: influxdb:2.7.12
-    ports: ["8086:8086"]
+    ports: ['8086:8086']
     environment:
       DOCKER_INFLUXDB_INIT_MODE: setup
       DOCKER_INFLUXDB_INIT_USERNAME: admin
@@ -9,21 +9,22 @@ services:
       DOCKER_INFLUXDB_INIT_ORG: k6
       DOCKER_INFLUXDB_INIT_BUCKET: k6
       DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: k6-local-development-token
+      DOCKER_INFLUXDB_INIT_RETENTION: ${INFLUXDB_RETENTION:-7d}
     volumes:
       - influxdb-data:/var/lib/influxdb2
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8086/health"]
+      test: ['CMD', 'curl', '-f', 'http://localhost:8086/health']
       interval: 5s
       timeout: 3s
       retries: 30
 
   grafana:
     image: grafana/grafana:13.0.2
-    ports: ["3001:3000"]
+    ports: ['3001:3000']
     environment:
       GF_SECURITY_ADMIN_USER: admin
       GF_SECURITY_ADMIN_PASSWORD: admin
-      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ENABLED: 'true'
       GF_AUTH_ANONYMOUS_ORG_ROLE: Viewer
     volumes:
       - grafana-data:/var/lib/grafana
@@ -34,18 +35,18 @@ services:
 
   otel-collector:
     image: otel/opentelemetry-collector-contrib:0.153.0
-    command: ["--config=/etc/otelcol-contrib/config.yaml"]
+    command: ['--config=/etc/otelcol-contrib/config.yaml']
     volumes:
       - ./otel/config.yaml:/etc/otelcol-contrib/config.yaml:ro
-    ports: ["4317:4317", "4318:4318", "13133:13133"]
+    ports: ['4317:4317', '4318:4318', '13133:13133']
     healthcheck:
-      test: ["CMD", "/otelcol-contrib", "validate", "--config=/etc/otelcol-contrib/config.yaml"]
+      test: ['CMD', '/otelcol-contrib', 'validate', '--config=/etc/otelcol-contrib/config.yaml']
       interval: 10s
       timeout: 5s
       retries: 10
 
   k6:
-    profiles: ["test"]
+    profiles: ['test']
     build:
       context: ..
       dockerfile: docker/Dockerfile.k6
@@ -58,10 +59,11 @@ services:
       K6_INFLUXDB_ORGANIZATION: k6
       K6_INFLUXDB_BUCKET: k6
       K6_INFLUXDB_TOKEN: k6-local-development-token
-      K6_OTEL_GRPC_EXPORTER_INSECURE: "true"
+      K6_OTEL_GRPC_EXPORTER_INSECURE: 'true'
       K6_OTEL_GRPC_EXPORTER_ENDPOINT: otel-collector:4317
       K6_OTEL_METRIC_PREFIX: k6_
       TEST_PROFILE: ${TEST_PROFILE:-validation}
+      K6_TAGS: run_id=${K6_RUN_ID:-local-development},environment=${TARGET_ENV:-local}
     depends_on:
       influxdb:
         condition: service_healthy

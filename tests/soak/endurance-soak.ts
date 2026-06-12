@@ -1,5 +1,6 @@
 import type { Options } from 'k6/options';
 import { soakThresholds } from '../../config/thresholds/soak';
+import { rampingVus } from '../../config/workloads';
 import { concurrentReaders } from '../../src/scenarios';
 import { createSummary } from '../../src/helpers';
 import { summaryTrendStats } from '../../src/types/config.types';
@@ -7,10 +8,8 @@ import { summaryTrendStats } from '../../src/types/config.types';
 const validation = __ENV.TEST_PROFILE === 'validation';
 export const options: Options = {
   scenarios: {
-    endurance_readers: {
-      executor: 'ramping-vus',
-      startVUs: 0,
-      stages: validation
+    endurance_readers: rampingVus(
+      validation
         ? [
             { duration: '5s', target: 2 },
             { duration: '10s', target: 2 },
@@ -21,9 +20,8 @@ export const options: Options = {
             { duration: '2h', target: 20 },
             { duration: '5m', target: 0 },
           ],
-      gracefulRampDown: '1m',
-      gracefulStop: '1m',
-    },
+      '1m',
+    ),
   },
   thresholds: soakThresholds,
   summaryTrendStats,

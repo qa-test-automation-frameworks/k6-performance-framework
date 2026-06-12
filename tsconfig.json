@@ -4,13 +4,16 @@
     "module": "CommonJS",
     "lib": ["ES2022", "DOM"],
     "strict": true,
+    "exactOptionalPropertyTypes": true,
+    "noUncheckedIndexedAccess": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "types": ["k6"]
+    "types": ["k6"],
+    "resolveJsonModule": true
   },
   "include": ["src/**/*", "tests/**/*", "config/**/*"],
   "exclude": ["node_modules", "dist", "reports", "baseline"]

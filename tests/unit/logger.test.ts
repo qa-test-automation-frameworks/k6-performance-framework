@@ -20,7 +20,7 @@ describe('logger', () => {
 
     logger.debug('request', { authorization: 'Bearer secret', nested: { token: 'secret' } });
 
-    const entry = JSON.parse(String(debug.mock.calls[0][0])) as {
+    const entry = JSON.parse(String(debug.mock.calls[0]![0])) as {
       level: string;
       context: { authorization: string; nested: { token: string } };
     };

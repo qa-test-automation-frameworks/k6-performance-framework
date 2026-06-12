@@ -55,6 +55,7 @@ function metricRow(name: string, values: MetricValues | undefined): string {
   return `| ${name} | ${median?.toFixed(2) ?? '-'} | ${p90?.toFixed(2) ?? '-'} | ${p95?.toFixed(2) ?? '-'} | ${p99?.toFixed(2) ?? '-'} | ${max?.toFixed(2) ?? '-'} | ${rate?.toFixed(4) ?? '-'} | ${count ?? '-'} |`;
 }
 
+/** Produces machine-readable and reviewer-readable artifacts from a completed k6 run. */
 export function createSummary(data: SummaryData): Record<string, string> {
   const summary: PerformanceSummary = {
     generatedAt: new Date().toISOString(),

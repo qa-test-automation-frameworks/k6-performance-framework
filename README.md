@@ -30,25 +30,25 @@ and stable metric names. Write-heavy tests reject non-local targets unless expli
 
 ## Test Types
 
-| Type | Purpose | Default target | Command |
-|---|---|---|---|
-| Smoke | Fast API and SLO validation | Hosted API, read-only | `npm run smoke` |
-| Load | Expected traffic and user journeys | Controlled local API | `npm run load` |
-| Stress | Progressive degradation | Controlled local API | `npm run stress` |
-| Spike | Sudden traffic and recovery | Controlled local API | `npm run spike` |
-| Soak | Long-duration stability | Controlled local API | `npm run soak` |
-| Breakpoint | Capacity boundary | Controlled local API | `npm run breakpoint` |
+| Type       | Purpose                            | Default target        | Command                            |
+| ---------- | ---------------------------------- | --------------------- | ---------------------------------- |
+| Smoke      | Fast API and SLO validation        | Hosted API, read-only | `TARGET_ENV=staging npm run smoke` |
+| Load       | Expected traffic and user journeys | Controlled local API  | `npm run load`                     |
+| Stress     | Progressive degradation            | Controlled local API  | `npm run stress`                   |
+| Spike      | Sudden traffic and recovery        | Controlled local API  | `npm run spike`                    |
+| Soak       | Long-duration stability            | Controlled local API  | `npm run soak`                     |
+| Breakpoint | Capacity boundary                  | Controlled local API  | `npm run breakpoint`               |
 
 ## Service Objectives
 
-| Endpoint group | p95 | p99 | Error rate |
-|---|---:|---:|---:|
-| Authentication | < 800 ms | < 1500 ms | < 1% |
-| Article reads | < 500 ms | < 1000 ms | < 1% |
-| Article writes | < 1000 ms | < 2000 ms | < 2% |
-| Comments | < 750 ms | < 1500 ms | < 2% |
-| Profiles | < 500 ms | < 1000 ms | < 1% |
-| Tags | < 300 ms | < 750 ms | < 1% |
+| Endpoint group |       p95 |       p99 | Error rate |
+| -------------- | --------: | --------: | ---------: |
+| Authentication |  < 800 ms | < 1500 ms |       < 1% |
+| Article reads  |  < 500 ms | < 1000 ms |       < 1% |
+| Article writes | < 1000 ms | < 2000 ms |       < 2% |
+| Comments       |  < 750 ms | < 1500 ms |       < 2% |
+| Profiles       |  < 500 ms | < 1000 ms |       < 1% |
+| Tags           |  < 300 ms |  < 750 ms |       < 1% |
 
 See [performance SLOs](docs/performance-slos.md) for enforcement details.
 
@@ -102,8 +102,9 @@ npm run load:journey
 
 - [Architecture](docs/architecture.md)
 - [Contributor onboarding](docs/onboarding.md)
+- [Results interpretation](docs/results-interpretation.md)
 - [Architecture decisions](docs/adr/README.md)
-- [Portfolio self-assessment](docs/portfolio-self-assessment.md)
+- [Capability status](docs/capability-status.md)
 - [Release notes](docs/releases/v0.1.0.md)
 
 ## Safety

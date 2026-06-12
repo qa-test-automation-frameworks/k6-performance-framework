@@ -1,6 +1,6 @@
 {
   "name": "k6-performance-framework",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "packageManager": "npm@10.9.4",
   "description": "Production-grade k6 TypeScript performance test automation framework for Conduit RealWorld API",
   "homepage": "https://qa-test-automation-frameworks.github.io/k6-performance-framework/",
@@ -33,26 +33,27 @@
     "docker:up": "docker compose -f docker/docker-compose.yml up -d --build",
     "docker:down": "docker compose -f docker/docker-compose.yml down -v",
     "docker:health": "powershell -ExecutionPolicy Bypass -File scripts/wait-observability.ps1",
-    "load:observed": "npm run build && docker compose -f docker/docker-compose.yml --profile test run --rm k6 run --out xk6-influxdb=http://influxdb:8086 --out opentelemetry dist/load/articles-load.js",
+    "load:observed": "npm run build && bash scripts/run-observed.sh",
     "baseline:compare": "node scripts/compare-performance.cjs",
     "baseline:aggregate": "node scripts/aggregate-baseline.cjs",
     "report:site": "node scripts/build-report-site.cjs",
     "report": "bash scripts/generate-report.sh",
     "baseline": "bash scripts/save-baseline.sh",
     "sbom": "node -e \"require('node:fs').mkdirSync('artifacts',{recursive:true})\" && cyclonedx-npm --output-format JSON --output-file artifacts/sbom.cdx.json",
-    "audit": "npm audit --audit-level=moderate"
+    "audit": "npm audit --audit-level=moderate",
+    "hooks:install": "git config core.hooksPath .githooks"
   },
   "devDependencies": {
-    "@cyclonedx/cyclonedx-npm": "^4.2.1",
-    "@types/k6": "^2.0.0",
-    "@typescript-eslint/eslint-plugin": "^7.0.0",
-    "@typescript-eslint/parser": "^7.0.0",
-    "esbuild": "^0.28.1",
-    "eslint": "^8.57.0",
-    "glob": "^10.3.10",
-    "prettier": "^3.2.0",
-    "typescript": "^5.4.0",
-    "vitest": "^4.1.8"
+    "@cyclonedx/cyclonedx-npm": "4.2.1",
+    "@types/k6": "2.0.0",
+    "@typescript-eslint/eslint-plugin": "7.18.0",
+    "@typescript-eslint/parser": "7.18.0",
+    "esbuild": "0.28.1",
+    "eslint": "8.57.1",
+    "glob": "10.5.0",
+    "prettier": "3.8.3",
+    "typescript": "5.9.3",
+    "vitest": "4.1.8"
   },
   "engines": {
     "node": ">=20.0.0"
