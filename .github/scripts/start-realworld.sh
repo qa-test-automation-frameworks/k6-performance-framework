@@ -8,7 +8,7 @@ cd "$target_dir"
 bun install --frozen-lockfile
 JWT_SECRET=ci-only-performance-secret bun run db:generate
 JWT_SECRET=ci-only-performance-secret bun run db:push
-JWT_SECRET=ci-only-performance-secret NITRO_PORT=3000 \
+env -u RUNNER_TRACKING_ID JWT_SECRET=ci-only-performance-secret NITRO_PORT=3000 \
   nohup bun run dev >"${RUNNER_TEMP}/realworld-api.log" 2>&1 &
 server_pid=$!
 
