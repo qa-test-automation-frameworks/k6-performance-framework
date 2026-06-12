@@ -21,6 +21,14 @@ export interface UserResponse {
   user: User;
 }
 
+export interface UserUpdatePayload {
+  email?: string;
+  username?: string;
+  password?: string;
+  bio?: string;
+  image?: string;
+}
+
 export type LoginResponse = UserResponse;
 export type UserToken = string;
 
@@ -49,6 +57,12 @@ export interface ArticlePayload {
   description: string;
   body: string;
   tagList?: string[];
+}
+
+export interface ArticleUpdatePayload {
+  title?: string;
+  description?: string;
+  body?: string;
 }
 
 export interface ArticlesQuery {
@@ -95,6 +109,12 @@ export interface ProfileResponse {
 export interface TagsResponse {
   tags: string[];
 }
+
+export interface ApiErrorResponse {
+  errors: Record<string, string[]>;
+}
+
+export type EmptyResponse = Record<string, never>;
 
 export type HttpMethod = 'GET' | 'HEAD' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 
