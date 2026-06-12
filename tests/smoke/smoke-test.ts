@@ -1,6 +1,7 @@
 import type { Options } from 'k6/options';
 import { smokeThresholds } from '../../config/thresholds/smoke';
 import { browseArticles } from '../../src/scenarios';
+import { createSummary } from '../../src/helpers';
 
 export const options: Options = {
   vus: 1,
@@ -9,3 +10,4 @@ export const options: Options = {
 };
 
 export default browseArticles;
+export const handleSummary = createSummary;

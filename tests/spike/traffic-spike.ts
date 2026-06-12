@@ -1,5 +1,6 @@
 import type { Options } from 'k6/options';
 import { concurrentReaders } from '../../src/scenarios';
+import { createSummary } from '../../src/helpers';
 
 const validation = __ENV.TEST_PROFILE === 'validation';
 export const options: Options = {
@@ -14,3 +15,4 @@ export const options: Options = {
   tags: { test_type: 'spike' },
 };
 export default concurrentReaders;
+export const handleSummary = createSummary;
