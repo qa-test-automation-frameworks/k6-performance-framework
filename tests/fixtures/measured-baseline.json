@@ -1,7 +1,12 @@
 {
   "metadata": {
     "status": "measured",
-    "sampleCount": 3
+    "sampleCount": 3,
+    "targetId": "realworld-local",
+    "targetCommit": "target-commit",
+    "k6Version": "2.0.0",
+    "runnerClass": "github-hosted",
+    "workload": { "profile": "full", "targetRps": 20, "maxVus": 100 }
   },
   "metrics": {
     "http_req_duration": {
