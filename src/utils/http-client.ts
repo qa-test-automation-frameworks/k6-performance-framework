@@ -5,7 +5,6 @@ import type { HttpMethod, HttpRequestOptions, HttpResponse } from '../types/api.
 import type { EnvConfig } from '../types/config.types';
 import { logger } from './logger';
 import {
-  activeVuCount,
   articleReadDuration,
   articleWriteDuration,
   authDuration,
@@ -31,7 +30,6 @@ function parseJson<T>(response: Response): T | null {
 
 function recordBusinessMetrics(method: HttpMethod, endpointName: string, response: Response): void {
   const duration = response.timings.duration;
-  activeVuCount.add(typeof __VU === 'number' ? __VU : 0);
   if (
     endpointName.includes('/users') ||
     endpointName === 'GET /user' ||

@@ -35,7 +35,7 @@
 - Added ADR-003 for the observability stack.
 - Corrected esbuild output so test directory paths are mirrored under `dist/`.
 
-## 0.1.0 - 2026-06-09
+## Initial development - 2026-06-11
 
 - Initialized Phase 0 repository scaffold.
 - Added TypeScript, ESLint, Prettier, and esbuild bootstrap configuration.

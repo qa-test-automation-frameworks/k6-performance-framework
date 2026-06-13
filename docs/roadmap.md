@@ -1,25 +1,25 @@
 # k6 Performance Framework - Implementation Roadmap
 
-> **Living document.** Phases in progress use present tense; completed phases use past tense.
-> Update this file as each phase is completed.
+> **Living document.** This file records delivered capability areas and the next engineering
+> milestones. It does not represent elapsed calendar time.
 
 ## Overview
 
-| Phase | Title                        | Duration   | Status      |
-| ----- | ---------------------------- | ---------- | ----------- |
-| 0     | Inception & Repository Setup | Days 1-3   | Completed   |
-| 1     | Core Infrastructure          | Days 4-7   | Completed   |
-| 2     | API Service Layer            | Days 8-11  | Implemented |
-| 3     | Smoke & Load Tests           | Days 12-15 | Implemented |
-| 4     | Advanced Scenarios           | Days 16-21 | Implemented |
-| 5     | Observability Stack          | Days 22-25 | Implemented |
-| 6     | CI/CD Integration            | Days 26-30 | Implemented |
-| 7     | Security & Quality Gates     | Days 31-33 | Implemented |
-| 8     | Documentation & Polish       | Days 34-38 | Implemented |
+| Phase | Title                        | Status    |
+| ----- | ---------------------------- | --------- |
+| 0     | Inception & Repository Setup | Delivered |
+| 1     | Core Infrastructure          | Delivered |
+| 2     | API Service Layer            | Delivered |
+| 3     | Smoke & Load Tests           | Delivered |
+| 4     | Advanced Scenarios           | Delivered |
+| 5     | Observability Stack          | Delivered |
+| 6     | CI/CD Integration            | Delivered |
+| 7     | Security & Quality Gates     | Delivered |
+| 8     | Documentation & Polish       | Delivered |
 
 ---
 
-## Phase 0: Inception & Repository Setup (Days 1-3)
+## Phase 0: Inception & Repository Setup
 
 **Goal:** An empty-but-opinionated skeleton that can receive code without configuration thrash.
 
@@ -46,11 +46,9 @@
 - `npm run lint` exits 0
 - All directories visible in repo tree
 
-**Estimated Effort:** 4-5 hours
-
 ---
 
-## Phase 1: Core Infrastructure (Days 4-7)
+## Phase 1: Core Infrastructure
 
 **Goal:** Foundational building blocks that every test file will import.
 
@@ -71,15 +69,13 @@
 - `http-client.ts` unit-verified: request tags appear in k6 output
 - Config resolver correctly returns local vs staging configs via `TARGET_ENV`
 
-**Estimated Effort:** 6-8 hours
-
 **Dependencies:** Phase 0
 
 **Completion note:** Core infrastructure and its prerequisite repository setup are complete.
 
 ---
 
-## Phase 2: API Service Layer (Days 8-11)
+## Phase 2: API Service Layer
 
 **Goal:** Typed service objects for all Conduit endpoints; the test layer never calls `k6/http` directly.
 
@@ -98,13 +94,11 @@
 - SharedArray token pattern works across VUs
 - ESLint reports zero errors
 
-**Estimated Effort:** 8-10 hours
-
 **Dependencies:** Phase 1
 
 ---
 
-## Phase 3: Smoke & Load Tests (Days 12-15)
+## Phase 3: Smoke & Load Tests
 
 **Goal:** CI-ready smoke tests and realistic load scenarios with SLO-enforced thresholds.
 
@@ -123,13 +117,11 @@
 - All groups visible in k6 summary output
 - SLOs defined for all primary endpoints
 
-**Estimated Effort:** 8-10 hours
-
 **Dependencies:** Phase 2
 
 ---
 
-## Phase 4: Advanced Scenarios (Days 16-21)
+## Phase 4: Advanced Scenarios
 
 **Goal:** Full coverage of all six k6 test types.
 
@@ -146,13 +138,11 @@
 - Breakpoint test aborts on threshold breach and reports failure rate
 - All six test types produce valid JSON output
 
-**Estimated Effort:** 10-12 hours
-
 **Dependencies:** Phase 3
 
 ---
 
-## Phase 5: Observability Stack (Days 22-25)
+## Phase 5: Observability Stack
 
 **Goal:** One-command local observability: `npm run docker:up` to Grafana at localhost:3001 with live k6 dashboards.
 
@@ -174,13 +164,11 @@ until Docker Desktop, k6, a local RealWorld target, and authentication tokens ar
 - OTEL collector receives metrics
 - Setup completes on a fresh machine in under 10 minutes
 
-**Estimated Effort:** 8-10 hours
-
 **Dependencies:** Phase 4
 
 ---
 
-## Phase 6: CI/CD Integration (Days 26-30)
+## Phase 6: CI/CD Integration
 
 **Goal:** Automated performance gates.
 
@@ -201,13 +189,11 @@ until Docker Desktop, k6, a local RealWorld target, and authentication tokens ar
 - Soak cron does not run on PR
 - Regression workflow fails when p95 is inflated beyond the threshold
 
-**Estimated Effort:** 8-10 hours
-
 **Dependencies:** Phase 5
 
 ---
 
-## Phase 7: Security & Quality Gates (Days 31-33)
+## Phase 7: Security & Quality Gates
 
 **Goal:** Production-grade security posture consistent with sibling repos.
 
@@ -226,13 +212,11 @@ until Docker Desktop, k6, a local RealWorld target, and authentication tokens ar
 - TypeScript strict mode has zero errors
 - No unused variables, imports, or parameters in TypeScript files
 
-**Estimated Effort:** 4-5 hours
-
 **Dependencies:** Phase 6
 
 ---
 
-## Phase 8: Documentation & Portfolio Polish (Days 34-38)
+## Phase 8: Documentation & Portfolio Polish
 
 **Goal:** Recruiter-ready, self-documenting, immediately impressive repository.
 
@@ -241,11 +225,9 @@ until Docker Desktop, k6, a local RealWorld target, and authentication tokens ar
 - [x] Complete README with badges, architecture diagram, SLO table, test table, and quick start
 - [x] Architecture, onboarding, and results interpretation docs
 - [x] All five ADRs complete and cross-linked from README
-- [x] v0.1.0 release notes
+- [x] Versioned release notes
 - [x] GitHub Pages report hosting
 - [x] Release automation for version tags
 - [x] Evidence-based capability status
-
-**Estimated Effort:** 6-8 hours
 
 **Dependencies:** Phase 7

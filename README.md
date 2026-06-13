@@ -107,7 +107,8 @@ npm run load:journey
 - [Results interpretation](docs/results-interpretation.md)
 - [Architecture decisions](docs/adr/README.md)
 - [Capability status](docs/capability-status.md)
-- [Release notes](docs/releases/v0.1.0.md)
+- [v0.3.0 release notes](docs/releases/v0.3.0.md)
+- [v0.2.0 release notes](docs/releases/v0.2.0.md)
 
 ## Safety
 

@@ -1,4 +1,4 @@
-import { Counter, Gauge, Rate, Trend } from 'k6/metrics';
+import { Counter, Rate, Trend } from 'k6/metrics';
 
 /** Authentication latency in milliseconds. */
 export const authDuration = new Trend('custom_auth_duration_ms', true);
@@ -10,5 +10,3 @@ export const articleWriteDuration = new Trend('custom_article_write_duration_ms'
 export const totalBusinessErrors = new Counter('custom_business_errors_total');
 /** Ratio of successful authentication operations. */
 export const authSuccessRate = new Rate('custom_auth_success_rate');
-/** Last observed virtual-user identifier for concurrency context. */
-export const activeVuCount = new Gauge('custom_active_vus');
