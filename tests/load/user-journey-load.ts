@@ -1,8 +1,12 @@
 import type { Options } from 'k6/options';
-import { loadThresholds } from '../../config/thresholds/load';
+import { authenticatedThresholds } from '../../config/thresholds/authenticated';
 import { getWorkloadProfile, rampingVus } from '../../config/workloads';
 import { authenticatedCrud } from '../../src/scenarios';
-import { createSummary } from '../../src/helpers';
+import {
+  createAuthenticatedSetup,
+  createSummary,
+  type AuthenticatedSetupData,
+} from '../../src/helpers';
 import { summaryTrendStats } from '../../src/types/config.types';
 
 const profile = getWorkloadProfile();
@@ -21,8 +25,16 @@ export const options: Options = {
           ],
     ),
   },
-  thresholds: loadThresholds,
+  thresholds: authenticatedThresholds,
   summaryTrendStats,
 };
-export default authenticatedCrud;
+
+export function setup(): AuthenticatedSetupData {
+  return createAuthenticatedSetup();
+}
+
+export default function (data: AuthenticatedSetupData): void {
+  authenticatedCrud(data.token);
+}
+
 export const handleSummary = createSummary;

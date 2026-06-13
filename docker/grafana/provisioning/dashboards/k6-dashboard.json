@@ -31,7 +31,7 @@
       "datasource": { "uid": "influxdb-k6" },
       "targets": [
         {
-          "query": "from(bucket: \"k6\") |> range(start: -15m) |> filter(fn: (r) => r._measurement == \"vus\")"
+          "query": "from(bucket: \"k6\") |> range(start: v.timeRangeStart, stop: v.timeRangeStop) |> filter(fn: (r) => r._measurement == \"vus\" and r.environment == \"${environment}\" and r.run_id == \"${run_id}\")"
         }
       ]
     },
@@ -42,7 +42,7 @@
       "datasource": { "uid": "influxdb-k6" },
       "targets": [
         {
-          "query": "from(bucket: \"k6\") |> range(start: -15m) |> filter(fn: (r) => r._measurement == \"http_reqs\") |> aggregateWindow(every: 10s, fn: sum)"
+          "query": "from(bucket: \"k6\") |> range(start: v.timeRangeStart, stop: v.timeRangeStop) |> filter(fn: (r) => r._measurement == \"http_reqs\" and r.environment == \"${environment}\" and r.run_id == \"${run_id}\") |> aggregateWindow(every: 10s, fn: sum)"
         }
       ]
     },
@@ -53,7 +53,7 @@
       "datasource": { "uid": "influxdb-k6" },
       "targets": [
         {
-          "query": "from(bucket: \"k6\") |> range(start: -15m) |> filter(fn: (r) => r._measurement == \"http_req_duration\") |> aggregateWindow(every: 10s, fn: (tables=<-, column) => tables |> quantile(q: 0.95, column: column))"
+          "query": "from(bucket: \"k6\") |> range(start: v.timeRangeStart, stop: v.timeRangeStop) |> filter(fn: (r) => r._measurement == \"http_req_duration\" and r.environment == \"${environment}\" and r.run_id == \"${run_id}\") |> aggregateWindow(every: 10s, fn: (tables=<-, column) => tables |> quantile(q: 0.95, column: column))"
         }
       ]
     },
@@ -64,7 +64,7 @@
       "datasource": { "uid": "influxdb-k6" },
       "targets": [
         {
-          "query": "from(bucket: \"k6\") |> range(start: -15m) |> filter(fn: (r) => r._measurement == \"http_req_failed\") |> aggregateWindow(every: 10s, fn: mean)"
+          "query": "from(bucket: \"k6\") |> range(start: v.timeRangeStart, stop: v.timeRangeStop) |> filter(fn: (r) => r._measurement == \"http_req_failed\" and r.environment == \"${environment}\" and r.run_id == \"${run_id}\") |> aggregateWindow(every: 10s, fn: mean)"
         }
       ]
     },
@@ -75,7 +75,7 @@
       "datasource": { "uid": "influxdb-k6" },
       "targets": [
         {
-          "query": "from(bucket: \"k6\") |> range(start: -15m) |> filter(fn: (r) => r._measurement == \"custom_article_read_duration_ms\") |> aggregateWindow(every: 10s, fn: (tables=<-, column) => tables |> quantile(q: 0.95, column: column))"
+          "query": "from(bucket: \"k6\") |> range(start: v.timeRangeStart, stop: v.timeRangeStop) |> filter(fn: (r) => r._measurement == \"custom_article_read_duration_ms\" and r.environment == \"${environment}\" and r.run_id == \"${run_id}\") |> aggregateWindow(every: 10s, fn: (tables=<-, column) => tables |> quantile(q: 0.95, column: column))"
         }
       ]
     },
@@ -86,7 +86,7 @@
       "datasource": { "uid": "influxdb-k6" },
       "targets": [
         {
-          "query": "from(bucket: \"k6\") |> range(start: -15m) |> filter(fn: (r) => r._measurement == \"custom_article_write_duration_ms\") |> aggregateWindow(every: 10s, fn: (tables=<-, column) => tables |> quantile(q: 0.95, column: column))"
+          "query": "from(bucket: \"k6\") |> range(start: v.timeRangeStart, stop: v.timeRangeStop) |> filter(fn: (r) => r._measurement == \"custom_article_write_duration_ms\" and r.environment == \"${environment}\" and r.run_id == \"${run_id}\") |> aggregateWindow(every: 10s, fn: (tables=<-, column) => tables |> quantile(q: 0.95, column: column))"
         }
       ]
     },
@@ -97,7 +97,7 @@
       "datasource": { "uid": "influxdb-k6" },
       "targets": [
         {
-          "query": "from(bucket: \"k6\") |> range(start: -15m) |> filter(fn: (r) => r._measurement == \"custom_business_errors_total\") |> sum()"
+          "query": "from(bucket: \"k6\") |> range(start: v.timeRangeStart, stop: v.timeRangeStop) |> filter(fn: (r) => r._measurement == \"custom_business_errors_total\" and r.environment == \"${environment}\" and r.run_id == \"${run_id}\") |> sum()"
         }
       ]
     }

@@ -6,6 +6,7 @@ import {
   ProfilesService,
   TagsService,
 } from '../../src/api';
+import { authenticatedThresholds } from '../../config/thresholds/authenticated';
 
 function client() {
   return {
@@ -53,5 +54,16 @@ describe('API services', () => {
       { params: { headers: { Authorization: 'Token token' } } },
     );
     expect(mock.get).toHaveBeenCalledWith('/tags', 'GET /tags');
+  });
+});
+
+describe('authenticated thresholds', () => {
+  it('enforces every published write and authentication objective', () => {
+    expect(authenticatedThresholds).toMatchObject({
+      custom_auth_duration_ms: ['p(95)<800', 'p(99)<1500'],
+      custom_auth_success_rate: ['rate>0.99'],
+      custom_article_write_duration_ms: ['p(95)<1000', 'p(99)<2000'],
+      'http_req_duration{name:POST /articles/:slug/comments}': ['p(95)<750', 'p(99)<1500'],
+    });
   });
 });

@@ -6,9 +6,8 @@ import { assertWriteTarget, checkStatus, requireData, tokenForVu } from '../help
 
 const thinkTimeSeconds = getWorkloadProfile().thinkTimeSeconds;
 
-export function authenticatedCrud(): void {
+export function authenticatedCrud(token = tokenForVu()): void {
   assertWriteTarget();
-  const token = tokenForVu();
   const api = createApi();
   group('authenticated article CRUD', () => {
     const created = api.articles.create(token, articleFixture());

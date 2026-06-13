@@ -42,6 +42,13 @@ describe('getConfig', () => {
     setTestEnv({ TARGET_RPS: '0' });
     expect(() => getWorkloadProfile()).toThrow('TARGET_RPS must be a positive number');
   });
+
+  it('authorizes controlled non-local writes only with an explicit override', () => {
+    setTestEnv({ TARGET_ENV: 'staging' });
+    expect(getConfig().readOnly).toBe(true);
+    setTestEnv({ TARGET_ENV: 'staging', ALLOW_NON_LOCAL_LOAD: 'true' });
+    expect(getConfig().readOnly).toBe(false);
+  });
 });
 
 describe('load thresholds', () => {
