@@ -105,12 +105,18 @@ $env:TEST_PROFILE = 'validation'
 npm run load:journey
 ```
 
+Set `AUTH_USER_COUNT` to size the setup user pool. VUs select credentials deterministically from
+that pool, avoiding a single-account bottleneck. Full non-local workloads also require explicit
+`K6_STAGES`; built-in full profiles are limited to the controlled local target.
+
 ## CI and Evidence
 
 - PR smoke posts an aggregate Markdown summary to same-repository pull requests.
-- Main load, regression, and soak workflows provision a pinned RealWorld backend.
+- Main load, regression, and advanced workload workflows provision a pinned RealWorld backend.
 - Regression checks enforce absolute thresholds and require a reviewed seeded baseline for relative
   p95/p99 comparison.
+- GitHub-hosted segmented validation proves partition wiring; the manual distributed workflow is
+  reserved for authorized self-hosted runners and a shared controlled target.
 - Security CI runs npm audit, creates a CycloneDX SBOM, and scans the lockfile with OSV.
 - [Published performance reports](https://qa-test-automation-frameworks.github.io/k6-performance-framework/)
 
