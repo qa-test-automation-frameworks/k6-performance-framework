@@ -2,6 +2,16 @@ name: Performance regression
 
 on:
   pull_request:
+    paths:
+      - '.github/workflows/performance-regression.yml'
+      - '.github/scripts/start-realworld.sh'
+      - 'config/**'
+      - 'scripts/aggregate-baseline.cjs'
+      - 'scripts/compare-performance.cjs'
+      - 'src/**'
+      - 'tests/load/**'
+      - 'package-lock.json'
+      - 'package.json'
   workflow_dispatch:
 
 permissions:

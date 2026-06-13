@@ -55,6 +55,11 @@ function metricRow(name: string, values: MetricValues | undefined): string {
   return `| ${name} | ${median?.toFixed(2) ?? '-'} | ${p90?.toFixed(2) ?? '-'} | ${p95?.toFixed(2) ?? '-'} | ${p99?.toFixed(2) ?? '-'} | ${max?.toFixed(2) ?? '-'} | ${rate?.toFixed(4) ?? '-'} | ${count ?? '-'} |`;
 }
 
+function thresholdActual(values: MetricValues, threshold: string): number | undefined {
+  const key = threshold.match(/^(p\(\d+\)|avg|med|min|max|rate|count|value)/)?.[1];
+  return key ? values[key as keyof MetricValues] : undefined;
+}
+
 /**
  * Produces machine-readable and reviewer-readable artifacts from a completed k6 run.
  * @param data k6 end-of-test summary data.
@@ -77,7 +82,10 @@ export function createSummary(data: SummaryData): Record<string, string> {
   const failedThresholds = Object.entries(summary.thresholds).flatMap(([metric, thresholds]) =>
     Object.entries(thresholds)
       .filter(([, result]) => !result.ok)
-      .map(([threshold]) => `${metric}: ${threshold}`),
+      .map(([threshold]) => {
+        const actual = thresholdActual(summary.metrics[metric] ?? {}, threshold);
+        return `${metric}: expected ${threshold}; actual ${actual ?? 'unavailable'}`;
+      }),
   );
   const markdown = [
     '# k6 Performance Summary',

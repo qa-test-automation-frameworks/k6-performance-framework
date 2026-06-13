@@ -38,11 +38,6 @@ jobs:
           SUMMARY_NAME: load
       - run: cat reports/load-summary.md >> "$GITHUB_STEP_SUMMARY"
         if: always()
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
-        if: always()
-        with:
-          name: load-results
-          path: reports/
       - name: Baseline regression check
         run: |
           if [[ -f baseline/load-summary.json ]]; then
@@ -51,3 +46,8 @@ jobs:
           else
             echo "No reviewed seeded baseline is available; absolute thresholds remain authoritative." | tee reports/regression-comparison.md
           fi
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        if: always()
+        with:
+          name: load-results
+          path: reports/
