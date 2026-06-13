@@ -25,6 +25,7 @@ jobs:
       - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6
         with:
           bun-version: 1.2.15
+      - run: npm install --global npm@10.9.4
       - run: npm ci
       - run: npm run build
       - name: Start controlled target and telemetry stack

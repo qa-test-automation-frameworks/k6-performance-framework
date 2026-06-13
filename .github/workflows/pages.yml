@@ -27,6 +27,7 @@ jobs:
         with:
           node-version: 20
           cache: npm
+      - run: npm install --global npm@10.9.4
       - run: npm ci
       - name: Download retained load history
         env:
