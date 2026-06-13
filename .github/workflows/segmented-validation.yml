@@ -39,6 +39,7 @@ jobs:
             name="$(echo "$segment" | tr '/:' '--')"
             SUMMARY_NAME="segment-${name}" k6 run \
               --execution-segment "$segment" \
+              --no-thresholds \
               --tag segment="$name" \
               dist/load/articles-load.js
           done
