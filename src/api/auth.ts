@@ -9,6 +9,7 @@ import { HttpClient } from '../utils/http-client';
 
 const envelope = <T>(key: string, value: T): Record<string, T> => ({ [key]: value });
 
+/** Provides typed operations for the RealWorld authentication endpoints. */
 export class AuthService {
   constructor(private readonly client = new HttpClient()) {}
 
@@ -31,6 +32,11 @@ export class AuthService {
   }
 }
 
+/**
+ * Creates k6 request parameters for token authentication.
+ * @param token RealWorld API token.
+ * @returns Request parameters containing the authorization header.
+ */
 export function auth(token: string) {
   return { headers: { Authorization: `Token ${token}` } };
 }

@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+## 0.3.0 - 2026-06-13
+
+- Added persistent OTEL metric export through Prometheus and a provisioned Grafana datasource.
+- Enforced measured-baseline comparisons in load and quality workflows.
+- Centralized workload thresholds and expanded endpoint and business-metric reporting.
+- Added cross-platform observability health checks and corrected k6 bundling configuration.
+- Added distinct concurrent-reader behavior, API documentation, report charts, and soak dashboards.
+- Expanded contributor guidance for authenticated scenarios and observability limitations.
+
+## 0.2.0 - 2026-06-12
+
 - Prepared the v0.2.0 evidence-focused release with measured-baseline workflows, executable endpoint
   SLOs, business metrics, executor diversity, strict configuration, and contributor guardrails.
 - Added controlled PR smoke, main load, regression, scheduled soak, quality, security, and Pages workflows.

@@ -12,6 +12,16 @@ describe('performance summaries', () => {
         },
         http_req_failed: { type: 'rate', contains: 'default', values: { rate: 0.01 } },
         checks: { type: 'rate', contains: 'default', values: { rate: 0.99 } },
+        custom_article_read_duration_ms: {
+          type: 'trend',
+          contains: 'time',
+          values: { 'p(95)': 350, 'p(99)': 600 },
+        },
+        custom_business_errors_total: {
+          type: 'counter',
+          contains: 'default',
+          values: { count: 0 },
+        },
       },
       root_group: { name: '', path: '', id: 'root', groups: [], checks: [] },
       state: { isStdOutTTY: false, isStdErrTTY: false, testRunDurationMs: 1000 },
@@ -22,5 +32,9 @@ describe('performance summaries', () => {
       '| http_req_duration | - | - | 400.00 | 700.00 |',
     );
     expect(result['reports/k6-summary-summary.md']).toContain('**Threshold status:** PASSED');
+    expect(result['reports/k6-summary-summary.md']).toContain(
+      '| custom_article_read_duration_ms |',
+    );
+    expect(result['reports/k6-summary-summary.md']).toContain('| custom_business_errors_total |');
   });
 });

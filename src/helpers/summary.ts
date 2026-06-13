@@ -55,7 +55,11 @@ function metricRow(name: string, values: MetricValues | undefined): string {
   return `| ${name} | ${median?.toFixed(2) ?? '-'} | ${p90?.toFixed(2) ?? '-'} | ${p95?.toFixed(2) ?? '-'} | ${p99?.toFixed(2) ?? '-'} | ${max?.toFixed(2) ?? '-'} | ${rate?.toFixed(4) ?? '-'} | ${count ?? '-'} |`;
 }
 
-/** Produces machine-readable and reviewer-readable artifacts from a completed k6 run. */
+/**
+ * Produces machine-readable and reviewer-readable artifacts from a completed k6 run.
+ * @param data k6 end-of-test summary data.
+ * @returns Output paths mapped to serialized report content.
+ */
 export function createSummary(data: SummaryData): Record<string, string> {
   const summary: PerformanceSummary = {
     generatedAt: new Date().toISOString(),
@@ -88,6 +92,8 @@ export function createSummary(data: SummaryData): Record<string, string> {
     metricRow('checks', summary.metrics.checks),
     metricRow('http_reqs', summary.metrics.http_reqs),
     metricRow('iterations', summary.metrics.iterations),
+    metricRow('custom_article_read_duration_ms', summary.metrics.custom_article_read_duration_ms),
+    metricRow('custom_business_errors_total', summary.metrics.custom_business_errors_total),
     '',
   ].join('\n');
 

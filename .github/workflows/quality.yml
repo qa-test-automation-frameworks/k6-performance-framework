@@ -26,7 +26,15 @@ jobs:
       - run: npm run build
       - name: Prove the regression fixture is rejected
         run: |
-          if CANDIDATE_FILE=tests/fixtures/regression-candidate.json npm run baseline:compare; then
+          set +e
+          output=$(CANDIDATE_FILE=tests/fixtures/regression-candidate.json npm run baseline:compare 2>&1)
+          status=$?
+          set -e
+          echo "$output"
+          if [ "$status" -eq 0 ]; then
             echo "Expected the inflated fixture to fail" >&2
             exit 1
           fi
+          echo "$output" | grep -q "Performance regression detected"
+      - name: Prove a healthy candidate is accepted
+        run: CANDIDATE_FILE=tests/fixtures/healthy-candidate.json npm run baseline:compare

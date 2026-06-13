@@ -48,6 +48,7 @@ function write(level: LogLevel, message: string, context?: Record<string, unknow
   else console.log(entry);
 }
 
+/** Structured, level-aware logger that redacts credential-shaped context fields. */
 export const logger = {
   debug: (message: string, context?: Record<string, unknown>): void =>
     write('debug', message, context),

@@ -8,7 +8,12 @@ const configs: Record<Exclude<EnvironmentName, 'production'>, EnvConfig> = {
   staging: stagingConfig,
 };
 
-/** Resolves and validates the selected target environment at k6 initialization time. */
+/**
+ * Resolves and validates the selected target environment at k6 initialization time.
+ * @param env Target environment name.
+ * @returns Validated environment configuration.
+ * @throws When the environment name is unknown or required production settings are absent.
+ */
 export function getConfig(env: string = __ENV.TARGET_ENV ?? 'local'): EnvConfig {
   if (env === 'production') {
     return productionConfig(__ENV.BASE_URL);
