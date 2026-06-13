@@ -18,7 +18,7 @@ export function getConfig(env: string = __ENV.TARGET_ENV ?? 'local'): EnvConfig 
   if (env === 'production') {
     return {
       ...productionConfig(__ENV.BASE_URL),
-      readOnly: __ENV.ALLOW_NON_LOCAL_LOAD !== 'true',
+      allowsWrites: __ENV.ALLOW_NON_LOCAL_LOAD === 'true',
     };
   }
 
@@ -26,7 +26,8 @@ export function getConfig(env: string = __ENV.TARGET_ENV ?? 'local'): EnvConfig 
     return {
       ...configs[env],
       baseUrl: __ENV.BASE_URL ?? configs[env].baseUrl,
-      readOnly: env === 'staging' ? __ENV.ALLOW_NON_LOCAL_LOAD !== 'true' : configs[env].readOnly,
+      allowsWrites:
+        env === 'staging' ? __ENV.ALLOW_NON_LOCAL_LOAD === 'true' : configs[env].allowsWrites,
     };
   }
 

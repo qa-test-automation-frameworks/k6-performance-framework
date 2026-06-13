@@ -6,5 +6,5 @@ export const localConfig: EnvConfig = {
   timeouts: { http: 30_000 },
   rps: { target: 20, max: 100 },
   tags: { env: 'local', app: 'conduit' },
-  readOnly: false,
+  allowsWrites: true,
 };

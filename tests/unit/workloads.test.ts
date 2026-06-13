@@ -20,6 +20,11 @@ describe('getWorkloadStages', () => {
     expect(getWorkloadStages('stress')).toEqual([{ duration: '30s', target: 12 }]);
   });
 
+  it('requires explicit full stages for non-local environments', () => {
+    setTestEnv({ TARGET_ENV: 'staging' });
+    expect(() => getWorkloadStages('stress')).toThrow('provide STRESS_STAGES');
+  });
+
   it.each([
     ['not-json', 'valid JSON'],
     ['{}', 'non-empty JSON array'],
