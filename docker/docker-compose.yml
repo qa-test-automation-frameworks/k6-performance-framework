@@ -40,6 +40,7 @@ services:
     command: ['--config.file=/etc/prometheus/prometheus.yml']
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
     ports: ['9090:9090']
     healthcheck:
       test: ['CMD', 'wget', '--spider', '-q', 'http://localhost:9090/-/healthy']
@@ -87,3 +88,4 @@ services:
 volumes:
   influxdb-data:
   grafana-data:
+  prometheus-data:

@@ -3,12 +3,15 @@ import { getWorkloadProfile } from '../../config/workloads';
 import { createApi } from '../api';
 import { browseBehavior } from '../fixtures';
 import { checkStatus, requireData } from '../helpers';
+import type { BrowseBehavior } from '../fixtures/browse-behaviors';
 
 const thinkTimeSeconds = getWorkloadProfile().thinkTimeSeconds;
+type Api = ReturnType<typeof createApi>;
 
-export function browseArticles(): void {
-  const api = createApi();
-  const behavior = browseBehavior();
+export function browseArticles(
+  api: Api = createApi(),
+  behavior: BrowseBehavior = browseBehavior(),
+): void {
   group(`browse articles: ${behavior.name}`, () => {
     const list = api.articles.list({ limit: behavior.articleLimit, offset: 0 });
     checkStatus(list, 200, 'list articles');

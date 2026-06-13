@@ -51,26 +51,23 @@ Increase the execution-segment matrix only after confirming runner capacity and 
 
 ## Credentials and Targets
 
-Provide tokens only through `K6_USER_TOKENS`. Do not commit `.env` files or generated reports.
-Write and high-volume scenarios run locally by default. Set `ALLOW_NON_LOCAL_LOAD=true` only after
-confirming authorization and capacity for the selected environment.
+Do not commit `.env` files, tokens, or generated reports. Authenticated scenarios register a
+disposable setup user at runtime. Write and high-volume scenarios run locally by default. Set
+`ALLOW_NON_LOCAL_LOAD=true` only after confirming authorization and capacity for the selected
+environment.
 
-### Obtain an Authentication Token
+### Run an Authenticated Scenario
 
-Register a disposable user against the pinned local backend:
-
-```bash
-curl -sS -X POST http://localhost:3000/api/users \
-  -H 'Content-Type: application/json' \
-  -d '{"user":{"username":"perf-user","email":"perf-user@example.test","password":"change-me"}}'
-```
-
-Read the `user.token` value from the response and provide it as a JSON array:
+Start the pinned local backend, then run:
 
 ```bash
-export K6_USER_TOKENS='["your-jwt-token"]'
+export TARGET_ENV=local
+export BASE_URL=http://localhost:3000/api
+export TEST_PROFILE=validation
 npm run load:journey
 ```
+
+The k6 `setup()` lifecycle registers the disposable user and supplies its token to the VUs.
 
 ## Troubleshooting
 

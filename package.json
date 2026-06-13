@@ -1,6 +1,7 @@
 {
   "name": "k6-performance-framework",
   "version": "0.3.0",
+  "license": "MIT",
   "packageManager": "npm@10.9.4",
   "description": "Production-grade k6 TypeScript performance test automation framework for Conduit RealWorld API",
   "homepage": "https://qa-test-automation-frameworks.github.io/k6-performance-framework/",
@@ -25,6 +26,7 @@
     "spike": "npm run build && k6 run --out json=reports/spike-results.json dist/spike/traffic-spike.js",
     "soak": "npm run build && k6 run --out json=reports/soak-results.json dist/soak/endurance-soak.js",
     "breakpoint": "npm run build && k6 run --out json=reports/breakpoint-results.json dist/breakpoint/breakpoint-test.js",
+    "breakpoint:search": "npm run build && node scripts/find-breakpoint.cjs",
     "lint": "eslint src tests config --ext .ts",
     "format": "prettier --write src tests config scripts .github package.json",
     "format:check": "prettier --check src tests config scripts .github package.json",

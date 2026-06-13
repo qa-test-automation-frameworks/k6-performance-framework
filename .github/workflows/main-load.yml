@@ -29,6 +29,8 @@ jobs:
         run: |
           source .github/scripts/start-realworld.sh
           k6 run dist/load/articles-load.js
+          TEST_PROFILE=validation SUMMARY_NAME=authenticated-validation \
+            k6 run dist/load/user-journey-load.js
         env:
           TARGET_ENV: local
           BASE_URL: http://localhost:3000/api
@@ -36,12 +38,16 @@ jobs:
           SUMMARY_NAME: load
       - run: cat reports/load-summary.md >> "$GITHUB_STEP_SUMMARY"
         if: always()
+      - name: Baseline regression check
+        run: |
+          if [[ -f baseline/load-summary.json ]]; then
+            CANDIDATE_FILE=reports/load-summary.json npm run baseline:compare | tee reports/regression-comparison.md
+            cat reports/regression-comparison.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "No reviewed seeded baseline is available; absolute thresholds remain authoritative." | tee reports/regression-comparison.md
+          fi
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         if: always()
         with:
           name: load-results
           path: reports/
-      - name: Baseline regression check
-        run: |
-          CANDIDATE_FILE=reports/load-summary.json npm run baseline:compare | tee reports/regression-comparison.md
-          cat reports/regression-comparison.md >> "$GITHUB_STEP_SUMMARY"

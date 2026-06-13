@@ -30,7 +30,7 @@ identifiers must never be used as tags. Local InfluxDB data expires after seven 
 The hosted RealWorld API is used only by the short read-only smoke workflow. Main load, regression,
 and soak workflows provision the backend at pinned commit
 `c8c66858a436a6e07f445fffe2253a65ff6dcb58`. Local write tests require tokens supplied through
-`K6_USER_TOKENS`; no credentials are stored in the repository.
+the k6 setup lifecycle; no credentials are stored in the repository.
 
 ## Failure Model
 

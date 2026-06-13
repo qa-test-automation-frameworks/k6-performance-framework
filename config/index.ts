@@ -16,13 +16,17 @@ const configs: Record<Exclude<EnvironmentName, 'production'>, EnvConfig> = {
  */
 export function getConfig(env: string = __ENV.TARGET_ENV ?? 'local'): EnvConfig {
   if (env === 'production') {
-    return productionConfig(__ENV.BASE_URL);
+    return {
+      ...productionConfig(__ENV.BASE_URL),
+      readOnly: __ENV.ALLOW_NON_LOCAL_LOAD !== 'true',
+    };
   }
 
   if (env === 'local' || env === 'staging') {
     return {
       ...configs[env],
       baseUrl: __ENV.BASE_URL ?? configs[env].baseUrl,
+      readOnly: env === 'staging' ? __ENV.ALLOW_NON_LOCAL_LOAD !== 'true' : configs[env].readOnly,
     };
   }
 
