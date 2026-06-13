@@ -5,11 +5,10 @@ import { articleFixture } from '../fixtures';
 import { assertWriteTarget, checkStatus, requireData, tokenForVu } from '../helpers';
 
 const thinkTimeSeconds = getWorkloadProfile().thinkTimeSeconds;
+type Api = ReturnType<typeof createApi>;
 
-export function authenticatedCrud(): void {
+export function authenticatedCrud(token = tokenForVu(), api: Api = createApi()): void {
   assertWriteTarget();
-  const token = tokenForVu();
-  const api = createApi();
   group('authenticated article CRUD', () => {
     const created = api.articles.create(token, articleFixture());
     checkStatus(created, 201, 'create article');

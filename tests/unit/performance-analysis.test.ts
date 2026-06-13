@@ -37,4 +37,21 @@ describe('performance summaries', () => {
     );
     expect(result['reports/k6-summary-summary.md']).toContain('| custom_business_errors_total |');
   });
+
+  it('reports actual values for failed thresholds', () => {
+    const result = createSummary({
+      metrics: {
+        http_req_duration: {
+          values: { 'p(95)': 750 },
+          thresholds: { 'p(95)<500': { ok: false } },
+        },
+      },
+      root_group: {},
+      state: {},
+    });
+
+    expect(result['reports/k6-summary-summary.md']).toContain(
+      'http_req_duration: expected p(95)<500; actual 750',
+    );
+  });
 });
