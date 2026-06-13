@@ -11,6 +11,7 @@ import { HttpClient } from '../utils/http-client';
 import { auth } from './auth';
 import { toQuery } from './query';
 
+/** Provides typed operations for RealWorld article endpoints. */
 export class ArticlesService {
   constructor(private readonly client = new HttpClient()) {}
 

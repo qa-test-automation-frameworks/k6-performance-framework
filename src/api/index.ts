@@ -11,6 +11,11 @@ export * from './comments';
 export * from './profiles';
 export * from './tags';
 
+/**
+ * Creates API service objects backed by one shared HTTP client.
+ * @param client Transport shared by all services.
+ * @returns Typed services for the complete RealWorld API surface.
+ */
 export function createApi(client = new HttpClient()) {
   return {
     auth: new AuthService(client),

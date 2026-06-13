@@ -3,6 +3,7 @@ import { rampingVus } from '../../config/workloads';
 import { concurrentReaders } from '../../src/scenarios';
 import { createSummary } from '../../src/helpers';
 import { summaryTrendStats } from '../../src/types/config.types';
+import { breakpointThresholds } from '../../config/thresholds/breakpoint';
 
 const validation = __ENV.TEST_PROFILE === 'validation';
 export const options: Options = {
@@ -21,14 +22,7 @@ export const options: Options = {
           ],
     ),
   },
-  thresholds: {
-    http_req_failed: [{ threshold: 'rate<0.10', abortOnFail: true, delayAbortEval: '10s' }],
-    http_req_duration: [
-      { threshold: 'p(95)<3000', abortOnFail: true, delayAbortEval: '10s' },
-      { threshold: 'p(99)<5000', abortOnFail: true, delayAbortEval: '10s' },
-    ],
-    iterations: ['rate>5'],
-  },
+  thresholds: breakpointThresholds,
   summaryTrendStats,
 };
 export default concurrentReaders;

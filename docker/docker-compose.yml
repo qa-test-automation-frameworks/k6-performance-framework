@@ -32,13 +32,27 @@ services:
     depends_on:
       influxdb:
         condition: service_healthy
+      prometheus:
+        condition: service_healthy
+
+  prometheus:
+    image: prom/prometheus:v3.9.1
+    command: ['--config.file=/etc/prometheus/prometheus.yml']
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    ports: ['9090:9090']
+    healthcheck:
+      test: ['CMD', 'wget', '--spider', '-q', 'http://localhost:9090/-/healthy']
+      interval: 5s
+      timeout: 3s
+      retries: 30
 
   otel-collector:
     image: otel/opentelemetry-collector-contrib:0.153.0
     command: ['--config=/etc/otelcol-contrib/config.yaml']
     volumes:
       - ./otel/config.yaml:/etc/otelcol-contrib/config.yaml:ro
-    ports: ['4317:4317', '4318:4318', '13133:13133']
+    ports: ['4317:4317', '4318:4318', '8889:8889', '13133:13133']
     healthcheck:
       test: ['CMD', '/otelcol-contrib', 'validate', '--config=/etc/otelcol-contrib/config.yaml']
       interval: 10s

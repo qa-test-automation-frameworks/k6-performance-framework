@@ -1,0 +1,40 @@
+{
+  "title": "k6 Soak Stability",
+  "uid": "k6-soak-stability",
+  "schemaVersion": 41,
+  "version": 1,
+  "refresh": "30s",
+  "time": { "from": "now-3h", "to": "now" },
+  "tags": ["k6", "soak", "stability"],
+  "panels": [
+    {
+      "type": "timeseries",
+      "title": "Latency Distribution",
+      "gridPos": { "h": 9, "w": 12, "x": 0, "y": 0 },
+      "datasource": { "uid": "influxdb-k6" },
+      "targets": [
+        { "refId": "A", "query": "from(bucket: \"k6\") |> range(start: v.timeRangeStart) |> filter(fn: (r) => r._measurement == \"http_req_duration\") |> aggregateWindow(every: 1m, fn: median)" },
+        { "refId": "B", "query": "from(bucket: \"k6\") |> range(start: v.timeRangeStart) |> filter(fn: (r) => r._measurement == \"http_req_duration\") |> aggregateWindow(every: 1m, fn: (tables=<-, column) => tables |> quantile(q: 0.95, column: column))" },
+        { "refId": "C", "query": "from(bucket: \"k6\") |> range(start: v.timeRangeStart) |> filter(fn: (r) => r._measurement == \"http_req_duration\") |> aggregateWindow(every: 1m, fn: (tables=<-, column) => tables |> quantile(q: 0.99, column: column))" }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Error Rate Stability",
+      "gridPos": { "h": 9, "w": 6, "x": 12, "y": 0 },
+      "datasource": { "uid": "influxdb-k6" },
+      "targets": [
+        { "query": "from(bucket: \"k6\") |> range(start: v.timeRangeStart) |> filter(fn: (r) => r._measurement == \"http_req_failed\") |> aggregateWindow(every: 1m, fn: mean)" }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Active Virtual Users",
+      "gridPos": { "h": 9, "w": 6, "x": 18, "y": 0 },
+      "datasource": { "uid": "influxdb-k6" },
+      "targets": [
+        { "query": "from(bucket: \"k6\") |> range(start: v.timeRangeStart) |> filter(fn: (r) => r._measurement == \"vus\") |> aggregateWindow(every: 1m, fn: max)" }
+      ]
+    }
+  ]
+}
