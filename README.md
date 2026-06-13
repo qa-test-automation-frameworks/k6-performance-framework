@@ -105,6 +105,7 @@ npm run load:journey
 - [Architecture](docs/architecture.md)
 - [Contributor onboarding](docs/onboarding.md)
 - [Results interpretation](docs/results-interpretation.md)
+- [Visual performance evidence](docs/evidence.md)
 - [Architecture decisions](docs/adr/README.md)
 - [Capability status](docs/capability-status.md)
 - [v0.3.0 release notes](docs/releases/v0.3.0.md)

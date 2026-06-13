@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="360" viewBox="0 0 1000 360">
+  <rect width="1000" height="360" fill="#111827"/>
+  <text x="40" y="48" fill="#f9fafb" font-family="Arial" font-size="26">Threshold Failure — Example</text>
+  <rect x="40" y="90" width="920" height="190" rx="10" fill="#1f2937" stroke="#ef4444" stroke-width="2"/>
+  <text x="70" y="130" fill="#fca5a5" font-family="Arial" font-size="19">FAILED · http_req_duration{name:GET /articles/:slug}</text>
+  <text x="70" y="178" fill="#d1d5db" font-family="Arial" font-size="18">Expected</text>
+  <text x="250" y="178" fill="#f9fafb" font-family="Arial" font-size="18">p(95) &lt; 500 ms</text>
+  <text x="70" y="220" fill="#d1d5db" font-family="Arial" font-size="18">Actual</text>
+  <text x="250" y="220" fill="#ef4444" font-family="Arial" font-size="24">742 ms</text>
+  <text x="520" y="220" fill="#fca5a5" font-family="Arial" font-size="18">+48.4% over objective</text>
+  <text x="40" y="325" fill="#9ca3af" font-family="Arial" font-size="13">Illustrative failure format. Retain the source summary for measured evidence.</text>
+</svg>
