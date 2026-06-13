@@ -45,6 +45,7 @@
     "sbom": "node -e \"require('node:fs').mkdirSync('artifacts',{recursive:true})\" && cyclonedx-npm --output-format JSON --output-file artifacts/sbom.cdx.json",
     "audit": "npm audit --audit-level=moderate",
     "secrets:scan": "node scripts/scan-secrets.cjs",
+    "release:validate": "node scripts/validate-release-version.cjs",
     "hooks:install": "git config core.hooksPath .githooks"
   },
   "devDependencies": {
