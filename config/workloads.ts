@@ -109,13 +109,25 @@ export function getWorkloadProfile(): WorkloadProfile {
   };
 }
 
-/** Resolves a typed stage profile, optionally overridden with validated JSON. */
+/**
+ * Resolves a typed stage profile for the selected environment and test profile.
+ * A workload can be overridden with a JSON array in its derived environment variable, such as
+ * `STRESS_STAGES` or `AUTHENTICATED_LOAD_STAGES`.
+ * @param workload Named staged workload.
+ * @returns Validated duration/target stages.
+ * @throws When an override is invalid JSON or is not a non-empty duration/target array.
+ */
 export function getWorkloadStages(workload: StagedWorkload): WorkloadStage[] {
   const overrideName =
     `${workload.replace(/[A-Z]/g, (letter) => `_${letter}`)}_STAGES`.toUpperCase();
   const raw = __ENV[overrideName];
   if (raw) {
-    const stages = JSON.parse(raw) as unknown;
+    let stages: unknown;
+    try {
+      stages = JSON.parse(raw) as unknown;
+    } catch {
+      throw new Error(`${overrideName} must contain valid JSON`);
+    }
     if (
       !Array.isArray(stages) ||
       stages.length === 0 ||

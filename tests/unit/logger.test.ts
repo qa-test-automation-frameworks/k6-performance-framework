@@ -28,4 +28,18 @@ describe('logger', () => {
     expect(entry.context.authorization).toBe('[REDACTED]');
     expect(entry.context.nested.token).toBe('[REDACTED]');
   });
+
+  it('routes each configured log level', () => {
+    const info = vi.spyOn(console, 'log').mockImplementation(() => undefined);
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+    const error = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+
+    logger.info('info');
+    logger.warn('warn');
+    logger.error('error');
+
+    expect(info).toHaveBeenCalledOnce();
+    expect(warn).toHaveBeenCalledOnce();
+    expect(error).toHaveBeenCalledOnce();
+  });
 });
