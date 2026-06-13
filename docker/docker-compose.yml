@@ -88,6 +88,14 @@ services:
       K6_OTEL_METRIC_PREFIX: k6_
       TEST_PROFILE: ${TEST_PROFILE:-validation}
       K6_TAGS: run_id=${K6_RUN_ID:-local-development},environment=${TARGET_ENV:-local}
+      K6_RUN_ID: ${K6_RUN_ID:-local-development}
+      K6_SCRIPT: ${K6_SCRIPT:-dist/load/articles-load.js}
+      SUMMARY_NAME: ${SUMMARY_NAME:-observed}
+      TARGET_ID: ${TARGET_ID:-realworld-local}
+      TARGET_COMMIT: ${TARGET_COMMIT:-unknown}
+      FRAMEWORK_COMMIT: ${FRAMEWORK_COMMIT:-unknown}
+      K6_VERSION: ${K6_VERSION:-2.0.0}
+      RUNNER_CLASS: ${RUNNER_CLASS:-local-docker}
     depends_on:
       influxdb:
         condition: service_healthy

@@ -11,6 +11,12 @@ on:
         default: full
         type: choice
         options: [full, validation]
+      scenario:
+        description: Controlled advanced workload
+        required: true
+        default: soak
+        type: choice
+        options: [stress, spike, soak, breakpoint]
 
 permissions:
   contents: read
@@ -33,15 +39,32 @@ jobs:
           k6-version: 2.0.0
       - run: npm ci
       - run: npm run build
-      - name: Run controlled soak test
+      - name: Run controlled advanced test
         run: |
           source .github/scripts/start-realworld.sh
-          k6 run dist/soak/endurance-soak.js
+          case "${SCENARIO}" in
+            stress) script="dist/stress/articles-stress.js" ;;
+            spike) script="dist/spike/traffic-spike.js" ;;
+            soak) script="dist/soak/endurance-soak.js" ;;
+            breakpoint) script="dist/breakpoint/breakpoint-test.js" ;;
+          esac
+          k6 run "$script"
         env:
+          SCENARIO: ${{ inputs.scenario || 'soak' }}
           TARGET_ENV: local
           BASE_URL: http://localhost:3000/api
           TEST_PROFILE: ${{ inputs.profile == 'validation' && 'validation' || '' }}
-          SUMMARY_NAME: soak
+          SUMMARY_NAME: ${{ inputs.scenario || 'soak' }}
+          TARGET_ID: realworld-local
+          TARGET_COMMIT: c8c66858a436a6e07f445fffe2253a65ff6dcb58
+          FRAMEWORK_COMMIT: ${{ github.sha }}
+          K6_VERSION: 2.0.0
+          RUNNER_CLASS: github-hosted
+      - name: Publish performance summary
+        if: always()
+        run: |
+          summary="reports/${{ inputs.scenario || 'soak' }}-summary.md"
+          if [ -f "$summary" ]; then cat "$summary" >> "$GITHUB_STEP_SUMMARY"; fi
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         if: always()
         with:
