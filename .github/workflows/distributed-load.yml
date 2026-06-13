@@ -62,6 +62,11 @@ jobs:
           ALLOW_NON_LOCAL_LOAD: 'true'
           TEST_PROFILE: full
           SUMMARY_NAME: ${{ matrix.name }}
+          TARGET_ID: ${{ inputs.target_url }}
+          TARGET_COMMIT: external
+          FRAMEWORK_COMMIT: ${{ github.sha }}
+          K6_VERSION: 2.0.0
+          RUNNER_CLASS: self-hosted-performance
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         if: always()
         with:

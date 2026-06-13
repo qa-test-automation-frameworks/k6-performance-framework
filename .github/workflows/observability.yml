@@ -34,6 +34,12 @@ jobs:
           docker compose -f docker/docker-compose.yml up -d --build
           npm run docker:health
       - name: Emit and verify telemetry
+        env:
+          TARGET_ID: realworld-local
+          TARGET_COMMIT: c8c66858a436a6e07f445fffe2253a65ff6dcb58
+          FRAMEWORK_COMMIT: ${{ github.sha }}
+          K6_VERSION: 2.0.0
+          RUNNER_CLASS: github-hosted
         run: |
           K6_RUN_ID="ci-${GITHUB_RUN_ID}" npm run load:observed
           sleep 10
