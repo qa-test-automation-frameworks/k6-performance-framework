@@ -1,5 +1,8 @@
 # Results Interpretation
 
+See [visual performance evidence](evidence.md) for the expected overview, soak, and threshold
+failure review format.
+
 ## Release Decision Order
 
 1. Confirm the target, commit, k6 version, profile, duration, and sample count.

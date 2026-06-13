@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="420" viewBox="0 0 1000 420">
+  <rect width="1000" height="420" fill="#111827"/>
+  <text x="40" y="48" fill="#f9fafb" font-family="Arial" font-size="26">Soak Stability — Example</text>
+  <text x="40" y="78" fill="#9ca3af" font-family="Arial" font-size="15">Two-hour sustained profile · illustrative values only</text>
+  <line x1="70" y1="340" x2="950" y2="340" stroke="#4b5563"/>
+  <line x1="70" y1="110" x2="70" y2="340" stroke="#4b5563"/>
+  <polyline points="70,265 150,258 230,270 310,250 390,262 470,255 550,268 630,248 710,260 790,252 870,266 950,256"
+    fill="none" stroke="#34d399" stroke-width="4"/>
+  <polyline points="70,225 150,218 230,232 310,210 390,224 470,215 550,230 630,205 710,220 790,212 870,228 950,216"
+    fill="none" stroke="#fbbf24" stroke-width="4"/>
+  <text x="760" y="115" fill="#34d399" font-family="Arial" font-size="15">p95 latency</text>
+  <text x="760" y="140" fill="#fbbf24" font-family="Arial" font-size="15">p99 latency</text>
+  <text x="70" y="375" fill="#9ca3af" font-family="Arial" font-size="13">0 min</text>
+  <text x="900" y="375" fill="#9ca3af" font-family="Arial" font-size="13">120 min</text>
+  <text x="40" y="405" fill="#9ca3af" font-family="Arial" font-size="13">Review for drift, periodic spikes, and error accumulation.</text>
+</svg>
