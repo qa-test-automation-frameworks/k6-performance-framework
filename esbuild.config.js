@@ -17,7 +17,8 @@ esbuild
   .build({
     entryPoints,
     bundle: true,
-    platform: 'node',
+    platform: 'browser',
+    format: 'cjs',
     target: 'es2022',
     outdir: 'dist',
     outbase: 'tests',
