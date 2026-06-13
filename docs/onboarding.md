@@ -22,11 +22,16 @@ npm run docker:health
 
 Grafana: `http://localhost:3001`  
 InfluxDB: `http://localhost:8086`  
+Prometheus: `http://localhost:9090`
 OTLP gRPC/HTTP: `localhost:4317` / `localhost:4318`
 
 Use `npm run docker:down` when finished. The command removes local observability volumes.
 Observed runs add Grafana start/end annotations and bounded run tags through
 `npm run load:observed`.
+
+The OTEL output is an experimental k6 metrics path and does not guarantee parity with every
+standard k6 metric. The InfluxDB output remains the complete dashboard source; Prometheus exposes
+the OTLP metric subset for collector and exporter validation.
 
 ## Segmented Execution
 
@@ -49,6 +54,23 @@ Increase the execution-segment matrix only after confirming runner capacity and 
 Provide tokens only through `K6_USER_TOKENS`. Do not commit `.env` files or generated reports.
 Write and high-volume scenarios run locally by default. Set `ALLOW_NON_LOCAL_LOAD=true` only after
 confirming authorization and capacity for the selected environment.
+
+### Obtain an Authentication Token
+
+Register a disposable user against the pinned local backend:
+
+```bash
+curl -sS -X POST http://localhost:3000/api/users \
+  -H 'Content-Type: application/json' \
+  -d '{"user":{"username":"perf-user","email":"perf-user@example.test","password":"change-me"}}'
+```
+
+Read the `user.token` value from the response and provide it as a JSON array:
+
+```bash
+export K6_USER_TOKENS='["your-jwt-token"]'
+npm run load:journey
+```
 
 ## Troubleshooting
 
