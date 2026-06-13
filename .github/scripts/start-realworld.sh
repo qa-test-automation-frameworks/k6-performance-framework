@@ -34,4 +34,48 @@ if [ "$ready" != true ]; then
   return 1 2>/dev/null || exit 1
 fi
 
+seed_suffix="${GITHUB_RUN_ID:-local}-${GITHUB_RUN_ATTEMPT:-1}"
+seed_user="perf-seed-${seed_suffix}"
+seed_email="${seed_user}@example.test"
+seed_password="ci-performance-seed"
+registration_response="$(
+  curl --fail --silent --show-error \
+    -X POST "http://localhost:3000/api/users" \
+    -H 'Content-Type: application/json' \
+    -d "{\"user\":{\"username\":\"${seed_user}\",\"email\":\"${seed_email}\",\"password\":\"${seed_password}\"}}"
+)"
+seed_token="$(
+  REGISTRATION_RESPONSE="$registration_response" node -e '
+    const response = JSON.parse(process.env.REGISTRATION_RESPONSE);
+    if (!response.user?.token) throw new Error("Seed user registration returned no token");
+    process.stdout.write(response.user.token);
+  '
+)"
+
+for article_number in 1 2 3 4 5; do
+  curl --fail --silent --show-error \
+    -X POST "http://localhost:3000/api/articles" \
+    -H 'Content-Type: application/json' \
+    -H "Authorization: Token ${seed_token}" \
+    -d "{\"article\":{\"title\":\"Performance seed ${seed_suffix}-${article_number}\",\"description\":\"Deterministic CI performance fixture\",\"body\":\"Seeded article body ${article_number}\",\"tagList\":[\"performance\",\"seed\"]}}" \
+    >/dev/null
+done
+
+seeded_count="$(
+  curl --fail --silent --show-error "http://localhost:3000/api/articles?limit=5" |
+    node -e '
+      let input = "";
+      process.stdin.on("data", (chunk) => input += chunk);
+      process.stdin.on("end", () => {
+        const response = JSON.parse(input);
+        process.stdout.write(String(response.articles?.length ?? 0));
+      });
+    '
+)"
+if [ "$seeded_count" -lt 5 ]; then
+  echo "RealWorld API seed validation failed: expected at least 5 articles, found ${seeded_count}" >&2
+  exit 1
+fi
+echo "Seeded ${seeded_count} articles for performance scenarios"
+
 cd "$caller_dir"

@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { getConfig } from '../../config';
+import { loadThresholds } from '../../config/thresholds/load';
 import { getWorkloadProfile } from '../../config/workloads';
 import { setTestEnv } from './setup';
 
@@ -40,5 +41,15 @@ describe('getConfig', () => {
     });
     setTestEnv({ TARGET_RPS: '0' });
     expect(() => getWorkloadProfile()).toThrow('TARGET_RPS must be a positive number');
+  });
+});
+
+describe('load thresholds', () => {
+  it('requires samples for every mandatory read transaction', () => {
+    expect(loadThresholds).toMatchObject({
+      'http_reqs{name:GET /articles}': ['count>0'],
+      'http_reqs{name:GET /articles/:slug}': ['count>0'],
+      'http_reqs{name:GET /tags}': ['count>0'],
+    });
   });
 });
