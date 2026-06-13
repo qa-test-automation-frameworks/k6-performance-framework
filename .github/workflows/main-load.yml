@@ -41,3 +41,7 @@ jobs:
         with:
           name: load-results
           path: reports/
+      - name: Baseline regression check
+        run: |
+          CANDIDATE_FILE=reports/load-summary.json npm run baseline:compare | tee reports/regression-comparison.md
+          cat reports/regression-comparison.md >> "$GITHUB_STEP_SUMMARY"
