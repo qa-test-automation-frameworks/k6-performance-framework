@@ -8,6 +8,7 @@ import type {
 import { HttpClient } from '../utils/http-client';
 import { auth } from './auth';
 
+/** Provides typed operations for RealWorld comment endpoints. */
 export class CommentsService {
   constructor(private readonly client = new HttpClient()) {}
 

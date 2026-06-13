@@ -2,6 +2,7 @@ import type { HttpResponse, ProfileResponse } from '../types';
 import { HttpClient } from '../utils/http-client';
 import { auth } from './auth';
 
+/** Provides typed operations for RealWorld profile endpoints. */
 export class ProfilesService {
   constructor(private readonly client = new HttpClient()) {}
 
