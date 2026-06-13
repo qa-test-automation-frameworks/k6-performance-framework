@@ -1,6 +1,6 @@
 services:
   influxdb:
-    image: influxdb:2.7.12
+    image: influxdb:2.7.12@sha256:b8d940ca9376f85118260f5b6bd236b8a00b1749c3350c5578d4cde8e27f31f2
     ports: ['8086:8086']
     environment:
       DOCKER_INFLUXDB_INIT_MODE: setup
@@ -19,7 +19,7 @@ services:
       retries: 30
 
   grafana:
-    image: grafana/grafana:13.0.2
+    image: grafana/grafana:13.0.2@sha256:5dad0df181cb644a14e13617b913b261a54f7d4fd4510721dba420929f35bea2
     ports: ['3001:3000']
     environment:
       GF_SECURITY_ADMIN_USER: admin
@@ -36,7 +36,7 @@ services:
         condition: service_healthy
 
   prometheus:
-    image: prom/prometheus:v3.9.1
+    image: prom/prometheus:v3.9.1@sha256:1f0f50f06acaceb0f5670d2c8a658a599affe7b0d8e78b898c1035653849a702
     command: ['--config.file=/etc/prometheus/prometheus.yml']
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
@@ -49,7 +49,7 @@ services:
       retries: 30
 
   otel-collector:
-    image: otel/opentelemetry-collector-contrib:0.153.0
+    image: otel/opentelemetry-collector-contrib:0.153.0@sha256:93aad750175cbf1a973ae1c5886c3371f4d800f61be25cdd26870b8441ffe9fa
     command: ['--config=/etc/otelcol-contrib/config.yaml']
     volumes:
       - ./otel/config.yaml:/etc/otelcol-contrib/config.yaml:ro
