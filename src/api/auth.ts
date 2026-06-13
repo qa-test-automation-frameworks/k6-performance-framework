@@ -15,19 +15,27 @@ export class AuthService {
   constructor(private readonly client = new HttpClient()) {}
 
   login(payload: LoginRequest): HttpResponse<UserResponse> {
-    return this.client.post('/users/login', 'POST /users/login', envelope('user', payload));
+    return this.client.post('/users/login', 'POST /users/login', envelope('user', payload), {
+      metricGroup: 'authentication',
+    });
   }
 
   register(payload: RegisterRequest): HttpResponse<UserResponse> {
-    return this.client.post('/users', 'POST /users', envelope('user', payload));
+    return this.client.post('/users', 'POST /users', envelope('user', payload), {
+      metricGroup: 'authentication',
+    });
   }
 
   current(token: string): HttpResponse<UserResponse> {
-    return this.client.get('/user', 'GET /user', { params: auth(token) });
+    return this.client.get('/user', 'GET /user', {
+      metricGroup: 'authentication',
+      params: auth(token),
+    });
   }
 
   update(token: string, payload: UserUpdatePayload): HttpResponse<UserResponse> {
     return this.client.put('/user', 'PUT /user', envelope('user', payload), {
+      metricGroup: 'authentication',
       params: auth(token),
     });
   }

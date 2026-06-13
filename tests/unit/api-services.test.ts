@@ -24,12 +24,14 @@ describe('API services', () => {
     articles.list({ tag: 'load test', limit: 10 });
     articles.create('token', { title: 't', description: 'd', body: 'b' });
 
-    expect(mock.get).toHaveBeenCalledWith('/articles?tag=load%20test&limit=10', 'GET /articles');
+    expect(mock.get).toHaveBeenCalledWith('/articles?tag=load%20test&limit=10', 'GET /articles', {
+      metricGroup: 'article-read',
+    });
     expect(mock.post).toHaveBeenCalledWith(
       '/articles',
       'POST /articles',
       { article: { title: 't', description: 'd', body: 'b' } },
-      { params: { headers: { Authorization: 'Token token' } } },
+      { metricGroup: 'article-write', params: { headers: { Authorization: 'Token token' } } },
     );
   });
 
@@ -40,20 +42,24 @@ describe('API services', () => {
     new ProfilesService(mock as never).follow('token', 'user name');
     new TagsService(mock as never).list();
 
-    expect(mock.post).toHaveBeenCalledWith('/users/login', 'POST /users/login', {
-      user: { email: 'a@example.test', password: 'secret' },
-    });
+    expect(mock.post).toHaveBeenCalledWith(
+      '/users/login',
+      'POST /users/login',
+      { user: { email: 'a@example.test', password: 'secret' } },
+      { metricGroup: 'authentication' },
+    );
     expect(mock.get).toHaveBeenCalledWith(
       '/articles/article%20slug/comments',
       'GET /articles/:slug/comments',
+      { metricGroup: 'comment' },
     );
     expect(mock.post).toHaveBeenCalledWith(
       '/profiles/user%20name/follow',
       'POST /profiles/:username/follow',
       {},
-      { params: { headers: { Authorization: 'Token token' } } },
+      { metricGroup: 'profile', params: { headers: { Authorization: 'Token token' } } },
     );
-    expect(mock.get).toHaveBeenCalledWith('/tags', 'GET /tags');
+    expect(mock.get).toHaveBeenCalledWith('/tags', 'GET /tags', { metricGroup: 'tag' });
   });
 
   it('covers the remaining authenticated and mutation operations', () => {
@@ -78,12 +84,13 @@ describe('API services', () => {
     profiles.unfollow('token', 'user name');
 
     expect(mock.get).toHaveBeenCalledWith('/articles/feed?limit=5', 'GET /articles/feed', {
+      metricGroup: 'article-read',
       params: { headers: { Authorization: 'Token token' } },
     });
     expect(mock.delete).toHaveBeenCalledWith(
       '/articles/article%20slug/comments/7',
       'DELETE /articles/:slug/comments/:id',
-      { params: { headers: { Authorization: 'Token token' } } },
+      { metricGroup: 'comment', params: { headers: { Authorization: 'Token token' } } },
     );
   });
 });
