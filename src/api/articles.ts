@@ -16,7 +16,9 @@ export class ArticlesService {
   constructor(private readonly client = new HttpClient()) {}
 
   list(query: ArticlesQuery = {}): HttpResponse<ArticlesListResponse> {
-    return this.client.get(`/articles${toQuery(query)}`, 'GET /articles');
+    return this.client.get(`/articles${toQuery(query)}`, 'GET /articles', {
+      metricGroup: 'article-read',
+    });
   }
 
   feed(
@@ -24,12 +26,15 @@ export class ArticlesService {
     query: Pick<ArticlesQuery, 'limit' | 'offset'> = {},
   ): HttpResponse<ArticlesListResponse> {
     return this.client.get(`/articles/feed${toQuery(query)}`, 'GET /articles/feed', {
+      metricGroup: 'article-read',
       params: auth(token),
     });
   }
 
   get(slug: string): HttpResponse<ArticleResponse> {
-    return this.client.get(`/articles/${encodeURIComponent(slug)}`, 'GET /articles/:slug');
+    return this.client.get(`/articles/${encodeURIComponent(slug)}`, 'GET /articles/:slug', {
+      metricGroup: 'article-read',
+    });
   }
 
   create(token: string, payload: ArticlePayload): HttpResponse<ArticleResponse> {
@@ -37,7 +42,7 @@ export class ArticlesService {
       '/articles',
       'POST /articles',
       { article: payload },
-      { params: auth(token) },
+      { metricGroup: 'article-write', params: auth(token) },
     );
   }
 
@@ -50,12 +55,13 @@ export class ArticlesService {
       `/articles/${encodeURIComponent(slug)}`,
       'PUT /articles/:slug',
       { article: payload },
-      { params: auth(token) },
+      { metricGroup: 'article-write', params: auth(token) },
     );
   }
 
   delete(token: string, slug: string): HttpResponse<EmptyResponse> {
     return this.client.delete(`/articles/${encodeURIComponent(slug)}`, 'DELETE /articles/:slug', {
+      metricGroup: 'article-write',
       params: auth(token),
     });
   }
@@ -65,7 +71,7 @@ export class ArticlesService {
       `/articles/${encodeURIComponent(slug)}/favorite`,
       'POST /articles/:slug/favorite',
       {},
-      { params: auth(token) },
+      { metricGroup: 'article-write', params: auth(token) },
     );
   }
 
@@ -73,7 +79,7 @@ export class ArticlesService {
     return this.client.delete(
       `/articles/${encodeURIComponent(slug)}/favorite`,
       'DELETE /articles/:slug/favorite',
-      { params: auth(token) },
+      { metricGroup: 'article-write', params: auth(token) },
     );
   }
 }

@@ -2,13 +2,22 @@ import { sleep } from 'k6';
 import http, { type Params, type RequestBody, type Response } from 'k6/http';
 import { getConfig } from '../../config';
 import type { HttpMethod, HttpRequestOptions, HttpResponse } from '../types/api.types';
+import type { BusinessMetricGroup } from '../types/api.types';
 import type { EnvConfig } from '../types/config.types';
 import { logger } from './logger';
 import {
   articleReadDuration,
+  articleReadSuccessRate,
   articleWriteDuration,
+  articleWriteSuccessRate,
   authDuration,
   authSuccessRate,
+  commentDuration,
+  commentSuccessRate,
+  profileDuration,
+  profileSuccessRate,
+  tagDuration,
+  tagSuccessRate,
   totalBusinessErrors,
 } from './metrics';
 
@@ -28,21 +37,30 @@ function parseJson<T>(response: Response): T | null {
   }
 }
 
-function recordBusinessMetrics(method: HttpMethod, endpointName: string, response: Response): void {
+const metricRecorders: Record<
+  BusinessMetricGroup,
+  { duration: typeof authDuration; success: typeof authSuccessRate }
+> = {
+  authentication: { duration: authDuration, success: authSuccessRate },
+  'article-read': { duration: articleReadDuration, success: articleReadSuccessRate },
+  'article-write': { duration: articleWriteDuration, success: articleWriteSuccessRate },
+  comment: { duration: commentDuration, success: commentSuccessRate },
+  profile: { duration: profileDuration, success: profileSuccessRate },
+  tag: { duration: tagDuration, success: tagSuccessRate },
+};
+
+function recordBusinessMetrics(
+  endpointName: string,
+  metricGroup: BusinessMetricGroup | undefined,
+  response: Response,
+): void {
   const duration = response.timings.duration;
-  if (
-    endpointName.includes('/users') ||
-    endpointName === 'GET /user' ||
-    endpointName === 'PUT /user'
-  ) {
-    authDuration.add(duration, { endpoint: endpointName });
-    authSuccessRate.add(response.status >= 200 && response.status < 400, {
+  if (metricGroup) {
+    const recorder = metricRecorders[metricGroup];
+    recorder.duration.add(duration, { endpoint: endpointName });
+    recorder.success.add(response.status >= 200 && response.status < 400, {
       endpoint: endpointName,
     });
-  } else if (endpointName.includes('/articles')) {
-    const metric =
-      method === 'GET' || method === 'HEAD' ? articleReadDuration : articleWriteDuration;
-    metric.add(duration, { endpoint: endpointName });
   }
   if (response.status >= 400) {
     totalBusinessErrors.add(1, { endpoint: endpointName, status: String(response.status) });
@@ -88,7 +106,7 @@ export class HttpClient {
       attempts += 1;
       logger.debug('HTTP request', { method, url, tags: params.tags, attempt: attempts });
       response = http.request(method, url, requestBody, params);
-      recordBusinessMetrics(method, endpointName, response);
+      recordBusinessMetrics(endpointName, options.metricGroup, response);
       logger.debug('HTTP response', { method, url, status: response.status, attempt: attempts });
 
       if (!(retry && attempts === 1 && response.status >= 500)) break;

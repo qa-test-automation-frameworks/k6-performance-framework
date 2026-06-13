@@ -16,6 +16,7 @@ export class CommentsService {
     return this.client.get(
       `/articles/${encodeURIComponent(slug)}/comments`,
       'GET /articles/:slug/comments',
+      { metricGroup: 'comment' },
     );
   }
 
@@ -24,7 +25,7 @@ export class CommentsService {
       `/articles/${encodeURIComponent(slug)}/comments`,
       'POST /articles/:slug/comments',
       { comment: payload },
-      { params: auth(token) },
+      { metricGroup: 'comment', params: auth(token) },
     );
   }
 
@@ -32,7 +33,7 @@ export class CommentsService {
     return this.client.delete(
       `/articles/${encodeURIComponent(slug)}/comments/${id}`,
       'DELETE /articles/:slug/comments/:id',
-      { params: auth(token) },
+      { metricGroup: 'comment', params: auth(token) },
     );
   }
 }
