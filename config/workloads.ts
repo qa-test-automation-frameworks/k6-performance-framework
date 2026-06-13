@@ -7,7 +7,7 @@ import type {
   WorkloadStage,
 } from '../src/types/config.types';
 
-const fullProfiles: Record<EnvironmentName, Record<StagedWorkload, WorkloadStage[]>> = {
+const fullProfiles: Partial<Record<EnvironmentName, Record<StagedWorkload, WorkloadStage[]>>> = {
   local: {
     authenticatedLoad: [
       { duration: '2m', target: 5 },
@@ -48,11 +48,7 @@ const fullProfiles: Record<EnvironmentName, Record<StagedWorkload, WorkloadStage
       { duration: '1m', target: 0 },
     ],
   },
-  staging: {} as Record<StagedWorkload, WorkloadStage[]>,
-  production: {} as Record<StagedWorkload, WorkloadStage[]>,
 };
-fullProfiles.staging = fullProfiles.local;
-fullProfiles.production = fullProfiles.local;
 
 const validationProfiles: Record<StagedWorkload, WorkloadStage[]> = {
   authenticatedLoad: [
@@ -145,9 +141,14 @@ export function getWorkloadStages(workload: StagedWorkload): WorkloadStage[] {
     return stages as WorkloadStage[];
   }
   const config = getConfig();
-  return __ENV.TEST_PROFILE === 'validation'
-    ? validationProfiles[workload]
-    : fullProfiles[config.environment][workload];
+  if (__ENV.TEST_PROFILE === 'validation') return validationProfiles[workload];
+  const environmentProfile = fullProfiles[config.environment];
+  if (!environmentProfile) {
+    throw new Error(
+      `Full ${workload} profile is not defined for ${config.environment}; provide ${overrideName}`,
+    );
+  }
+  return environmentProfile[workload];
 }
 
 /**

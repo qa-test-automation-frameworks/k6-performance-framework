@@ -11,7 +11,7 @@ const config: EnvConfig = {
   timeouts: { http: 5_000 },
   rps: { target: 1, max: 2 },
   tags: { env: 'staging', app: 'conduit' },
-  readOnly: false,
+  allowsWrites: true,
 };
 
 function response(status: number, data: unknown = { ok: true }) {
@@ -70,7 +70,7 @@ describe('HttpClient', () => {
   });
 
   it('blocks writes in read-only production configuration', () => {
-    const production = { ...config, environment: 'production', readOnly: true } as EnvConfig;
+    const production = { ...config, environment: 'production', allowsWrites: false } as EnvConfig;
     expect(() =>
       new HttpClient(production).delete('/articles/test', 'DELETE /articles/:slug'),
     ).toThrow('blocked in the production environment');

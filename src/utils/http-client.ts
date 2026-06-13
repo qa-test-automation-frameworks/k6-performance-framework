@@ -78,7 +78,7 @@ export class HttpClient {
     body?: unknown,
     options: HttpRequestOptions = {},
   ): HttpResponse<T> {
-    if (this.config.readOnly && writeMethods.has(method)) {
+    if (!this.config.allowsWrites && writeMethods.has(method)) {
       throw new Error(`${method} requests are blocked in the production environment`);
     }
 

@@ -56,9 +56,9 @@ describe('getConfig', () => {
 
   it('authorizes controlled non-local writes only with an explicit override', () => {
     setTestEnv({ TARGET_ENV: 'staging' });
-    expect(getConfig().readOnly).toBe(true);
+    expect(getConfig().allowsWrites).toBe(false);
     setTestEnv({ TARGET_ENV: 'staging', ALLOW_NON_LOCAL_LOAD: 'true' });
-    expect(getConfig().readOnly).toBe(false);
+    expect(getConfig().allowsWrites).toBe(true);
   });
 
   it('blocks every non-local sustained workload without explicit authorization', () => {

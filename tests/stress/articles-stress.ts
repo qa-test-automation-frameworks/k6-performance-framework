@@ -1,7 +1,7 @@
 import type { Options } from 'k6/options';
 import { stressThresholds } from '../../config/thresholds/stress';
 import { getWorkloadStages, rampingVus } from '../../config/workloads';
-import { concurrentReaders } from '../../src/scenarios';
+import { stressReaders } from '../../src/scenarios';
 import { assertAuthorizedLoadTarget, createSummary } from '../../src/helpers';
 import { summaryTrendStats } from '../../src/types/config.types';
 
@@ -13,5 +13,5 @@ export const options: Options = {
   thresholds: stressThresholds,
   summaryTrendStats,
 };
-export default concurrentReaders;
+export default stressReaders;
 export const handleSummary = createSummary;

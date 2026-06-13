@@ -17,6 +17,6 @@ export function productionConfig(baseUrl: string | undefined): EnvConfig {
     timeouts: { http: 30_000 },
     rps: { target: 10, max: 50 },
     tags: { env: 'production', app: 'conduit' },
-    readOnly: true,
+    allowsWrites: false,
   };
 }

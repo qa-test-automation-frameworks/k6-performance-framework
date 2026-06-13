@@ -3,3 +3,4 @@ export function setTestEnv(env: Record<string, string | undefined>): void {
 }
 
 setTestEnv({});
+Object.assign(globalThis, { __ITER: 0, __VU: 1 });
