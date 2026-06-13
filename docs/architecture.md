@@ -25,6 +25,18 @@ Metric tags are restricted to bounded values: environment, run identifier, workl
 endpoint name, and HTTP status. Raw URLs, article slugs, usernames, tokens, and generated fixture
 identifiers must never be used as tags. Local InfluxDB data expires after seven days by default.
 
+## Business Metrics
+
+API services explicitly assign every request to an endpoint group. Each group records latency,
+success rate, and business-error counters, so SLO thresholds do not depend on endpoint-name
+substring matching.
+
+## Environment Profiles
+
+Environment configuration records whether writes are authorized. Built-in full traffic profiles
+are restricted to the controlled local target; an authorized non-local run must provide explicit
+stages and opt in with `ALLOW_NON_LOCAL_LOAD=true`.
+
 ## Target Policy
 
 The hosted RealWorld API is used only by the short read-only smoke workflow. Main load, regression,

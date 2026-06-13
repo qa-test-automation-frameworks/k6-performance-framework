@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Enforced endpoint-group SLOs with explicit metric ownership and complete business signals.
+- Added workload-specific journeys, deterministic setup-user pools, and non-local profile guards.
+- Added baseline compatibility provenance, failure-preserving launchers, and richer reports.
+- Expanded observability with endpoint dashboards, annotations, validation queries, and PNG capture.
+- Added hosted segmented and advanced workload validation plus repeatable release publication.
+- Pinned npm and container inputs and raised unit coverage gates.
+
 ## 0.4.0 - 2026-06-13
 
 - Made functional checks and target authorization mandatory across sustained workloads.

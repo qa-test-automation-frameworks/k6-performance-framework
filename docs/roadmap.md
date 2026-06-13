@@ -11,8 +11,8 @@
 | 1     | Core Infrastructure          | Complete       | Complete             | Not applicable    |
 | 2     | API Service Layer            | Complete       | Complete             | Not applicable    |
 | 3     | Smoke & Load Tests           | Complete       | Complete             | Complete          |
-| 4     | Advanced Scenarios           | Complete       | Complete             | Soak pending      |
-| 5     | Observability Stack          | Complete       | Workflow added       | Capture pending   |
+| 4     | Advanced Scenarios           | Complete       | Complete             | Hosted runs pending |
+| 5     | Observability Stack          | Complete       | Complete             | Capture pending   |
 | 6     | CI/CD Integration            | Complete       | Complete             | Complete          |
 | 7     | Security & Quality Gates     | Complete       | Complete             | Release pending   |
 | 8     | Documentation & Polish       | Complete       | Complete             | Review pending    |
@@ -32,7 +32,7 @@
 - [x] `.eslintrc.js` + `.prettierrc` + `.editorconfig`
 - [x] `.gitignore` (node_modules, dist, reports, \*.json output)
 - [x] `LICENSE` (MIT with Attribution)
-- [x] `README.md` stub (badges, description, quick-start placeholder)
+- [x] `README.md` with badges, architecture, SLOs, and quick start
 - [x] `CONTRIBUTING.md` + `CHANGELOG.md`
 - [x] All directory scaffolding with `.gitkeep` files
 - [x] `docs/roadmap.md` (this document)

@@ -28,6 +28,8 @@ OTLP gRPC/HTTP: `localhost:4317` / `localhost:4318`
 Use `npm run docker:down` when finished. The command removes local observability volumes.
 Observed runs add Grafana start/end annotations and bounded run tags through
 `npm run load:observed`.
+Select another built bundle with `K6_SCRIPT`, and identify the workload with `K6_SCENARIO`. After
+the run, `npm run observability:capture` exports the provisioned overview and endpoint dashboards.
 
 The OTEL output is an experimental k6 metrics path and does not guarantee parity with every
 standard k6 metric. The InfluxDB output remains the complete dashboard source; Prometheus exposes
@@ -38,6 +40,8 @@ the OTLP metric subset for collector and exporter validation.
 The `Distributed controlled load` workflow partitions an authorized target across two self-hosted
 runners labeled `performance`. It is manual-only and requires an explicit controlled target URL.
 Increase the execution-segment matrix only after confirming runner capacity and target authorization.
+The separate `Segmented validation` workflow runs short partitions on GitHub-hosted runners to
+verify execution-segment configuration; it is not distributed load evidence.
 
 ## Add a Scenario
 
@@ -76,7 +80,15 @@ $env:TEST_PROFILE = 'validation'
 npm run load:journey
 ```
 
-The k6 `setup()` lifecycle registers the disposable user and supplies its token to the VUs.
+The k6 `setup()` lifecycle registers an `AUTH_USER_COUNT`-sized disposable user pool. Each VU
+selects a token deterministically from that pool.
+
+## Baselines
+
+Capture at least three controlled full-profile runs on the same runner class, then aggregate them
+with `npm run baseline:aggregate`. Comparisons reject mismatched target IDs, commits, profiles,
+throughput settings, k6 versions, and runner classes. Use a distinct `BASELINE_FILE` for another
+environment or execution topology.
 
 ## Troubleshooting
 
