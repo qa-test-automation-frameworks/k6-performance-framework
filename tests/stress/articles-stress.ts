@@ -2,9 +2,10 @@ import type { Options } from 'k6/options';
 import { stressThresholds } from '../../config/thresholds/stress';
 import { rampingVus } from '../../config/workloads';
 import { concurrentReaders } from '../../src/scenarios';
-import { createSummary } from '../../src/helpers';
+import { assertAuthorizedLoadTarget, createSummary } from '../../src/helpers';
 import { summaryTrendStats } from '../../src/types/config.types';
 
+assertAuthorizedLoadTarget({ workload: 'Stress' });
 const validation = __ENV.TEST_PROFILE === 'validation';
 export const options: Options = {
   scenarios: {

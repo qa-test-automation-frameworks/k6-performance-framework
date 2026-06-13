@@ -1,7 +1,13 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { getConfig } from '../../config';
+import { authenticatedThresholds } from '../../config/thresholds/authenticated';
+import { breakpointThresholds } from '../../config/thresholds/breakpoint';
 import { loadThresholds } from '../../config/thresholds/load';
+import { soakThresholds } from '../../config/thresholds/soak';
+import { spikeThresholds } from '../../config/thresholds/spike';
+import { stressThresholds } from '../../config/thresholds/stress';
 import { getWorkloadProfile } from '../../config/workloads';
+import { assertAuthorizedLoadTarget } from '../../src/helpers/safety';
 import { setTestEnv } from './setup';
 
 describe('getConfig', () => {
@@ -49,6 +55,16 @@ describe('getConfig', () => {
     setTestEnv({ TARGET_ENV: 'staging', ALLOW_NON_LOCAL_LOAD: 'true' });
     expect(getConfig().readOnly).toBe(false);
   });
+
+  it('blocks every non-local sustained workload without explicit authorization', () => {
+    setTestEnv({ TARGET_ENV: 'staging' });
+    expect(() => assertAuthorizedLoadTarget({ workload: 'Stress' })).toThrow(
+      'ALLOW_NON_LOCAL_LOAD=true',
+    );
+
+    setTestEnv({ TARGET_ENV: 'staging', ALLOW_NON_LOCAL_LOAD: 'true' });
+    expect(() => assertAuthorizedLoadTarget({ workload: 'Stress' })).not.toThrow();
+  });
 });
 
 describe('load thresholds', () => {
@@ -58,5 +74,18 @@ describe('load thresholds', () => {
       'http_reqs{name:GET /articles/:slug}': ['count>0'],
       'http_reqs{name:GET /tags}': ['count>0'],
     });
+  });
+
+  it('fails every workload when functional checks fail', () => {
+    for (const thresholds of [
+      authenticatedThresholds,
+      loadThresholds,
+      stressThresholds,
+      spikeThresholds,
+      soakThresholds,
+      breakpointThresholds,
+    ]) {
+      expect(thresholds.checks).toEqual(['rate==1']);
+    }
   });
 });

@@ -44,7 +44,7 @@ describe('scenario transaction coverage', () => {
         unfavorite: vi.fn(() => response({ article: {} })),
         delete: vi.fn(() => response({}, 204)),
       },
-      comments: { create: vi.fn(() => response({ comment: {} })) },
+      comments: { create: vi.fn(() => response({ comment: {} }, 201)) },
     };
 
     authenticatedCrud('token', api as never);

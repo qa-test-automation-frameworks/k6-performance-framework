@@ -1,10 +1,11 @@
 import type { Options } from 'k6/options';
 import { rampingVus } from '../../config/workloads';
 import { concurrentReaders } from '../../src/scenarios';
-import { createSummary } from '../../src/helpers';
+import { assertAuthorizedLoadTarget, createSummary } from '../../src/helpers';
 import { summaryTrendStats } from '../../src/types/config.types';
 import { spikeThresholds } from '../../config/thresholds/spike';
 
+assertAuthorizedLoadTarget({ workload: 'Spike' });
 const validation = __ENV.TEST_PROFILE === 'validation';
 export const options: Options = {
   scenarios: {

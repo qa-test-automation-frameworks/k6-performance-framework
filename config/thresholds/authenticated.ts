@@ -1,6 +1,7 @@
 import type { ThresholdSet } from '../../src/types/config.types';
 
 export const authenticatedThresholds: ThresholdSet = {
+  checks: ['rate==1'],
   http_req_duration: ['p(95)<2000', 'p(99)<3500'],
   http_req_failed: ['rate<0.02'],
   'http_req_duration{name:POST /users}': ['p(95)<800', 'p(99)<1500'],
