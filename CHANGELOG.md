@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+## 0.4.0 - 2026-06-13
+
+- Made functional checks and target authorization mandatory across sustained workloads.
+- Made summaries failure-sensitive and restored mandatory measured regression comparison.
+- Added automated observability validation, isolated dashboard queries, and traceable evidence.
+- Added typed workload profiles, cross-platform launchers, and supported lint tooling.
+
 ## 0.3.0 - 2026-06-13
 
 - Added persistent OTEL metric export through Prometheus and a provisioned Grafana datasource.

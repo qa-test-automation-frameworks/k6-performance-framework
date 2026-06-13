@@ -3,6 +3,14 @@
 Measured evidence must come from a seeded controlled target. The example panels below document the
 expected review format; they are intentionally labeled as examples and are not release evidence.
 
+## Reviewed Baseline
+
+The current aggregate baseline was produced by
+[workflow run 27465074415](https://github.com/qa-test-automation-frameworks/k6-performance-framework/actions/runs/27465074415)
+from three full seeded runs against target commit `c8c66858a436a6e07f445fffe2253a65ff6dcb58`.
+All three runs passed checks and thresholds with zero request failures. The aggregate and source
+hashes are retained in `baseline/load-summary.json`.
+
 ## Overview
 
 ![Example performance overview](images/performance-overview-example.svg)

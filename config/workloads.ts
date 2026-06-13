@@ -1,5 +1,88 @@
 import { getConfig } from '.';
-import type { WorkloadProfile, WorkloadScenario } from '../src/types/config.types';
+import type {
+  EnvironmentName,
+  StagedWorkload,
+  WorkloadProfile,
+  WorkloadScenario,
+  WorkloadStage,
+} from '../src/types/config.types';
+
+const fullProfiles: Record<EnvironmentName, Record<StagedWorkload, WorkloadStage[]>> = {
+  local: {
+    authenticatedLoad: [
+      { duration: '2m', target: 5 },
+      { duration: '5m', target: 5 },
+      { duration: '1m', target: 0 },
+    ],
+    authenticatedStress: [
+      { duration: '2m', target: 5 },
+      { duration: '5m', target: 20 },
+      { duration: '2m', target: 0 },
+    ],
+    stress: [
+      { duration: '2m', target: 25 },
+      { duration: '3m', target: 50 },
+      { duration: '3m', target: 100 },
+      { duration: '3m', target: 150 },
+      { duration: '2m', target: 0 },
+    ],
+    spike: [
+      { duration: '2m', target: 10 },
+      { duration: '30s', target: 200 },
+      { duration: '1m', target: 200 },
+      { duration: '30s', target: 10 },
+      { duration: '3m', target: 10 },
+      { duration: '1m', target: 0 },
+    ],
+    soak: [
+      { duration: '5m', target: 20 },
+      { duration: '2h', target: 20 },
+      { duration: '5m', target: 0 },
+    ],
+    breakpoint: [
+      { duration: '2m', target: 50 },
+      { duration: '2m', target: 100 },
+      { duration: '2m', target: 200 },
+      { duration: '2m', target: 400 },
+      { duration: '1m', target: 400 },
+      { duration: '1m', target: 0 },
+    ],
+  },
+  staging: {} as Record<StagedWorkload, WorkloadStage[]>,
+  production: {} as Record<StagedWorkload, WorkloadStage[]>,
+};
+fullProfiles.staging = fullProfiles.local;
+fullProfiles.production = fullProfiles.local;
+
+const validationProfiles: Record<StagedWorkload, WorkloadStage[]> = {
+  authenticatedLoad: [
+    { duration: '5s', target: 1 },
+    { duration: '5s', target: 0 },
+  ],
+  authenticatedStress: [
+    { duration: '5s', target: 1 },
+    { duration: '5s', target: 0 },
+  ],
+  stress: [
+    { duration: '5s', target: 5 },
+    { duration: '5s', target: 0 },
+  ],
+  spike: [
+    { duration: '3s', target: 2 },
+    { duration: '3s', target: 20 },
+    { duration: '5s', target: 2 },
+  ],
+  soak: [
+    { duration: '5s', target: 2 },
+    { duration: '10s', target: 2 },
+    { duration: '5s', target: 0 },
+  ],
+  breakpoint: [
+    { duration: '5s', target: 5 },
+    { duration: '5s', target: 20 },
+    { duration: '5s', target: 0 },
+  ],
+};
 
 function positiveNumber(name: string, fallback: number): number {
   const raw = __ENV[name];
@@ -24,6 +107,35 @@ export function getWorkloadProfile(): WorkloadProfile {
     maxVus: positiveNumber('MAX_VUS', config.rps.max),
     thinkTimeSeconds: positiveNumber('THINK_TIME_SECONDS', 1),
   };
+}
+
+/** Resolves a typed stage profile, optionally overridden with validated JSON. */
+export function getWorkloadStages(workload: StagedWorkload): WorkloadStage[] {
+  const overrideName =
+    `${workload.replace(/[A-Z]/g, (letter) => `_${letter}`)}_STAGES`.toUpperCase();
+  const raw = __ENV[overrideName];
+  if (raw) {
+    const stages = JSON.parse(raw) as unknown;
+    if (
+      !Array.isArray(stages) ||
+      stages.length === 0 ||
+      stages.some(
+        (stage) =>
+          typeof stage !== 'object' ||
+          stage === null ||
+          typeof (stage as WorkloadStage).duration !== 'string' ||
+          !Number.isInteger((stage as WorkloadStage).target) ||
+          (stage as WorkloadStage).target < 0,
+      )
+    ) {
+      throw new Error(`${overrideName} must be a non-empty JSON array of duration/target stages`);
+    }
+    return stages as WorkloadStage[];
+  }
+  const config = getConfig();
+  return __ENV.TEST_PROFILE === 'validation'
+    ? validationProfiles[workload]
+    : fullProfiles[config.environment][workload];
 }
 
 /**

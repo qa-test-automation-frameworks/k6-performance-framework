@@ -31,11 +31,28 @@ describe('performance summaries', () => {
     expect(result['reports/k6-summary-summary.md']).toContain(
       '| http_req_duration | - | - | 400.00 | 700.00 |',
     );
-    expect(result['reports/k6-summary-summary.md']).toContain('**Threshold status:** PASSED');
+    expect(result['reports/k6-summary-summary.md']).toContain('**Run status:** PASSED');
     expect(result['reports/k6-summary-summary.md']).toContain(
       '| custom_article_read_duration_ms |',
     );
     expect(result['reports/k6-summary-summary.md']).toContain('| custom_business_errors_total |');
+  });
+
+  it('fails the run summary when checks, setup, or iterations fail', () => {
+    const result = createSummary({
+      metrics: {
+        checks: { values: { fails: 2, passes: 3, rate: 0.6 } },
+        interrupted_iterations: { values: { count: 1 } },
+      },
+      root_group: {},
+      state: { setupErrors: 1 },
+    });
+
+    const markdown = result['reports/k6-summary-summary.md'];
+    expect(markdown).toContain('**Run status:** FAILED');
+    expect(markdown).toContain('Checks: 2 failed');
+    expect(markdown).toContain('Setup: 1 error(s)');
+    expect(markdown).toContain('Execution: 1 interrupted iteration(s)');
   });
 
   it('reports actual values for failed thresholds', () => {

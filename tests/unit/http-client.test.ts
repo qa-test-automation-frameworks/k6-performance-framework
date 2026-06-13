@@ -8,7 +8,7 @@ import { setTestEnv } from './setup';
 const config: EnvConfig = {
   environment: 'staging',
   baseUrl: 'https://example.test/api/',
-  timeouts: { http: 5_000, connect: 1_000 },
+  timeouts: { http: 5_000 },
   rps: { target: 1, max: 2 },
   tags: { env: 'staging', app: 'conduit' },
   readOnly: false,

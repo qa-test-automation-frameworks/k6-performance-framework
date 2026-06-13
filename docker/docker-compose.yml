@@ -68,6 +68,8 @@ services:
     working_dir: /work
     volumes:
       - ..:/work
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
     environment:
       TARGET_ENV: local
       BASE_URL: ${BASE_URL:-http://host.docker.internal:3000/api}

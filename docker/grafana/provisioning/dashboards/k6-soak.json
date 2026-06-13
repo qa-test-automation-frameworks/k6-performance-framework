@@ -6,6 +6,24 @@
   "refresh": "30s",
   "time": { "from": "now-3h", "to": "now" },
   "tags": ["k6", "soak", "stability"],
+  "templating": {
+    "list": [
+      {
+        "name": "environment",
+        "label": "Environment",
+        "type": "query",
+        "datasource": { "uid": "influxdb-k6" },
+        "query": "import \"influxdata/influxdb/schema\"\nschema.tagValues(bucket: \"k6\", tag: \"environment\")"
+      },
+      {
+        "name": "run_id",
+        "label": "Run",
+        "type": "query",
+        "datasource": { "uid": "influxdb-k6" },
+        "query": "import \"influxdata/influxdb/schema\"\nschema.tagValues(bucket: \"k6\", tag: \"run_id\")"
+      }
+    ]
+  },
   "panels": [
     {
       "type": "timeseries",
@@ -13,9 +31,9 @@
       "gridPos": { "h": 9, "w": 12, "x": 0, "y": 0 },
       "datasource": { "uid": "influxdb-k6" },
       "targets": [
-        { "refId": "A", "query": "from(bucket: \"k6\") |> range(start: v.timeRangeStart) |> filter(fn: (r) => r._measurement == \"http_req_duration\") |> aggregateWindow(every: 1m, fn: median)" },
-        { "refId": "B", "query": "from(bucket: \"k6\") |> range(start: v.timeRangeStart) |> filter(fn: (r) => r._measurement == \"http_req_duration\") |> aggregateWindow(every: 1m, fn: (tables=<-, column) => tables |> quantile(q: 0.95, column: column))" },
-        { "refId": "C", "query": "from(bucket: \"k6\") |> range(start: v.timeRangeStart) |> filter(fn: (r) => r._measurement == \"http_req_duration\") |> aggregateWindow(every: 1m, fn: (tables=<-, column) => tables |> quantile(q: 0.99, column: column))" }
+        { "refId": "A", "query": "from(bucket: \"k6\") |> range(start: v.timeRangeStart) |> filter(fn: (r) => r._measurement == \"http_req_duration\" and r.environment == \"${environment}\" and r.run_id == \"${run_id}\") |> aggregateWindow(every: 1m, fn: median)" },
+        { "refId": "B", "query": "from(bucket: \"k6\") |> range(start: v.timeRangeStart) |> filter(fn: (r) => r._measurement == \"http_req_duration\" and r.environment == \"${environment}\" and r.run_id == \"${run_id}\") |> aggregateWindow(every: 1m, fn: (tables=<-, column) => tables |> quantile(q: 0.95, column: column))" },
+        { "refId": "C", "query": "from(bucket: \"k6\") |> range(start: v.timeRangeStart) |> filter(fn: (r) => r._measurement == \"http_req_duration\" and r.environment == \"${environment}\" and r.run_id == \"${run_id}\") |> aggregateWindow(every: 1m, fn: (tables=<-, column) => tables |> quantile(q: 0.99, column: column))" }
       ]
     },
     {
@@ -24,7 +42,7 @@
       "gridPos": { "h": 9, "w": 6, "x": 12, "y": 0 },
       "datasource": { "uid": "influxdb-k6" },
       "targets": [
-        { "query": "from(bucket: \"k6\") |> range(start: v.timeRangeStart) |> filter(fn: (r) => r._measurement == \"http_req_failed\") |> aggregateWindow(every: 1m, fn: mean)" }
+        { "query": "from(bucket: \"k6\") |> range(start: v.timeRangeStart) |> filter(fn: (r) => r._measurement == \"http_req_failed\" and r.environment == \"${environment}\" and r.run_id == \"${run_id}\") |> aggregateWindow(every: 1m, fn: mean)" }
       ]
     },
     {
@@ -33,7 +51,7 @@
       "gridPos": { "h": 9, "w": 6, "x": 18, "y": 0 },
       "datasource": { "uid": "influxdb-k6" },
       "targets": [
-        { "query": "from(bucket: \"k6\") |> range(start: v.timeRangeStart) |> filter(fn: (r) => r._measurement == \"vus\") |> aggregateWindow(every: 1m, fn: max)" }
+        { "query": "from(bucket: \"k6\") |> range(start: v.timeRangeStart) |> filter(fn: (r) => r._measurement == \"vus\" and r.environment == \"${environment}\" and r.run_id == \"${run_id}\") |> aggregateWindow(every: 1m, fn: max)" }
       ]
     }
   ]

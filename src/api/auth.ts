@@ -6,6 +6,7 @@ import type {
   UserUpdatePayload,
 } from '../types';
 import { HttpClient } from '../utils/http-client';
+import type { Params } from 'k6/http';
 
 const envelope = <T>(key: string, value: T): Record<string, T> => ({ [key]: value });
 
@@ -37,6 +38,6 @@ export class AuthService {
  * @param token RealWorld API token.
  * @returns Request parameters containing the authorization header.
  */
-export function auth(token: string) {
+export function auth(token: string): Params {
   return { headers: { Authorization: `Token ${token}` } };
 }

@@ -70,6 +70,13 @@ Run the read-only validation profile:
 TARGET_ENV=staging TEST_PROFILE=validation SUMMARY_NAME=smoke npm run smoke
 ```
 
+```powershell
+$env:TARGET_ENV = 'staging'
+$env:TEST_PROFILE = 'validation'
+$env:SUMMARY_NAME = 'smoke'
+npm run smoke
+```
+
 Start observability and run a local observed load:
 
 ```bash
@@ -91,12 +98,19 @@ export TEST_PROFILE=validation
 npm run load:journey
 ```
 
+```powershell
+$env:TARGET_ENV = 'local'
+$env:BASE_URL = 'http://localhost:3000/api'
+$env:TEST_PROFILE = 'validation'
+npm run load:journey
+```
+
 ## CI and Evidence
 
 - PR smoke posts an aggregate Markdown summary to same-repository pull requests.
 - Main load, regression, and soak workflows provision a pinned RealWorld backend.
-- Regression checks always enforce absolute k6 thresholds. Relative p95/p99 comparison is enabled
-  only when a reviewed seeded baseline is committed.
+- Regression checks enforce absolute thresholds and require a reviewed seeded baseline for relative
+  p95/p99 comparison.
 - Security CI runs npm audit, creates a CycloneDX SBOM, and scans the lockfile with OSV.
 - [Published performance reports](https://qa-test-automation-frameworks.github.io/k6-performance-framework/)
 
@@ -104,11 +118,13 @@ npm run load:journey
 
 - [Architecture](docs/architecture.md)
 - [Contributor onboarding](docs/onboarding.md)
+- [Adapting to another API](docs/adapting-targets.md)
+- [Engineering notes](docs/engineering-notes.md)
 - [Results interpretation](docs/results-interpretation.md)
 - [Visual performance evidence](docs/evidence.md)
 - [Architecture decisions](docs/adr/README.md)
 - [Capability status](docs/capability-status.md)
-- [v0.3.0 release notes](docs/releases/v0.3.0.md)
+- [v0.4.0 release notes](docs/releases/v0.4.0.md)
 - [v0.2.0 release notes](docs/releases/v0.2.0.md)
 
 ## Safety

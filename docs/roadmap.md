@@ -5,17 +5,17 @@
 
 ## Overview
 
-| Phase | Title                        | Status    |
-| ----- | ---------------------------- | --------- |
-| 0     | Inception & Repository Setup | Delivered |
-| 1     | Core Infrastructure          | Delivered |
-| 2     | API Service Layer            | Delivered |
-| 3     | Smoke & Load Tests           | Delivered |
-| 4     | Advanced Scenarios           | Delivered |
-| 5     | Observability Stack          | Delivered |
-| 6     | CI/CD Integration            | Delivered |
-| 7     | Security & Quality Gates     | Delivered |
-| 8     | Documentation & Polish       | Delivered |
+| Phase | Title                        | Implementation | Automated validation | Measured evidence |
+| ----- | ---------------------------- | -------------- | -------------------- | ----------------- |
+| 0     | Inception & Repository Setup | Complete       | Complete             | Not applicable    |
+| 1     | Core Infrastructure          | Complete       | Complete             | Not applicable    |
+| 2     | API Service Layer            | Complete       | Complete             | Not applicable    |
+| 3     | Smoke & Load Tests           | Complete       | Complete             | Complete          |
+| 4     | Advanced Scenarios           | Complete       | Complete             | Soak pending      |
+| 5     | Observability Stack          | Complete       | Workflow added       | Capture pending   |
+| 6     | CI/CD Integration            | Complete       | Complete             | Complete          |
+| 7     | Security & Quality Gates     | Complete       | Complete             | Release pending   |
+| 8     | Documentation & Polish       | Complete       | Complete             | Review pending    |
 
 ---
 
@@ -154,8 +154,8 @@
 - [x] Local setup and baseline capture scripts
 - [x] Load tests runnable with InfluxDB output
 
-**Validation note:** Phase 3-5 source deliverables are implemented. Runtime acceptance remains pending
-until Docker Desktop, k6, a local RealWorld target, and authentication tokens are available.
+**Validation note:** The observability integration workflow exercises provisioning and ingestion.
+Measured dashboard captures and a full scheduled soak remain separate release evidence gates.
 
 **Acceptance Criteria:**
 

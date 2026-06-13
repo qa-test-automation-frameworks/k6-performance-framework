@@ -8,7 +8,6 @@ export interface EnvConfig {
   baseUrl: string;
   timeouts: {
     http: number;
-    connect: number;
   };
   rps: {
     target: number;
@@ -28,5 +27,18 @@ export interface WorkloadProfile {
   maxVus: number;
   thinkTimeSeconds: number;
 }
+
+export interface WorkloadStage {
+  duration: string;
+  target: number;
+}
+
+export type StagedWorkload =
+  | 'authenticatedLoad'
+  | 'authenticatedStress'
+  | 'stress'
+  | 'spike'
+  | 'soak'
+  | 'breakpoint';
 
 export type WorkloadScenario = ScenarioOptions;

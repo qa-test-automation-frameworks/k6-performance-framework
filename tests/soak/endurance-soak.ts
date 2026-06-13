@@ -1,28 +1,14 @@
 import type { Options } from 'k6/options';
 import { soakThresholds } from '../../config/thresholds/soak';
-import { rampingVus } from '../../config/workloads';
+import { getWorkloadStages, rampingVus } from '../../config/workloads';
 import { concurrentReaders } from '../../src/scenarios';
 import { assertAuthorizedLoadTarget, createSummary } from '../../src/helpers';
 import { summaryTrendStats } from '../../src/types/config.types';
 
 assertAuthorizedLoadTarget({ workload: 'Soak' });
-const validation = __ENV.TEST_PROFILE === 'validation';
 export const options: Options = {
   scenarios: {
-    endurance_readers: rampingVus(
-      validation
-        ? [
-            { duration: '5s', target: 2 },
-            { duration: '10s', target: 2 },
-            { duration: '5s', target: 0 },
-          ]
-        : [
-            { duration: '5m', target: 20 },
-            { duration: '2h', target: 20 },
-            { duration: '5m', target: 0 },
-          ],
-      '1m',
-    ),
+    endurance_readers: rampingVus(getWorkloadStages('soak'), '1m'),
   },
   thresholds: soakThresholds,
   summaryTrendStats,
