@@ -28,6 +28,7 @@ services:
       GF_AUTH_ANONYMOUS_ORG_ROLE: Viewer
       GF_RENDERING_SERVER_URL: http://renderer:8081/render
       GF_RENDERING_CALLBACK_URL: http://grafana:3000/
+      GF_RENDERING_RENDERER_TOKEN: k6-local-renderer-token
     volumes:
       - grafana-data:/var/lib/grafana
       - ./grafana/provisioning:/etc/grafana/provisioning:ro
@@ -41,6 +42,8 @@ services:
 
   renderer:
     image: grafana/grafana-image-renderer:3.12.6@sha256:37d03fc58922f0a933a7a02e070e76ad8dc28bfb7a55c05ca898e01875fc8939
+    environment:
+      AUTH_TOKEN: k6-local-renderer-token
 
   prometheus:
     image: prom/prometheus:v3.9.1@sha256:1f0f50f06acaceb0f5670d2c8a658a599affe7b0d8e78b898c1035653849a702
