@@ -19,6 +19,25 @@ const candidate = read(candidatePath);
 if (baseline.metadata?.status !== 'measured' || baseline.metadata?.sampleCount < 3) {
   throw new Error('Baseline must contain at least three measured controlled runs');
 }
+const compatibilityFields = [
+  ['targetId', baseline.metadata?.targetId, candidate.metadata?.targetId],
+  ['targetCommit', baseline.metadata?.targetCommit, candidate.metadata?.targetCommit],
+  ['profile', baseline.metadata?.workload?.profile, candidate.metadata?.profile],
+  ['targetRps', baseline.metadata?.workload?.targetRps, candidate.metadata?.targetRps],
+  ['maxVus', baseline.metadata?.workload?.maxVus, candidate.metadata?.maxVus],
+  ['k6Version', baseline.metadata?.k6Version, candidate.metadata?.k6Version],
+  ['runnerClass', baseline.metadata?.runnerClass, candidate.metadata?.runnerClass],
+];
+const incompatible = compatibilityFields.filter(
+  ([, before, after]) => before === undefined || after === undefined || before !== after,
+);
+if (incompatible.length) {
+  throw new Error(
+    `Incompatible baseline: ${incompatible
+      .map(([name, before, after]) => `${name}=${before ?? 'missing'}/${after ?? 'missing'}`)
+      .join(', ')}`,
+  );
+}
 const comparisons = [
   [
     'p95',

@@ -36,6 +36,7 @@ describe('performance summaries', () => {
       '| custom_article_read_duration_ms |',
     );
     expect(result['reports/k6-summary-summary.md']).toContain('| custom_business_errors_total |');
+    expect(result['reports/k6-summary-summary.html']).toContain('Latency percentiles');
   });
 
   it('fails the run summary when checks, setup, or iterations fail', () => {
