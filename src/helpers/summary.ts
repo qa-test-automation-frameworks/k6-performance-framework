@@ -23,10 +23,15 @@ interface SummaryMetric {
 interface SummaryData {
   metrics: Record<string, SummaryMetric>;
   root_group: unknown;
-  state: unknown;
+  state: {
+    setupErrors?: number;
+    interruptedIterations?: number;
+    [key: string]: unknown;
+  };
 }
 
 export interface PerformanceSummary {
+  failures: string[];
   generatedAt: string;
   metrics: Record<string, MetricValues>;
   rootGroup: unknown;
@@ -66,7 +71,12 @@ function thresholdActual(values: MetricValues, threshold: string): number | unde
  * @returns Output paths mapped to serialized report content.
  */
 export function createSummary(data: SummaryData): Record<string, string> {
+  const checkFailures = data.metrics.checks?.values.fails ?? 0;
+  const interruptedIterations =
+    data.metrics.interrupted_iterations?.values.count ?? data.state.interruptedIterations ?? 0;
+  const setupErrors = data.state.setupErrors ?? 0;
   const summary: PerformanceSummary = {
+    failures: [],
     generatedAt: new Date().toISOString(),
     metrics: Object.fromEntries(
       Object.entries(data.metrics).map(([name, metric]) => [name, metric.values]),
@@ -87,11 +97,19 @@ export function createSummary(data: SummaryData): Record<string, string> {
         return `${metric}: expected ${threshold}; actual ${actual ?? 'unavailable'}`;
       }),
   );
+  summary.failures = [
+    ...failedThresholds.map((failure) => `Threshold: ${failure}`),
+    ...(checkFailures > 0 ? [`Checks: ${checkFailures} failed`] : []),
+    ...(setupErrors > 0 ? [`Setup: ${setupErrors} error(s)`] : []),
+    ...(interruptedIterations > 0
+      ? [`Execution: ${interruptedIterations} interrupted iteration(s)`]
+      : []),
+  ];
   const markdown = [
     '# k6 Performance Summary',
     '',
-    `**Threshold status:** ${failedThresholds.length ? 'FAILED' : 'PASSED'}`,
-    ...(failedThresholds.length ? ['', ...failedThresholds.map((failure) => `- ${failure}`)] : []),
+    `**Run status:** ${summary.failures.length ? 'FAILED' : 'PASSED'}`,
+    ...(summary.failures.length ? ['', ...summary.failures.map((failure) => `- ${failure}`)] : []),
     '',
     '| Metric | p50 | p90 | p95 | p99 | max | Rate | Count |',
     '|---|---:|---:|---:|---:|---:|---:|---:|',

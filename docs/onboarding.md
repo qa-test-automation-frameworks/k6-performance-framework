@@ -67,6 +67,15 @@ export TEST_PROFILE=validation
 npm run load:journey
 ```
 
+PowerShell:
+
+```powershell
+$env:TARGET_ENV = 'local'
+$env:BASE_URL = 'http://localhost:3000/api'
+$env:TEST_PROFILE = 'validation'
+npm run load:journey
+```
+
 The k6 `setup()` lifecycle registers the disposable user and supplies its token to the VUs.
 
 ## Troubleshooting
@@ -75,3 +84,6 @@ The k6 `setup()` lifecycle registers the disposable user and supplies its token 
 - Missing summaries: set `SUMMARY_NAME` and ensure `reports/` is writable.
 - Authentication failure: verify the token array is valid JSON and tokens match the target.
 - Regression failure: inspect both summaries before proposing a baseline change.
+
+The `load:observed`, `report`, and `baseline` scripts select PowerShell on Windows and Bash on
+macOS/Linux. Git Bash or WSL is not required for these npm commands.

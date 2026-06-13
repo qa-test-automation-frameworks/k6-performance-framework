@@ -49,15 +49,8 @@ jobs:
         shell: bash
         run: |
           set -o pipefail
-          if [[ -f baseline/load-summary.json ]]; then
-            npm run baseline:compare 2>&1 | tee regression.md
-          else
-            {
-              echo "## Relative regression comparison skipped"
-              echo
-              echo "No reviewed measured baseline is available. Absolute k6 thresholds were enforced."
-            } | tee regression.md
-          fi
+          test -f baseline/load-summary.json
+          npm run baseline:compare 2>&1 | tee regression.md
       - run: cat regression.md >> "$GITHUB_STEP_SUMMARY"
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         if: always()

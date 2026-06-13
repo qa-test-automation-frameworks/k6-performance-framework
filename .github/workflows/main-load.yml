@@ -40,12 +40,9 @@ jobs:
         if: always()
       - name: Baseline regression check
         run: |
-          if [[ -f baseline/load-summary.json ]]; then
-            CANDIDATE_FILE=reports/load-summary.json npm run baseline:compare | tee reports/regression-comparison.md
-            cat reports/regression-comparison.md >> "$GITHUB_STEP_SUMMARY"
-          else
-            echo "No reviewed seeded baseline is available; absolute thresholds remain authoritative." | tee reports/regression-comparison.md
-          fi
+          test -f baseline/load-summary.json
+          CANDIDATE_FILE=reports/load-summary.json npm run baseline:compare | tee reports/regression-comparison.md
+          cat reports/regression-comparison.md >> "$GITHUB_STEP_SUMMARY"
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         if: always()
         with:

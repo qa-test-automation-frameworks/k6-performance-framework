@@ -32,6 +32,7 @@ jobs:
           - segment: 1/2:1
             name: segment-2
     runs-on: [self-hosted, performance]
+    environment: performance-controlled
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0
@@ -44,6 +45,11 @@ jobs:
           k6-version: 2.0.0
       - run: npm ci
       - run: npm run build
+      - name: Verify approved target
+        run: node scripts/validate-target.cjs
+        env:
+          BASE_URL: ${{ inputs.target_url }}
+          PERFORMANCE_TARGET_ALLOWLIST: ${{ vars.PERFORMANCE_TARGET_ALLOWLIST }}
       - name: Run execution segment
         run: >-
           k6 run

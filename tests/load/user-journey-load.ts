@@ -1,6 +1,6 @@
 import type { Options } from 'k6/options';
 import { authenticatedThresholds } from '../../config/thresholds/authenticated';
-import { getWorkloadProfile, rampingVus } from '../../config/workloads';
+import { getWorkloadStages, rampingVus } from '../../config/workloads';
 import { authenticatedCrud } from '../../src/scenarios';
 import {
   assertAuthorizedLoadTarget,
@@ -11,21 +11,9 @@ import {
 import { summaryTrendStats } from '../../src/types/config.types';
 
 assertAuthorizedLoadTarget({ workload: 'Authenticated load', write: true });
-const profile = getWorkloadProfile();
 export const options: Options = {
   scenarios: {
-    authenticated_users: rampingVus(
-      profile.validation
-        ? [
-            { duration: '5s', target: 1 },
-            { duration: '5s', target: 0 },
-          ]
-        : [
-            { duration: '2m', target: 5 },
-            { duration: '5m', target: 5 },
-            { duration: '1m', target: 0 },
-          ],
-    ),
+    authenticated_users: rampingVus(getWorkloadStages('authenticatedLoad')),
   },
   thresholds: authenticatedThresholds,
   summaryTrendStats,

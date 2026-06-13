@@ -1,0 +1,47 @@
+{
+  "generatedAt": "2026-06-13T11:34:37.597Z",
+  "metadata": {
+    "status": "measured",
+    "sampleCount": 3,
+    "sourceFiles": [
+      "baseline-1-summary.json",
+      "baseline-2-summary.json",
+      "baseline-3-summary.json"
+    ],
+    "sourceSha256": {
+      "baseline-1-summary.json": "5995227b5a7992ab5fb108c6793179be26f7d8d476f2f8e34f53282fe474c44c",
+      "baseline-2-summary.json": "347cc6c6acdada56291612449450e3a02981550655abe7c8481c8ea7b678436a",
+      "baseline-3-summary.json": "d26b9df188cf76deeb0818b9663fdb6f93669381158e7021b75ce9a2cc7b2aad"
+    },
+    "targetCommit": "c8c66858a436a6e07f445fffe2253a65ff6dcb58",
+    "frameworkCommit": "d9db4e09d0f7e39bc64c508c251ccf0dc23ccb53",
+    "k6Version": "2.0.0",
+    "runner": "ubuntu24-20260607.184.1",
+    "workload": {
+      "targetRps": 20,
+      "maxVus": 100,
+      "profile": "full"
+    },
+    "workflowRun": "https://github.com/qa-test-automation-frameworks/k6-performance-framework/actions/runs/27465074415"
+  },
+  "metrics": {
+    "http_req_duration": {
+      "p(95)": 1.9458381999999999,
+      "p(99)": 2.3195666800000003
+    },
+    "http_req_failed": {
+      "rate": 0
+    },
+    "http_reqs": {
+      "count": 32245,
+      "rate": 67.04347458780272
+    },
+    "iterations": {
+      "count": 9599,
+      "rate": 19.958142737426527
+    },
+    "dropped_iterations": {
+      "count": 1
+    }
+  }
+}
