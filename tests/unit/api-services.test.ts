@@ -55,6 +55,37 @@ describe('API services', () => {
     );
     expect(mock.get).toHaveBeenCalledWith('/tags', 'GET /tags');
   });
+
+  it('covers the remaining authenticated and mutation operations', () => {
+    const mock = client();
+    const auth = new AuthService(mock as never);
+    const articles = new ArticlesService(mock as never);
+    const comments = new CommentsService(mock as never);
+    const profiles = new ProfilesService(mock as never);
+
+    auth.register({ username: 'user', email: 'a@example.test', password: 'secret' });
+    auth.current('token');
+    auth.update('token', { bio: 'updated' });
+    articles.feed('token', { limit: 5 });
+    articles.get('article slug');
+    articles.update('token', 'article slug', { title: 'updated' });
+    articles.delete('token', 'article slug');
+    articles.favorite('token', 'article slug');
+    articles.unfavorite('token', 'article slug');
+    comments.create('token', 'article slug', { body: 'comment' });
+    comments.delete('token', 'article slug', 7);
+    profiles.get('user name', 'token');
+    profiles.unfollow('token', 'user name');
+
+    expect(mock.get).toHaveBeenCalledWith('/articles/feed?limit=5', 'GET /articles/feed', {
+      params: { headers: { Authorization: 'Token token' } },
+    });
+    expect(mock.delete).toHaveBeenCalledWith(
+      '/articles/article%20slug/comments/7',
+      'DELETE /articles/:slug/comments/:id',
+      { params: { headers: { Authorization: 'Token token' } } },
+    );
+  });
 });
 
 describe('authenticated thresholds', () => {

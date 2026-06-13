@@ -6,7 +6,12 @@ import { loadThresholds } from '../../config/thresholds/load';
 import { soakThresholds } from '../../config/thresholds/soak';
 import { spikeThresholds } from '../../config/thresholds/spike';
 import { stressThresholds } from '../../config/thresholds/stress';
-import { getWorkloadProfile } from '../../config/workloads';
+import {
+  constantArrivalRate,
+  getWorkloadProfile,
+  perVuIterations,
+  rampingVus,
+} from '../../config/workloads';
 import { assertAuthorizedLoadTarget } from '../../src/helpers/safety';
 import { setTestEnv } from './setup';
 
@@ -87,5 +92,30 @@ describe('load thresholds', () => {
     ]) {
       expect(thresholds.checks).toEqual(['rate==1']);
     }
+  });
+});
+
+describe('workload builders', () => {
+  it('builds all supported executor shapes', () => {
+    expect(rampingVus([{ duration: '1m', target: 2 }])).toMatchObject({
+      executor: 'ramping-vus',
+      gracefulRampDown: '30s',
+    });
+    expect(perVuIterations(2, 3, '1m')).toMatchObject({
+      executor: 'per-vu-iterations',
+      vus: 2,
+      iterations: 3,
+    });
+    expect(
+      constantArrivalRate(
+        { validation: false, targetRps: 12, maxVus: 40, thinkTimeSeconds: 1 },
+        '5m',
+      ),
+    ).toMatchObject({
+      executor: 'constant-arrival-rate',
+      rate: 12,
+      preAllocatedVUs: 20,
+      maxVUs: 40,
+    });
   });
 });
