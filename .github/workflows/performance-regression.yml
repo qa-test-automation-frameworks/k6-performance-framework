@@ -28,6 +28,8 @@ jobs:
         run: |
           source .github/scripts/start-realworld.sh
           k6 run dist/load/articles-load.js
+          TEST_PROFILE=validation SUMMARY_NAME=authenticated-validation \
+            k6 run dist/load/user-journey-load.js
         env:
           TARGET_ENV: local
           BASE_URL: http://localhost:3000/api

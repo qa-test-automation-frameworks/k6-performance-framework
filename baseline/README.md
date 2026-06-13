@@ -1,7 +1,8 @@
 # Performance Baseline
 
 This directory stores a reviewed aggregate baseline produced from at least three full controlled
-load runs.
+load runs. The previous baseline was invalidated after the controlled target gained deterministic
+seed data and endpoint sample-presence gates.
 
 The regression workflow rejects missing, bootstrap, or single-sample baselines. Generate candidate
 summaries with the controlled local RealWorld target, aggregate them with

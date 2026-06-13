@@ -82,10 +82,9 @@ Grafana is available at `http://localhost:3001` with local credentials `admin` /
 Grafana evidence is produced by local observed runs because GitHub-hosted CI does not persist a
 remote InfluxDB. CI publishes JSON, Markdown, and Pages artifacts instead.
 
-Authenticated scenarios require runtime tokens:
+Authenticated scenarios create a disposable setup user against an authorized writable target:
 
 ```bash
-export K6_USER_TOKENS='["token-one","token-two"]'
 export TARGET_ENV=local
 export BASE_URL=http://localhost:3000/api
 export TEST_PROFILE=validation
@@ -96,8 +95,8 @@ npm run load:journey
 
 - PR smoke posts an aggregate Markdown summary to same-repository pull requests.
 - Main load, regression, and soak workflows provision a pinned RealWorld backend.
-- Regression checks always enforce absolute k6 thresholds and a 20% p95/p99 comparison against the
-  reviewed measured baseline.
+- Regression checks always enforce absolute k6 thresholds. Relative p95/p99 comparison is enabled
+  only when a reviewed seeded baseline is committed.
 - Security CI runs npm audit, creates a CycloneDX SBOM, and scans the lockfile with OSV.
 - [Published performance reports](https://qa-test-automation-frameworks.github.io/k6-performance-framework/)
 
