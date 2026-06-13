@@ -16,8 +16,15 @@ annotate() {
     "${grafana_url}/api/annotations" >/dev/null
 }
 
+finish() {
+  local status=$?
+  trap - EXIT
+  annotate "k6 end: ${scenario} (${run_id}) status=${status}"
+  exit "$status"
+}
+
 annotate "k6 start: ${scenario} (${run_id})"
-trap 'status=$?; annotate "k6 end: '"${scenario}"' ('"${run_id}"') status='"${status}"'"; exit $status' EXIT
+trap finish EXIT
 
 K6_RUN_ID="$run_id" docker compose -f docker/docker-compose.yml --profile test run --rm k6 \
   run --out xk6-influxdb=http://influxdb:8086 --out opentelemetry "$script"
