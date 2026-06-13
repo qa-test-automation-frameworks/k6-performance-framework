@@ -38,6 +38,7 @@ jobs:
           K6_RUN_ID="ci-${GITHUB_RUN_ID}" npm run load:observed
           sleep 10
           node scripts/validate-observability.cjs
+          K6_RUN_ID="ci-${GITHUB_RUN_ID}" node scripts/capture-grafana-evidence.cjs
       - name: Export diagnostics
         if: always()
         run: docker compose -f docker/docker-compose.yml logs --no-color > observability.log
@@ -48,3 +49,4 @@ jobs:
           path: |
             observability.log
             reports/
+            artifacts/evidence/
