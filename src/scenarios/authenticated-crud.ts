@@ -21,7 +21,7 @@ export function authenticatedCrud(token = tokenForVu(), api: Api = createApi()):
       );
       checkStatus(
         api.comments.create(token, slug, { body: 'Performance comment' }),
-        200,
+        201,
         'create comment',
       );
       checkStatus(api.articles.favorite(token, slug), 200, 'favorite article');

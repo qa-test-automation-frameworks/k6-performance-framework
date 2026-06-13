@@ -3,12 +3,14 @@ import { authenticatedThresholds } from '../../config/thresholds/authenticated';
 import { rampingVus } from '../../config/workloads';
 import { authenticatedCrud } from '../../src/scenarios';
 import {
+  assertAuthorizedLoadTarget,
   createAuthenticatedSetup,
   createSummary,
   type AuthenticatedSetupData,
 } from '../../src/helpers';
 import { summaryTrendStats } from '../../src/types/config.types';
 
+assertAuthorizedLoadTarget({ workload: 'Authenticated stress', write: true });
 const validation = __ENV.TEST_PROFILE === 'validation';
 export const options: Options = {
   scenarios: {

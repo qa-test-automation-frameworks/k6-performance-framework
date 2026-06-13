@@ -1,10 +1,11 @@
 import type { Options } from 'k6/options';
 import { rampingVus } from '../../config/workloads';
 import { concurrentReaders } from '../../src/scenarios';
-import { createSummary } from '../../src/helpers';
+import { assertAuthorizedLoadTarget, createSummary } from '../../src/helpers';
 import { summaryTrendStats } from '../../src/types/config.types';
 import { breakpointThresholds } from '../../config/thresholds/breakpoint';
 
+assertAuthorizedLoadTarget({ workload: 'Breakpoint' });
 const validation = __ENV.TEST_PROFILE === 'validation';
 const candidateVus = Number(__ENV.BREAKPOINT_VUS || '0');
 export const options: Options = {

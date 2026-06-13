@@ -1,6 +1,7 @@
 import type { ThresholdSet } from '../../src/types/config.types';
 
 export const soakThresholds: ThresholdSet = {
+  checks: ['rate==1'],
   http_req_duration: [
     { threshold: 'p(95)<1200', abortOnFail: false },
     { threshold: 'p(99)<2500', abortOnFail: false },

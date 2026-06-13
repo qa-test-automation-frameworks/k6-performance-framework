@@ -3,12 +3,14 @@ import { authenticatedThresholds } from '../../config/thresholds/authenticated';
 import { getWorkloadProfile, rampingVus } from '../../config/workloads';
 import { authenticatedCrud } from '../../src/scenarios';
 import {
+  assertAuthorizedLoadTarget,
   createAuthenticatedSetup,
   createSummary,
   type AuthenticatedSetupData,
 } from '../../src/helpers';
 import { summaryTrendStats } from '../../src/types/config.types';
 
+assertAuthorizedLoadTarget({ workload: 'Authenticated load', write: true });
 const profile = getWorkloadProfile();
 export const options: Options = {
   scenarios: {
