@@ -1,5 +1,5 @@
 import type { Options } from 'k6/options';
-import { loadThresholds } from '../../config/thresholds/load';
+import { loadThresholds, observabilityProbeThresholds } from '../../config/thresholds/load';
 import { constantArrivalRate, getWorkloadProfile, perVuIterations } from '../../config/workloads';
 import { browseArticles } from '../../src/scenarios';
 import { assertAuthorizedLoadTarget, createSummary } from '../../src/helpers';
@@ -13,7 +13,7 @@ export const options: Options = {
       ? perVuIterations(2, 2, '15s', '5s')
       : constantArrivalRate(profile, '8m'),
   },
-  thresholds: loadThresholds,
+  thresholds: __ENV.OBSERVABILITY_PROBE === 'true' ? observabilityProbeThresholds : loadThresholds,
   summaryTrendStats,
 };
 export default browseArticles;

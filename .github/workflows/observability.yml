@@ -41,6 +41,7 @@ jobs:
           FRAMEWORK_COMMIT: ${{ github.sha }}
           K6_VERSION: 2.0.0
           RUNNER_CLASS: github-hosted
+          OBSERVABILITY_PROBE: 'true'
         run: |
           K6_RUN_ID="ci-${GITHUB_RUN_ID}" npm run load:observed
           sleep 10
