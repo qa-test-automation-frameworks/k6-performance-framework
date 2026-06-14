@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { getConfig } from '../../config';
 import { authenticatedThresholds } from '../../config/thresholds/authenticated';
 import { breakpointThresholds } from '../../config/thresholds/breakpoint';
-import { loadThresholds } from '../../config/thresholds/load';
+import { loadThresholds, observabilityProbeThresholds } from '../../config/thresholds/load';
 import { soakThresholds } from '../../config/thresholds/soak';
 import { spikeThresholds } from '../../config/thresholds/spike';
 import { stressThresholds } from '../../config/thresholds/stress';
@@ -78,6 +78,14 @@ describe('load thresholds', () => {
       'http_reqs{name:GET /articles}': ['count>0'],
       'http_reqs{name:GET /articles/:slug}': ['count>0'],
       'http_reqs{name:GET /tags}': ['count>0'],
+    });
+  });
+
+  it('keeps observability probes focused on telemetry health', () => {
+    expect(observabilityProbeThresholds).toEqual({
+      checks: ['rate==1'],
+      http_req_failed: ['rate<0.02'],
+      http_reqs: ['count>0'],
     });
   });
 

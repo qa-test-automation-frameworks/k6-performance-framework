@@ -32,3 +32,9 @@ export const loadThresholds: ThresholdSet = {
   dropped_iterations: ['count<10'],
   http_reqs: ['rate>5'],
 };
+
+export const observabilityProbeThresholds: ThresholdSet = {
+  checks: ['rate==1'],
+  http_req_failed: ['rate<0.02'],
+  http_reqs: ['count>0'],
+};
