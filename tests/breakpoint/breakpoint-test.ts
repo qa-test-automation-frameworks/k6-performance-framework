@@ -1,6 +1,6 @@
 import type { Options } from 'k6/options';
 import { getWorkloadStages, rampingVus } from '../../config/workloads';
-import { concurrentReaders } from '../../src/scenarios';
+import { capacityReaders } from '../../src/scenarios';
 import { assertAuthorizedLoadTarget, createSummary } from '../../src/helpers';
 import { summaryTrendStats } from '../../src/types/config.types';
 import { breakpointThresholds } from '../../config/thresholds/breakpoint';
@@ -22,5 +22,5 @@ export const options: Options = {
   thresholds: breakpointThresholds,
   summaryTrendStats,
 };
-export default concurrentReaders;
+export default capacityReaders;
 export const handleSummary = createSummary;

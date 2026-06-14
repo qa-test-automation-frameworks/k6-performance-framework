@@ -37,9 +37,11 @@ const baseline = {
     sourceFiles: inputs.map((file) => path.basename(file)),
     sourceSha256: Object.fromEntries(inputs.map((file) => [path.basename(file), sha256(file)])),
     targetCommit: process.env.TARGET_COMMIT ?? 'unknown',
+    targetId: process.env.TARGET_ID ?? 'realworld-local',
     frameworkCommit: process.env.FRAMEWORK_COMMIT ?? 'unknown',
     k6Version: process.env.K6_VERSION ?? '2.0.0',
     runner: process.env.RUNNER_IMAGE ?? process.platform,
+    runnerClass: process.env.RUNNER_CLASS ?? 'github-hosted',
     workload: {
       targetRps: Number(process.env.TARGET_RPS || '20'),
       maxVus: Number(process.env.MAX_VUS || '100'),

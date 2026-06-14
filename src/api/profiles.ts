@@ -7,11 +7,10 @@ export class ProfilesService {
   constructor(private readonly client = new HttpClient()) {}
 
   get(username: string, token?: string): HttpResponse<ProfileResponse> {
-    return this.client.get(
-      `/profiles/${encodeURIComponent(username)}`,
-      'GET /profiles/:username',
-      token ? { params: auth(token) } : undefined,
-    );
+    return this.client.get(`/profiles/${encodeURIComponent(username)}`, 'GET /profiles/:username', {
+      metricGroup: 'profile',
+      ...(token ? { params: auth(token) } : {}),
+    });
   }
 
   follow(token: string, username: string): HttpResponse<ProfileResponse> {
@@ -19,7 +18,7 @@ export class ProfilesService {
       `/profiles/${encodeURIComponent(username)}/follow`,
       'POST /profiles/:username/follow',
       {},
-      { params: auth(token) },
+      { metricGroup: 'profile', params: auth(token) },
     );
   }
 
@@ -27,7 +26,7 @@ export class ProfilesService {
     return this.client.delete(
       `/profiles/${encodeURIComponent(username)}/follow`,
       'DELETE /profiles/:username/follow',
-      { params: auth(token) },
+      { metricGroup: 'profile', params: auth(token) },
     );
   }
 }

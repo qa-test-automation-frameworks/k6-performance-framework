@@ -6,6 +6,7 @@ import {
   assertAuthorizedLoadTarget,
   createAuthenticatedSetup,
   createSummary,
+  setupUserForVu,
   type AuthenticatedSetupData,
 } from '../../src/helpers';
 import { summaryTrendStats } from '../../src/types/config.types';
@@ -24,7 +25,7 @@ export function setup(): AuthenticatedSetupData {
 }
 
 export default function (data: AuthenticatedSetupData): void {
-  authenticatedCrud(data.token);
+  authenticatedCrud(setupUserForVu(data).token);
 }
 
 export const handleSummary = createSummary;

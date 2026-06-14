@@ -34,6 +34,17 @@ export interface PerformanceSummary {
   failures: string[];
   generatedAt: string;
   metrics: Record<string, MetricValues>;
+  metadata: {
+    environment: string;
+    frameworkCommit: string;
+    k6Version: string;
+    maxVus: number | null;
+    profile: string;
+    runnerClass: string;
+    targetCommit: string;
+    targetId: string;
+    targetRps: number | null;
+  };
   rootGroup: unknown;
   state: unknown;
   thresholds: Record<string, Record<string, { ok: boolean }>>;
@@ -47,6 +58,11 @@ function summaryFile(): string {
 function markdownFile(): string {
   const name = __ENV.SUMMARY_NAME ?? 'k6-summary';
   return `reports/${name}-summary.md`;
+}
+
+function htmlFile(): string {
+  const name = __ENV.SUMMARY_NAME ?? 'k6-summary';
+  return `reports/${name}-summary.html`;
 }
 
 function metricRow(name: string, values: MetricValues | undefined): string {
@@ -65,12 +81,49 @@ function thresholdActual(values: MetricValues, threshold: string): number | unde
   return key ? values[key as keyof MetricValues] : undefined;
 }
 
+function htmlEscape(value: string): string {
+  return value
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;');
+}
+
+function metricValue(value: number | undefined, digits = 2): string {
+  return value === undefined ? '-' : value.toFixed(digits);
+}
+
+function htmlMetricRows(metrics: Record<string, MetricValues>, names: string[]): string {
+  if (names.length === 0) {
+    return '<tr><td colspan="7">No matching metrics were emitted.</td></tr>';
+  }
+  return names
+    .map((name) => {
+      const values = metrics[name] ?? {};
+      return `<tr><td>${htmlEscape(name)}</td><td>${metricValue(values.med)}</td><td>${metricValue(values['p(90)'])}</td><td>${metricValue(values['p(95)'])}</td><td>${metricValue(values['p(99)'])}</td><td>${metricValue(values.rate, 4)}</td><td>${values.count ?? '-'}</td></tr>`;
+    })
+    .join('');
+}
+
+function htmlThresholdRows(summary: PerformanceSummary): string {
+  const rows = Object.entries(summary.thresholds).flatMap(([metric, thresholds]) =>
+    Object.entries(thresholds).map(([threshold, result]) => {
+      const actual = thresholdActual(summary.metrics[metric] ?? {}, threshold);
+      return `<tr><td>${htmlEscape(metric)}</td><td>${htmlEscape(threshold)}</td><td>${actual ?? 'unavailable'}</td><td class="${result.ok ? 'passed' : 'failed'}">${result.ok ? 'PASS' : 'FAIL'}</td></tr>`;
+    }),
+  );
+  return rows.length === 0
+    ? '<tr><td colspan="4">No threshold results were reported.</td></tr>'
+    : rows.join('');
+}
+
 /**
  * Produces machine-readable and reviewer-readable artifacts from a completed k6 run.
  * @param data k6 end-of-test summary data.
  * @returns Output paths mapped to serialized report content.
  */
 export function createSummary(data: SummaryData): Record<string, string> {
+  const workload = getWorkloadProfile();
   const checkFailures = data.metrics.checks?.values.fails ?? 0;
   const interruptedIterations =
     data.metrics.interrupted_iterations?.values.count ?? data.state.interruptedIterations ?? 0;
@@ -81,6 +134,17 @@ export function createSummary(data: SummaryData): Record<string, string> {
     metrics: Object.fromEntries(
       Object.entries(data.metrics).map(([name, metric]) => [name, metric.values]),
     ),
+    metadata: {
+      environment: __ENV.TARGET_ENV ?? 'local',
+      frameworkCommit: __ENV.FRAMEWORK_COMMIT ?? 'unknown',
+      k6Version: __ENV.K6_VERSION ?? '2.0.0',
+      maxVus: workload.maxVus,
+      profile: __ENV.TEST_PROFILE ?? 'full',
+      runnerClass: __ENV.RUNNER_CLASS ?? 'local',
+      targetCommit: __ENV.TARGET_COMMIT ?? 'unknown',
+      targetId: __ENV.TARGET_ID ?? __ENV.TARGET_ENV ?? 'local',
+      targetRps: workload.targetRps,
+    },
     rootGroup: data.root_group,
     state: data.state,
     thresholds: Object.fromEntries(
@@ -109,6 +173,8 @@ export function createSummary(data: SummaryData): Record<string, string> {
     '# k6 Performance Summary',
     '',
     `**Run status:** ${summary.failures.length ? 'FAILED' : 'PASSED'}`,
+    `**Target:** ${summary.metadata.targetId} (${summary.metadata.targetCommit})`,
+    `**Profile:** ${summary.metadata.profile} on ${summary.metadata.runnerClass}`,
     ...(summary.failures.length ? ['', ...summary.failures.map((failure) => `- ${failure}`)] : []),
     '',
     '| Metric | p50 | p90 | p95 | p99 | max | Rate | Count |',
@@ -122,10 +188,54 @@ export function createSummary(data: SummaryData): Record<string, string> {
     metricRow('custom_business_errors_total', summary.metrics.custom_business_errors_total),
     '',
   ].join('\n');
+  const duration = summary.metrics.http_req_duration ?? {};
+  const bars = [
+    ['p50', duration.med ?? 0],
+    ['p90', duration['p(90)'] ?? 0],
+    ['p95', duration['p(95)'] ?? 0],
+    ['p99', duration['p(99)'] ?? 0],
+    ['max', duration.max ?? 0],
+  ] as const;
+  const maximum = Math.max(...bars.map(([, value]) => value), 1);
+  const chart = bars
+    .map(
+      ([label, value], index) =>
+        `<g transform="translate(0 ${index * 42})"><text x="0" y="20">${label}</text><rect x="48" y="4" width="${(value / maximum) * 500}" height="22" fill="#2563eb"/><text x="${56 + (value / maximum) * 500}" y="20">${value.toFixed(2)} ms</text></g>`,
+    )
+    .join('');
+  const endpointMetrics = Object.keys(summary.metrics)
+    .filter(
+      (name) =>
+        name.startsWith('http_req_duration{name:') || name.startsWith('http_req_failed{name:'),
+    )
+    .sort();
+  const businessMetrics = Object.keys(summary.metrics)
+    .filter((name) => name.startsWith('custom_'))
+    .sort();
+  const html = `<!doctype html>
+<html><head><meta charset="utf-8"><title>k6 Performance Summary</title>
+<style>body{font:16px system-ui;max-width:1120px;margin:40px auto;padding:0 20px;color:#18212f}table{border-collapse:collapse;width:100%;margin:12px 0 28px}th,td{padding:8px;border:1px solid #ccd3dc;text-align:left}th{background:#f4f7fb}.failed{color:#b91c1c;font-weight:700}.passed{color:#047857;font-weight:700}.meta{line-height:1.6}.chart{margin:12px 0 28px}</style></head>
+<body><h1>k6 Performance Summary</h1>
+<p class="${summary.failures.length ? 'failed' : 'passed'}"><strong>${summary.failures.length ? 'FAILED' : 'PASSED'}</strong></p>
+<p class="meta">Target: ${htmlEscape(summary.metadata.targetId)} (${htmlEscape(summary.metadata.targetCommit)})<br>Profile: ${htmlEscape(summary.metadata.profile)}<br>Runner: ${htmlEscape(summary.metadata.runnerClass)}</p>
+<svg class="chart" role="img" aria-label="Latency percentiles" width="720" height="230" viewBox="0 0 720 230">${chart}</svg>
+<h2>Core Metrics</h2>
+<table><thead><tr><th>Metric</th><th>p50</th><th>p90</th><th>p95</th><th>p99</th><th>Rate</th><th>Count</th></tr></thead><tbody>${htmlMetricRows(summary.metrics, ['http_req_duration', 'http_req_failed', 'checks', 'http_reqs', 'iterations'])}</tbody></table>
+<h2>Endpoint Metrics</h2>
+<table><thead><tr><th>Metric</th><th>p50</th><th>p90</th><th>p95</th><th>p99</th><th>Rate</th><th>Count</th></tr></thead><tbody>${htmlMetricRows(summary.metrics, endpointMetrics)}</tbody></table>
+<h2>Business Metrics</h2>
+<table><thead><tr><th>Metric</th><th>p50</th><th>p90</th><th>p95</th><th>p99</th><th>Rate</th><th>Count</th></tr></thead><tbody>${htmlMetricRows(summary.metrics, businessMetrics)}</tbody></table>
+<h2>Thresholds</h2>
+<table><thead><tr><th>Metric</th><th>Threshold</th><th>Actual</th><th>Status</th></tr></thead><tbody>${htmlThresholdRows(summary)}</tbody></table>
+<h2>Markdown Summary</h2>
+<pre>${htmlEscape(markdown)}</pre>
+</body></html>`;
 
   return {
     [summaryFile()]: JSON.stringify(summary, null, 2),
     [markdownFile()]: markdown,
+    [htmlFile()]: html,
     stdout: markdown,
   };
 }
+import { getWorkloadProfile } from '../../config/workloads';

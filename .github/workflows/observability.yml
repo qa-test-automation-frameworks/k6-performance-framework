@@ -25,6 +25,7 @@ jobs:
       - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6
         with:
           bun-version: 1.2.15
+      - run: npm install --global npm@10.9.4
       - run: npm ci
       - run: npm run build
       - name: Start controlled target and telemetry stack
@@ -34,17 +35,29 @@ jobs:
           docker compose -f docker/docker-compose.yml up -d --build
           npm run docker:health
       - name: Emit and verify telemetry
+        env:
+          TARGET_ID: realworld-local
+          TARGET_COMMIT: c8c66858a436a6e07f445fffe2253a65ff6dcb58
+          FRAMEWORK_COMMIT: ${{ github.sha }}
+          K6_VERSION: 2.0.0
+          RUNNER_CLASS: github-hosted
+          OBSERVABILITY_PROBE: 'true'
         run: |
           K6_RUN_ID="ci-${GITHUB_RUN_ID}" npm run load:observed
           sleep 10
           node scripts/validate-observability.cjs
+          K6_RUN_ID="ci-${GITHUB_RUN_ID}" node scripts/capture-grafana-evidence.cjs
       - name: Export diagnostics
         if: always()
-        run: docker compose -f docker/docker-compose.yml logs --no-color > observability.log
+        run: |
+          docker compose -f docker/docker-compose.yml logs --no-color > observability.log
+          cp "${RUNNER_TEMP}/realworld-api.log" realworld-api.log 2>/dev/null || true
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         if: always()
         with:
           name: observability-diagnostics
           path: |
             observability.log
+            realworld-api.log
             reports/
+            artifacts/evidence/

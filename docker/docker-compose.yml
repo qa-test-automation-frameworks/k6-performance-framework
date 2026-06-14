@@ -1,14 +1,14 @@
 services:
   influxdb:
-    image: influxdb:2.7.12
+    image: influxdb:2.7.12@sha256:b8d940ca9376f85118260f5b6bd236b8a00b1749c3350c5578d4cde8e27f31f2
     ports: ['8086:8086']
     environment:
       DOCKER_INFLUXDB_INIT_MODE: setup
       DOCKER_INFLUXDB_INIT_USERNAME: admin
-      DOCKER_INFLUXDB_INIT_PASSWORD: performance-admin-password
+      DOCKER_INFLUXDB_INIT_PASSWORD: ${INFLUXDB_ADMIN_PASSWORD:-performance-admin-password}
       DOCKER_INFLUXDB_INIT_ORG: k6
       DOCKER_INFLUXDB_INIT_BUCKET: k6
-      DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: k6-local-development-token
+      DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: ${INFLUXDB_ADMIN_TOKEN:-k6-local-development-token}
       DOCKER_INFLUXDB_INIT_RETENTION: ${INFLUXDB_RETENTION:-7d}
     volumes:
       - influxdb-data:/var/lib/influxdb2
@@ -19,13 +19,17 @@ services:
       retries: 30
 
   grafana:
-    image: grafana/grafana:13.0.2
+    image: grafana/grafana:13.0.2@sha256:5dad0df181cb644a14e13617b913b261a54f7d4fd4510721dba420929f35bea2
     ports: ['3001:3000']
     environment:
       GF_SECURITY_ADMIN_USER: admin
-      GF_SECURITY_ADMIN_PASSWORD: admin
-      GF_AUTH_ANONYMOUS_ENABLED: 'true'
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-admin}
+      GF_AUTH_ANONYMOUS_ENABLED: ${GRAFANA_ANONYMOUS_ENABLED:-true}
       GF_AUTH_ANONYMOUS_ORG_ROLE: Viewer
+      GF_RENDERING_SERVER_URL: http://renderer:8081/render
+      GF_RENDERING_CALLBACK_URL: http://grafana:3000/
+      GF_RENDERING_RENDERER_TOKEN: ${GRAFANA_RENDERER_TOKEN:-k6-local-renderer-token}
+      INFLUXDB_ADMIN_TOKEN: ${INFLUXDB_ADMIN_TOKEN:-k6-local-development-token}
     volumes:
       - grafana-data:/var/lib/grafana
       - ./grafana/provisioning:/etc/grafana/provisioning:ro
@@ -34,9 +38,16 @@ services:
         condition: service_healthy
       prometheus:
         condition: service_healthy
+      renderer:
+        condition: service_started
+
+  renderer:
+    image: grafana/grafana-image-renderer:3.12.6@sha256:37d03fc58922f0a933a7a02e070e76ad8dc28bfb7a55c05ca898e01875fc8939
+    environment:
+      AUTH_TOKEN: ${GRAFANA_RENDERER_TOKEN:-k6-local-renderer-token}
 
   prometheus:
-    image: prom/prometheus:v3.9.1
+    image: prom/prometheus:v3.9.1@sha256:1f0f50f06acaceb0f5670d2c8a658a599affe7b0d8e78b898c1035653849a702
     command: ['--config.file=/etc/prometheus/prometheus.yml']
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
@@ -49,7 +60,7 @@ services:
       retries: 30
 
   otel-collector:
-    image: otel/opentelemetry-collector-contrib:0.153.0
+    image: otel/opentelemetry-collector-contrib:0.153.0@sha256:93aad750175cbf1a973ae1c5886c3371f4d800f61be25cdd26870b8441ffe9fa
     command: ['--config=/etc/otelcol-contrib/config.yaml']
     volumes:
       - ./otel/config.yaml:/etc/otelcol-contrib/config.yaml:ro
@@ -75,12 +86,21 @@ services:
       BASE_URL: ${BASE_URL:-http://host.docker.internal:3000/api}
       K6_INFLUXDB_ORGANIZATION: k6
       K6_INFLUXDB_BUCKET: k6
-      K6_INFLUXDB_TOKEN: k6-local-development-token
+      K6_INFLUXDB_TOKEN: ${INFLUXDB_ADMIN_TOKEN:-k6-local-development-token}
       K6_OTEL_GRPC_EXPORTER_INSECURE: 'true'
       K6_OTEL_GRPC_EXPORTER_ENDPOINT: otel-collector:4317
       K6_OTEL_METRIC_PREFIX: k6_
       TEST_PROFILE: ${TEST_PROFILE:-validation}
-      K6_TAGS: run_id=${K6_RUN_ID:-local-development},environment=${TARGET_ENV:-local}
+      OBSERVABILITY_PROBE: ${OBSERVABILITY_PROBE:-false}
+      K6_TAGS: run_id:${K6_RUN_ID:-local-development},environment:${TARGET_ENV:-local}
+      K6_RUN_ID: ${K6_RUN_ID:-local-development}
+      K6_SCRIPT: ${K6_SCRIPT:-dist/load/articles-load.js}
+      SUMMARY_NAME: ${SUMMARY_NAME:-observed}
+      TARGET_ID: ${TARGET_ID:-realworld-local}
+      TARGET_COMMIT: ${TARGET_COMMIT:-unknown}
+      FRAMEWORK_COMMIT: ${FRAMEWORK_COMMIT:-unknown}
+      K6_VERSION: ${K6_VERSION:-2.0.0}
+      RUNNER_CLASS: ${RUNNER_CLASS:-local-docker}
     depends_on:
       influxdb:
         condition: service_healthy

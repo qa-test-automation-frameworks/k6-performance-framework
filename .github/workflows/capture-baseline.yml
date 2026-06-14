@@ -22,6 +22,7 @@ jobs:
       - uses: grafana/setup-k6-action@db07bd9765aac508ef18982e52ab937fe633a065
         with:
           k6-version: 2.0.0
+      - run: npm install --global npm@10.9.4
       - run: npm ci
       - run: npm run build
       - name: Capture three controlled runs
@@ -42,6 +43,11 @@ jobs:
           TARGET_ENV: local
           BASE_URL: http://localhost:3000/api
           TEST_PROFILE: full
+          TARGET_ID: realworld-local
+          TARGET_COMMIT: c8c66858a436a6e07f445fffe2253a65ff6dcb58
+          FRAMEWORK_COMMIT: ${{ github.sha }}
+          K6_VERSION: 2.0.0
+          RUNNER_CLASS: github-hosted
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: measured-load-baseline

@@ -19,6 +19,14 @@ that exceeds the reviewed baseline by more than 20%, and rejects request failure
 2%. A baseline is valid only when it is the median of at least three controlled full-profile runs
 against the pinned RealWorld backend.
 
+The committed baseline is valid only for the recorded target, workload profile, k6 version, and
+runner class. `npm run baseline:compare` rejects incompatible candidates before comparing metrics.
+Network targets, different profiles, and materially different runner classes require a separate
+reviewed file selected with `BASELINE_FILE`.
+
+Automated baseline regression comparison currently covers the load workload. Stress, spike, soak,
+and breakpoint runs are evaluated through absolute k6 thresholds and Grafana dashboard review.
+
 ## Common Signals
 
 | Signal                                     | Interpretation                                                        |

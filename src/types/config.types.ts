@@ -14,7 +14,7 @@ export interface EnvConfig {
     max: number;
   };
   tags: Record<string, string>;
-  readOnly: boolean;
+  allowsWrites: boolean;
 }
 
 export type ThresholdSet = Record<string, Threshold[]>;

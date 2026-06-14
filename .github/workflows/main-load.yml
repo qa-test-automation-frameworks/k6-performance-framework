@@ -23,6 +23,7 @@ jobs:
       - uses: grafana/setup-k6-action@db07bd9765aac508ef18982e52ab937fe633a065
         with:
           k6-version: 2.0.0
+      - run: npm install --global npm@10.9.4
       - run: npm ci
       - run: npm run build
       - name: Run controlled load test
@@ -36,6 +37,11 @@ jobs:
           BASE_URL: http://localhost:3000/api
           TEST_PROFILE: full
           SUMMARY_NAME: load
+          TARGET_ID: realworld-local
+          TARGET_COMMIT: c8c66858a436a6e07f445fffe2253a65ff6dcb58
+          FRAMEWORK_COMMIT: ${{ github.sha }}
+          K6_VERSION: 2.0.0
+          RUNNER_CLASS: github-hosted
       - run: cat reports/load-summary.md >> "$GITHUB_STEP_SUMMARY"
         if: always()
       - name: Baseline regression check

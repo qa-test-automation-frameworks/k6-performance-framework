@@ -1,5 +1,14 @@
 import { describe, expect, it, vi } from 'vitest';
-import { authenticatedCrud, browseArticles } from '../../src/scenarios';
+import http from 'k6/http';
+import {
+  authenticatedCrud,
+  browseArticles,
+  capacityReaders,
+  concurrentReaders,
+  soakReaders,
+  spikeReaders,
+  stressReaders,
+} from '../../src/scenarios';
 
 function response<T>(data: T, status = 200) {
   return { data, status, raw: {}, headers: {}, attempts: 1 };
@@ -54,5 +63,20 @@ describe('scenario transaction coverage', () => {
     expect(api.articles.favorite).toHaveBeenCalled();
     expect(api.articles.unfavorite).toHaveBeenCalled();
     expect(api.articles.delete).toHaveBeenCalledWith('token', 'created');
+  });
+
+  it('executes the high-concurrency reader journey', () => {
+    vi.mocked(http.request).mockReturnValue({
+      status: 200,
+      body: '{"articles":[{"slug":"seed"}],"tags":[]}',
+      headers: {},
+      json: () => ({ articles: [{ slug: 'seed' }], tags: [], comments: [] }),
+      timings: { duration: 10 },
+    } as never);
+    concurrentReaders();
+    stressReaders();
+    spikeReaders();
+    soakReaders();
+    capacityReaders();
   });
 });

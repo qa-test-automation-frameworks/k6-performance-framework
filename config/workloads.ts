@@ -7,7 +7,7 @@ import type {
   WorkloadStage,
 } from '../src/types/config.types';
 
-const fullProfiles: Record<EnvironmentName, Record<StagedWorkload, WorkloadStage[]>> = {
+const fullProfiles: Partial<Record<EnvironmentName, Record<StagedWorkload, WorkloadStage[]>>> = {
   local: {
     authenticatedLoad: [
       { duration: '2m', target: 5 },
@@ -48,11 +48,7 @@ const fullProfiles: Record<EnvironmentName, Record<StagedWorkload, WorkloadStage
       { duration: '1m', target: 0 },
     ],
   },
-  staging: {} as Record<StagedWorkload, WorkloadStage[]>,
-  production: {} as Record<StagedWorkload, WorkloadStage[]>,
 };
-fullProfiles.staging = fullProfiles.local;
-fullProfiles.production = fullProfiles.local;
 
 const validationProfiles: Record<StagedWorkload, WorkloadStage[]> = {
   authenticatedLoad: [
@@ -109,13 +105,25 @@ export function getWorkloadProfile(): WorkloadProfile {
   };
 }
 
-/** Resolves a typed stage profile, optionally overridden with validated JSON. */
+/**
+ * Resolves a typed stage profile for the selected environment and test profile.
+ * A workload can be overridden with a JSON array in its derived environment variable, such as
+ * `STRESS_STAGES` or `AUTHENTICATED_LOAD_STAGES`.
+ * @param workload Named staged workload.
+ * @returns Validated duration/target stages.
+ * @throws When an override is invalid JSON or is not a non-empty duration/target array.
+ */
 export function getWorkloadStages(workload: StagedWorkload): WorkloadStage[] {
   const overrideName =
     `${workload.replace(/[A-Z]/g, (letter) => `_${letter}`)}_STAGES`.toUpperCase();
   const raw = __ENV[overrideName];
   if (raw) {
-    const stages = JSON.parse(raw) as unknown;
+    let stages: unknown;
+    try {
+      stages = JSON.parse(raw) as unknown;
+    } catch {
+      throw new Error(`${overrideName} must contain valid JSON`);
+    }
     if (
       !Array.isArray(stages) ||
       stages.length === 0 ||
@@ -133,9 +141,14 @@ export function getWorkloadStages(workload: StagedWorkload): WorkloadStage[] {
     return stages as WorkloadStage[];
   }
   const config = getConfig();
-  return __ENV.TEST_PROFILE === 'validation'
-    ? validationProfiles[workload]
-    : fullProfiles[config.environment][workload];
+  if (__ENV.TEST_PROFILE === 'validation') return validationProfiles[workload];
+  const environmentProfile = fullProfiles[config.environment];
+  if (!environmentProfile) {
+    throw new Error(
+      `Full ${workload} profile is not defined for ${config.environment}; provide ${overrideName}`,
+    );
+  }
+  return environmentProfile[workload];
 }
 
 /**

@@ -10,10 +10,10 @@ const patterns = [
     pattern: /\b(?:api[_-]?key|client[_-]?secret|password|token)\s*[:=]\s*["'][^"'$\n]{12,}["']/gi,
   },
 ];
-const allowedFiles = new Set(['.env.example', 'docker/docker-compose.yml']);
+const allowedFiles = new Set(['.env.example']);
 const files = execFileSync('git', ['ls-files', '-z'], { encoding: 'utf8' })
   .split('\0')
-  .filter(Boolean);
+  .filter((file) => file && fs.existsSync(file));
 const findings = [];
 
 for (const file of files) {

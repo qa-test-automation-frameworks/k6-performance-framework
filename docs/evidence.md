@@ -5,11 +5,9 @@ expected review format; they are intentionally labeled as examples and are not r
 
 ## Reviewed Baseline
 
-The current aggregate baseline was produced by
-[workflow run 27465074415](https://github.com/qa-test-automation-frameworks/k6-performance-framework/actions/runs/27465074415)
-from three full seeded runs against target commit `c8c66858a436a6e07f445fffe2253a65ff6dcb58`.
-All three runs passed checks and thresholds with zero request failures. The aggregate and source
-hashes are retained in `baseline/load-summary.json`.
+The committed aggregate is retained for regression wiring, but it must be refreshed through the
+controlled capture workflow before release because baseline compatibility now includes target,
+profile, k6 version, and runner-class provenance.
 
 ## Overview
 
@@ -36,9 +34,10 @@ Failure evidence must show the metric, expected threshold, actual value, and bre
 1. Start the controlled RealWorld target and seed at least five articles.
 2. Run `npm run docker:up` and `npm run docker:health`.
 3. Run `K6_RUN_ID=<commit-or-ticket> npm run load:observed`.
-4. Select the matching `environment` and `run_id` in Grafana.
-5. Capture the overview and soak dashboards with the run metadata visible.
-6. Retain the JSON/Markdown summaries and link the matching Actions run.
+4. Run `npm run observability:capture` to export the overview and endpoint dashboards.
+5. Select the matching `environment` and `run_id` in Grafana for any additional review.
+6. Retain the PNG, JSON, and Markdown artifacts and link the matching Actions run.
 
 Only replace the example assets with captures whose source summaries and baseline metadata are
-retained.
+retained. A release also requires completed full stress, spike, breakpoint, and soak workflow
+evidence; short validation profiles prove wiring only.

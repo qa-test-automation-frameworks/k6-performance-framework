@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-13T11:34:37.597Z",
+  "generatedAt": "2026-06-13T18:39:23.785Z",
   "metadata": {
     "status": "measured",
     "sampleCount": 3,
@@ -9,36 +9,38 @@
       "baseline-3-summary.json"
     ],
     "sourceSha256": {
-      "baseline-1-summary.json": "5995227b5a7992ab5fb108c6793179be26f7d8d476f2f8e34f53282fe474c44c",
-      "baseline-2-summary.json": "347cc6c6acdada56291612449450e3a02981550655abe7c8481c8ea7b678436a",
-      "baseline-3-summary.json": "d26b9df188cf76deeb0818b9663fdb6f93669381158e7021b75ce9a2cc7b2aad"
+      "baseline-1-summary.json": "088c94b2c6fca764c88b7c3f61ee90ffae0c71ae641e7057fc123013a00bd946",
+      "baseline-2-summary.json": "24a165a99edd5091fff5fd3997093e7be90285720d705f20f92622f67aa6814e",
+      "baseline-3-summary.json": "02b50705206881885afb1a19f2bb84803b469172d52552f922ff8754cfc03318"
     },
     "targetCommit": "c8c66858a436a6e07f445fffe2253a65ff6dcb58",
-    "frameworkCommit": "d9db4e09d0f7e39bc64c508c251ccf0dc23ccb53",
+    "targetId": "realworld-local",
+    "frameworkCommit": "d9d8295beadbd1ba7085a3bddd902cbb31f2fc58",
     "k6Version": "2.0.0",
     "runner": "ubuntu24-20260607.184.1",
+    "runnerClass": "github-hosted",
     "workload": {
       "targetRps": 20,
       "maxVus": 100,
       "profile": "full"
     },
-    "workflowRun": "https://github.com/qa-test-automation-frameworks/k6-performance-framework/actions/runs/27465074415"
+    "workflowRun": "https://github.com/qa-test-automation-frameworks/k6-performance-framework/actions/runs/27474987004"
   },
   "metrics": {
     "http_req_duration": {
-      "p(95)": 1.9458381999999999,
-      "p(99)": 2.3195666800000003
+      "p(95)": 2.4370673,
+      "p(99)": 2.734138409999999
     },
     "http_req_failed": {
       "rate": 0
     },
     "http_reqs": {
       "count": 32245,
-      "rate": 67.04347458780272
+      "rate": 67.04339952405867
     },
     "iterations": {
       "count": 9599,
-      "rate": 19.958142737426527
+      "rate": 19.958077987417315
     },
     "dropped_iterations": {
       "count": 1

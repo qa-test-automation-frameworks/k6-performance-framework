@@ -1,0 +1,59 @@
+name: Segmented execution validation
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/segmented-validation.yml'
+      - 'config/**'
+      - 'src/**'
+      - 'tests/load/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
+        with:
+          node-version: 20
+          cache: npm
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6
+        with:
+          bun-version: 1.2.15
+      - uses: grafana/setup-k6-action@db07bd9765aac508ef18982e52ab937fe633a065
+        with:
+          k6-version: 2.0.0
+      - run: npm install --global npm@10.9.4
+      - run: npm ci
+      - run: npm run build
+      - name: Run both execution segments against one controlled target
+        shell: bash
+        run: |
+          source .github/scripts/start-realworld.sh
+          for segment in '0:1/2' '1/2:1'; do
+            name="$(echo "$segment" | tr '/:' '--')"
+            SUMMARY_NAME="segment-${name}" k6 run \
+              --execution-segment "$segment" \
+              --no-thresholds \
+              --tag segment="$name" \
+              dist/load/articles-load.js
+          done
+        env:
+          TARGET_ENV: local
+          BASE_URL: http://localhost:3000/api
+          TEST_PROFILE: validation
+          TARGET_ID: realworld-local
+          TARGET_COMMIT: c8c66858a436a6e07f445fffe2253a65ff6dcb58
+          FRAMEWORK_COMMIT: ${{ github.sha }}
+          K6_VERSION: 2.0.0
+          RUNNER_CLASS: github-hosted-segmented-validation
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        if: always()
+        with:
+          name: segmented-validation-results
+          path: reports/

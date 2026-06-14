@@ -1,7 +1,7 @@
 import type { Options } from 'k6/options';
 import { soakThresholds } from '../../config/thresholds/soak';
 import { getWorkloadStages, rampingVus } from '../../config/workloads';
-import { concurrentReaders } from '../../src/scenarios';
+import { soakReaders } from '../../src/scenarios';
 import { assertAuthorizedLoadTarget, createSummary } from '../../src/helpers';
 import { summaryTrendStats } from '../../src/types/config.types';
 
@@ -13,5 +13,5 @@ export const options: Options = {
   thresholds: soakThresholds,
   summaryTrendStats,
 };
-export default concurrentReaders;
+export default soakReaders;
 export const handleSummary = createSummary;

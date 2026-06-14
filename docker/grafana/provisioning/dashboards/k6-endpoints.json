@@ -1,0 +1,56 @@
+{
+  "annotations": { "list": [] },
+  "editable": true,
+  "panels": [
+    {
+      "datasource": { "uid": "influxdb-k6" },
+      "fieldConfig": { "defaults": { "unit": "ms" }, "overrides": [] },
+      "gridPos": { "h": 10, "w": 24, "x": 0, "y": 0 },
+      "id": 1,
+      "targets": [
+        {
+          "query": "from(bucket: \"k6\") |> range(start: v.timeRangeStart, stop: v.timeRangeStop) |> filter(fn: (r) => r._measurement == \"http_req_duration\" and r.environment == \"${environment}\" and r.run_id == \"${run_id}\") |> group(columns: [\"name\"]) |> aggregateWindow(every: 10s, fn: (tables=<-, column) => tables |> quantile(q: 0.95, column: column))"
+        }
+      ],
+      "title": "Endpoint p95 Latency",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "uid": "influxdb-k6" },
+      "fieldConfig": { "defaults": { "unit": "percentunit" }, "overrides": [] },
+      "gridPos": { "h": 10, "w": 24, "x": 0, "y": 10 },
+      "id": 2,
+      "targets": [
+        {
+          "query": "from(bucket: \"k6\") |> range(start: v.timeRangeStart, stop: v.timeRangeStop) |> filter(fn: (r) => r._measurement == \"http_req_failed\" and r.environment == \"${environment}\" and r.run_id == \"${run_id}\") |> group(columns: [\"name\"]) |> aggregateWindow(every: 10s, fn: mean)"
+        }
+      ],
+      "title": "Endpoint Error Rate",
+      "type": "timeseries"
+    }
+  ],
+  "schemaVersion": 41,
+  "tags": ["k6", "performance", "endpoints"],
+  "templating": {
+    "list": [
+      {
+        "datasource": { "uid": "influxdb-k6" },
+        "label": "Environment",
+        "name": "environment",
+        "query": "import \"influxdata/influxdb/schema\"\nschema.tagValues(bucket: \"k6\", tag: \"environment\")",
+        "type": "query"
+      },
+      {
+        "datasource": { "uid": "influxdb-k6" },
+        "label": "Run",
+        "name": "run_id",
+        "query": "import \"influxdata/influxdb/schema\"\nschema.tagValues(bucket: \"k6\", tag: \"run_id\")",
+        "type": "query"
+      }
+    ]
+  },
+  "time": { "from": "now-30m", "to": "now" },
+  "title": "k6 Endpoint Breakdown",
+  "uid": "k6-endpoints",
+  "version": 1
+}

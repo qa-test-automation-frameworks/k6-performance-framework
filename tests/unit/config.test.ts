@@ -1,12 +1,17 @@
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { getConfig } from '../../config';
 import { authenticatedThresholds } from '../../config/thresholds/authenticated';
 import { breakpointThresholds } from '../../config/thresholds/breakpoint';
-import { loadThresholds } from '../../config/thresholds/load';
+import { loadThresholds, observabilityProbeThresholds } from '../../config/thresholds/load';
 import { soakThresholds } from '../../config/thresholds/soak';
 import { spikeThresholds } from '../../config/thresholds/spike';
 import { stressThresholds } from '../../config/thresholds/stress';
-import { getWorkloadProfile } from '../../config/workloads';
+import {
+  constantArrivalRate,
+  getWorkloadProfile,
+  perVuIterations,
+  rampingVus,
+} from '../../config/workloads';
 import { assertAuthorizedLoadTarget } from '../../src/helpers/safety';
 import { setTestEnv } from './setup';
 
@@ -51,9 +56,9 @@ describe('getConfig', () => {
 
   it('authorizes controlled non-local writes only with an explicit override', () => {
     setTestEnv({ TARGET_ENV: 'staging' });
-    expect(getConfig().readOnly).toBe(true);
+    expect(getConfig().allowsWrites).toBe(false);
     setTestEnv({ TARGET_ENV: 'staging', ALLOW_NON_LOCAL_LOAD: 'true' });
-    expect(getConfig().readOnly).toBe(false);
+    expect(getConfig().allowsWrites).toBe(true);
   });
 
   it('blocks every non-local sustained workload without explicit authorization', () => {
@@ -76,6 +81,14 @@ describe('load thresholds', () => {
     });
   });
 
+  it('keeps observability probes focused on telemetry health', () => {
+    expect(observabilityProbeThresholds).toEqual({
+      checks: ['rate==1'],
+      http_req_failed: ['rate<0.02'],
+      http_reqs: ['count>0'],
+    });
+  });
+
   it('fails every workload when functional checks fail', () => {
     for (const thresholds of [
       authenticatedThresholds,
@@ -87,5 +100,59 @@ describe('load thresholds', () => {
     ]) {
       expect(thresholds.checks).toEqual(['rate==1']);
     }
+  });
+
+  it('keeps stress and soak thresholds exploratory by default', () => {
+    expect(stressThresholds.http_req_duration).toContainEqual({
+      threshold: 'p(95)<2000',
+      abortOnFail: false,
+    });
+    expect(soakThresholds.http_req_failed).toContainEqual({
+      threshold: 'rate<0.01',
+      abortOnFail: false,
+    });
+  });
+
+  it('can promote stress and soak thresholds to release gates', async () => {
+    setTestEnv({ PERF_STRICT_THRESHOLDS: 'true' });
+    vi.resetModules();
+    const [{ stressThresholds: strictStress }, { soakThresholds: strictSoak }] = await Promise.all([
+      import('../../config/thresholds/stress'),
+      import('../../config/thresholds/soak'),
+    ]);
+
+    expect(strictStress.http_req_duration).toContainEqual({
+      threshold: 'p(95)<2000',
+      abortOnFail: true,
+    });
+    expect(strictSoak.http_req_failed).toContainEqual({
+      threshold: 'rate<0.01',
+      abortOnFail: true,
+    });
+  });
+});
+
+describe('workload builders', () => {
+  it('builds all supported executor shapes', () => {
+    expect(rampingVus([{ duration: '1m', target: 2 }])).toMatchObject({
+      executor: 'ramping-vus',
+      gracefulRampDown: '30s',
+    });
+    expect(perVuIterations(2, 3, '1m')).toMatchObject({
+      executor: 'per-vu-iterations',
+      vus: 2,
+      iterations: 3,
+    });
+    expect(
+      constantArrivalRate(
+        { validation: false, targetRps: 12, maxVus: 40, thinkTimeSeconds: 1 },
+        '5m',
+      ),
+    ).toMatchObject({
+      executor: 'constant-arrival-rate',
+      rate: 12,
+      preAllocatedVUs: 20,
+      maxVUs: 40,
+    });
   });
 });

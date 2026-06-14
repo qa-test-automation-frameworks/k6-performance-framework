@@ -32,10 +32,12 @@
     "format:check": "prettier --check src tests config scripts .github package.json",
     "typecheck": "tsc --noEmit",
     "test:unit": "vitest run",
+    "test:coverage": "vitest run --coverage",
     "docker:up": "docker compose -f docker/docker-compose.yml up -d --build",
     "docker:down": "docker compose -f docker/docker-compose.yml down -v",
     "docker:health": "node scripts/wait-observability.cjs",
     "load:observed": "npm run build && node scripts/platform-runner.cjs observed",
+    "observability:capture": "node scripts/capture-grafana-evidence.cjs",
     "baseline:compare": "node scripts/compare-performance.cjs",
     "baseline:aggregate": "node scripts/aggregate-baseline.cjs",
     "report:site": "node scripts/build-report-site.cjs",
@@ -44,6 +46,7 @@
     "sbom": "node -e \"require('node:fs').mkdirSync('artifacts',{recursive:true})\" && cyclonedx-npm --output-format JSON --output-file artifacts/sbom.cdx.json",
     "audit": "npm audit --audit-level=moderate",
     "secrets:scan": "node scripts/scan-secrets.cjs",
+    "release:validate": "node scripts/validate-release-version.cjs",
     "hooks:install": "git config core.hooksPath .githooks"
   },
   "devDependencies": {
@@ -51,6 +54,7 @@
     "@types/k6": "2.0.0",
     "@typescript-eslint/eslint-plugin": "7.18.0",
     "@typescript-eslint/parser": "7.18.0",
+    "@vitest/coverage-v8": "4.1.8",
     "esbuild": "0.28.1",
     "eslint": "8.57.1",
     "glob": "10.5.0",
