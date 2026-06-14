@@ -81,6 +81,42 @@ function thresholdActual(values: MetricValues, threshold: string): number | unde
   return key ? values[key as keyof MetricValues] : undefined;
 }
 
+function htmlEscape(value: string): string {
+  return value
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;');
+}
+
+function metricValue(value: number | undefined, digits = 2): string {
+  return value === undefined ? '-' : value.toFixed(digits);
+}
+
+function htmlMetricRows(metrics: Record<string, MetricValues>, names: string[]): string {
+  if (names.length === 0) {
+    return '<tr><td colspan="7">No matching metrics were emitted.</td></tr>';
+  }
+  return names
+    .map((name) => {
+      const values = metrics[name] ?? {};
+      return `<tr><td>${htmlEscape(name)}</td><td>${metricValue(values.med)}</td><td>${metricValue(values['p(90)'])}</td><td>${metricValue(values['p(95)'])}</td><td>${metricValue(values['p(99)'])}</td><td>${metricValue(values.rate, 4)}</td><td>${values.count ?? '-'}</td></tr>`;
+    })
+    .join('');
+}
+
+function htmlThresholdRows(summary: PerformanceSummary): string {
+  const rows = Object.entries(summary.thresholds).flatMap(([metric, thresholds]) =>
+    Object.entries(thresholds).map(([threshold, result]) => {
+      const actual = thresholdActual(summary.metrics[metric] ?? {}, threshold);
+      return `<tr><td>${htmlEscape(metric)}</td><td>${htmlEscape(threshold)}</td><td>${actual ?? 'unavailable'}</td><td class="${result.ok ? 'passed' : 'failed'}">${result.ok ? 'PASS' : 'FAIL'}</td></tr>`;
+    }),
+  );
+  return rows.length === 0
+    ? '<tr><td colspan="4">No threshold results were reported.</td></tr>'
+    : rows.join('');
+}
+
 /**
  * Produces machine-readable and reviewer-readable artifacts from a completed k6 run.
  * @param data k6 end-of-test summary data.
@@ -167,14 +203,32 @@ export function createSummary(data: SummaryData): Record<string, string> {
         `<g transform="translate(0 ${index * 42})"><text x="0" y="20">${label}</text><rect x="48" y="4" width="${(value / maximum) * 500}" height="22" fill="#2563eb"/><text x="${56 + (value / maximum) * 500}" y="20">${value.toFixed(2)} ms</text></g>`,
     )
     .join('');
+  const endpointMetrics = Object.keys(summary.metrics)
+    .filter(
+      (name) =>
+        name.startsWith('http_req_duration{name:') || name.startsWith('http_req_failed{name:'),
+    )
+    .sort();
+  const businessMetrics = Object.keys(summary.metrics)
+    .filter((name) => name.startsWith('custom_'))
+    .sort();
   const html = `<!doctype html>
 <html><head><meta charset="utf-8"><title>k6 Performance Summary</title>
-<style>body{font:16px system-ui;max-width:960px;margin:40px auto;padding:0 20px;color:#18212f}table{border-collapse:collapse;width:100%}th,td{padding:8px;border:1px solid #ccd3dc;text-align:left}.failed{color:#b91c1c}.passed{color:#047857}</style></head>
+<style>body{font:16px system-ui;max-width:1120px;margin:40px auto;padding:0 20px;color:#18212f}table{border-collapse:collapse;width:100%;margin:12px 0 28px}th,td{padding:8px;border:1px solid #ccd3dc;text-align:left}th{background:#f4f7fb}.failed{color:#b91c1c;font-weight:700}.passed{color:#047857;font-weight:700}.meta{line-height:1.6}.chart{margin:12px 0 28px}</style></head>
 <body><h1>k6 Performance Summary</h1>
 <p class="${summary.failures.length ? 'failed' : 'passed'}"><strong>${summary.failures.length ? 'FAILED' : 'PASSED'}</strong></p>
-<p>Target: ${summary.metadata.targetId} (${summary.metadata.targetCommit})<br>Profile: ${summary.metadata.profile}<br>Runner: ${summary.metadata.runnerClass}</p>
-<svg role="img" aria-label="Latency percentiles" width="720" height="230" viewBox="0 0 720 230">${chart}</svg>
-<pre>${markdown.replaceAll('&', '&amp;').replaceAll('<', '&lt;')}</pre>
+<p class="meta">Target: ${htmlEscape(summary.metadata.targetId)} (${htmlEscape(summary.metadata.targetCommit)})<br>Profile: ${htmlEscape(summary.metadata.profile)}<br>Runner: ${htmlEscape(summary.metadata.runnerClass)}</p>
+<svg class="chart" role="img" aria-label="Latency percentiles" width="720" height="230" viewBox="0 0 720 230">${chart}</svg>
+<h2>Core Metrics</h2>
+<table><thead><tr><th>Metric</th><th>p50</th><th>p90</th><th>p95</th><th>p99</th><th>Rate</th><th>Count</th></tr></thead><tbody>${htmlMetricRows(summary.metrics, ['http_req_duration', 'http_req_failed', 'checks', 'http_reqs', 'iterations'])}</tbody></table>
+<h2>Endpoint Metrics</h2>
+<table><thead><tr><th>Metric</th><th>p50</th><th>p90</th><th>p95</th><th>p99</th><th>Rate</th><th>Count</th></tr></thead><tbody>${htmlMetricRows(summary.metrics, endpointMetrics)}</tbody></table>
+<h2>Business Metrics</h2>
+<table><thead><tr><th>Metric</th><th>p50</th><th>p90</th><th>p95</th><th>p99</th><th>Rate</th><th>Count</th></tr></thead><tbody>${htmlMetricRows(summary.metrics, businessMetrics)}</tbody></table>
+<h2>Thresholds</h2>
+<table><thead><tr><th>Metric</th><th>Threshold</th><th>Actual</th><th>Status</th></tr></thead><tbody>${htmlThresholdRows(summary)}</tbody></table>
+<h2>Markdown Summary</h2>
+<pre>${htmlEscape(markdown)}</pre>
 </body></html>`;
 
   return {

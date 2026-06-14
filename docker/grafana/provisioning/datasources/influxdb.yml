@@ -11,5 +11,5 @@ datasources:
       defaultBucket: k6
       tlsSkipVerify: true
     secureJsonData:
-      token: k6-local-development-token
+      token: ${INFLUXDB_ADMIN_TOKEN}
     isDefault: true

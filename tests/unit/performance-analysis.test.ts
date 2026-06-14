@@ -22,6 +22,12 @@ describe('performance summaries', () => {
           contains: 'default',
           values: { count: 0 },
         },
+        'http_req_duration{name:GET /articles}': {
+          type: 'trend',
+          contains: 'time',
+          values: { med: 200, 'p(95)': 450, 'p(99)': 650 },
+          thresholds: { 'p(95)<500': { ok: true } },
+        },
       },
       root_group: { name: '', path: '', id: 'root', groups: [], checks: [] },
       state: { isStdOutTTY: false, isStdErrTTY: false, testRunDurationMs: 1000 },
@@ -36,7 +42,14 @@ describe('performance summaries', () => {
       '| custom_article_read_duration_ms |',
     );
     expect(result['reports/k6-summary-summary.md']).toContain('| custom_business_errors_total |');
-    expect(result['reports/k6-summary-summary.html']).toContain('Latency percentiles');
+    const html = result['reports/k6-summary-summary.html'];
+    expect(html).toContain('Latency percentiles');
+    expect(html).toContain('Endpoint Metrics');
+    expect(html).toContain('http_req_duration{name:GET /articles}');
+    expect(html).toContain('Business Metrics');
+    expect(html).toContain('custom_article_read_duration_ms');
+    expect(html).toContain('Thresholds');
+    expect(html).toContain('<td>450</td><td class="passed">PASS</td>');
   });
 
   it('fails the run summary when checks, setup, or iterations fail', () => {
@@ -70,6 +83,9 @@ describe('performance summaries', () => {
 
     expect(result['reports/k6-summary-summary.md']).toContain(
       'http_req_duration: expected p(95)<500; actual 750',
+    );
+    expect(result['reports/k6-summary-summary.html']).toContain(
+      '<td>750</td><td class="failed">FAIL</td>',
     );
   });
 });

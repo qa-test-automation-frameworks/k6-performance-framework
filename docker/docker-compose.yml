@@ -5,10 +5,10 @@ services:
     environment:
       DOCKER_INFLUXDB_INIT_MODE: setup
       DOCKER_INFLUXDB_INIT_USERNAME: admin
-      DOCKER_INFLUXDB_INIT_PASSWORD: performance-admin-password
+      DOCKER_INFLUXDB_INIT_PASSWORD: ${INFLUXDB_ADMIN_PASSWORD:-performance-admin-password}
       DOCKER_INFLUXDB_INIT_ORG: k6
       DOCKER_INFLUXDB_INIT_BUCKET: k6
-      DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: k6-local-development-token
+      DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: ${INFLUXDB_ADMIN_TOKEN:-k6-local-development-token}
       DOCKER_INFLUXDB_INIT_RETENTION: ${INFLUXDB_RETENTION:-7d}
     volumes:
       - influxdb-data:/var/lib/influxdb2
@@ -23,12 +23,13 @@ services:
     ports: ['3001:3000']
     environment:
       GF_SECURITY_ADMIN_USER: admin
-      GF_SECURITY_ADMIN_PASSWORD: admin
-      GF_AUTH_ANONYMOUS_ENABLED: 'true'
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-admin}
+      GF_AUTH_ANONYMOUS_ENABLED: ${GRAFANA_ANONYMOUS_ENABLED:-true}
       GF_AUTH_ANONYMOUS_ORG_ROLE: Viewer
       GF_RENDERING_SERVER_URL: http://renderer:8081/render
       GF_RENDERING_CALLBACK_URL: http://grafana:3000/
-      GF_RENDERING_RENDERER_TOKEN: k6-local-renderer-token
+      GF_RENDERING_RENDERER_TOKEN: ${GRAFANA_RENDERER_TOKEN:-k6-local-renderer-token}
+      INFLUXDB_ADMIN_TOKEN: ${INFLUXDB_ADMIN_TOKEN:-k6-local-development-token}
     volumes:
       - grafana-data:/var/lib/grafana
       - ./grafana/provisioning:/etc/grafana/provisioning:ro
@@ -43,7 +44,7 @@ services:
   renderer:
     image: grafana/grafana-image-renderer:3.12.6@sha256:37d03fc58922f0a933a7a02e070e76ad8dc28bfb7a55c05ca898e01875fc8939
     environment:
-      AUTH_TOKEN: k6-local-renderer-token
+      AUTH_TOKEN: ${GRAFANA_RENDERER_TOKEN:-k6-local-renderer-token}
 
   prometheus:
     image: prom/prometheus:v3.9.1@sha256:1f0f50f06acaceb0f5670d2c8a658a599affe7b0d8e78b898c1035653849a702
@@ -85,7 +86,7 @@ services:
       BASE_URL: ${BASE_URL:-http://host.docker.internal:3000/api}
       K6_INFLUXDB_ORGANIZATION: k6
       K6_INFLUXDB_BUCKET: k6
-      K6_INFLUXDB_TOKEN: k6-local-development-token
+      K6_INFLUXDB_TOKEN: ${INFLUXDB_ADMIN_TOKEN:-k6-local-development-token}
       K6_OTEL_GRPC_EXPORTER_INSECURE: 'true'
       K6_OTEL_GRPC_EXPORTER_ENDPOINT: otel-collector:4317
       K6_OTEL_METRIC_PREFIX: k6_

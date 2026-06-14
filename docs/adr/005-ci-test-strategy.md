@@ -22,6 +22,8 @@ service. Pull requests need fast feedback, while main, regression, and soak runs
   while absolute k6 thresholds remain authoritative.
 - Workflows use least-privilege permissions, pinned action SHAs, aggregate summaries, and retained
   artifacts. The soak schedule never runs for pull requests.
+- The scheduled soak cadence is weekly because it provisions the controlled target and runs a
+  long-duration workload; nightly coverage would add cost without materially improving PR feedback.
 
 ## Consequences
 
