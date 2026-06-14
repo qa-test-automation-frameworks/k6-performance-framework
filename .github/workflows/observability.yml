@@ -48,12 +48,15 @@ jobs:
           K6_RUN_ID="ci-${GITHUB_RUN_ID}" node scripts/capture-grafana-evidence.cjs
       - name: Export diagnostics
         if: always()
-        run: docker compose -f docker/docker-compose.yml logs --no-color > observability.log
+        run: |
+          docker compose -f docker/docker-compose.yml logs --no-color > observability.log
+          cp "${RUNNER_TEMP}/realworld-api.log" realworld-api.log 2>/dev/null || true
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         if: always()
         with:
           name: observability-diagnostics
           path: |
             observability.log
+            realworld-api.log
             reports/
             artifacts/evidence/
