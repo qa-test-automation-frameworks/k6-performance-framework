@@ -22,7 +22,7 @@ $status = 1
 try {
   $env:K6_RUN_ID = $runId
   docker compose -f docker/docker-compose.yml --profile test run --rm k6 `
-    run --out xk6-influxdb=http://influxdb:8086 --out opentelemetry $script
+    run --out influxdb=http://influxdb:8086 --out opentelemetry $script
   $status = $LASTEXITCODE
 } finally {
   Add-Annotation "k6 end: $scenario ($runId) status=$status"

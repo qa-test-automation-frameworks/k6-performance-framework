@@ -21,3 +21,11 @@ npm run build
 - Use `TEST_PROFILE=validation` before full-duration performance runs.
 - Do not direct write-heavy or sustained traffic at public targets.
 - Include summary or baseline evidence when changing thresholds.
+
+## Adding Endpoint Coverage
+
+- Add typed service methods with stable request names such as `GET /articles/:slug`.
+- Assign every request to a bounded business metric group.
+- Add endpoint and business-metric thresholds for the new path.
+- Cover request shape, tags, and failure handling in unit tests.
+- Update Grafana dashboard queries when the endpoint needs first-class review.

@@ -28,7 +28,7 @@ jobs:
       - name: Prove the regression fixture is rejected
         run: |
           set +e
-          output=$(BASELINE_FILE=tests/fixtures/measured-baseline.json CANDIDATE_FILE=tests/fixtures/regression-candidate.json npm run baseline:compare 2>&1)
+          output=$(BASELINE_FILE=tests/regression-fixtures/measured-baseline.json CANDIDATE_FILE=tests/regression-fixtures/regression-candidate.json npm run baseline:compare 2>&1)
           status=$?
           set -e
           echo "$output"
@@ -38,4 +38,4 @@ jobs:
           fi
           echo "$output" | grep -q "Performance regression detected"
       - name: Prove a healthy candidate is accepted
-        run: BASELINE_FILE=tests/fixtures/measured-baseline.json CANDIDATE_FILE=tests/fixtures/healthy-candidate.json npm run baseline:compare
+        run: BASELINE_FILE=tests/regression-fixtures/measured-baseline.json CANDIDATE_FILE=tests/regression-fixtures/healthy-candidate.json npm run baseline:compare

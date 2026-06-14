@@ -39,6 +39,9 @@ and stable metric names. Write-heavy tests reject non-local targets unless expli
 | Soak       | Long-duration stability            | Controlled local API  | `npm run soak`                     |
 | Breakpoint | Capacity boundary                  | Controlled local API  | `npm run breakpoint`               |
 
+Use `npm run breakpoint:search` to run a binary-search capacity probe. Its JSON output reports
+`lastHealthyVus`, `firstUnhealthyVus`, and `toleranceVus`.
+
 ## Service Objectives
 
 | Endpoint group |       p95 |       p99 | Error rate |
@@ -83,6 +86,7 @@ Start observability and run a local observed load:
 npm run docker:up
 npm run docker:health
 npm run load:observed
+npm run observability:capture
 ```
 
 Grafana is available at `http://localhost:3001` with local credentials `admin` / `admin`.
@@ -131,10 +135,13 @@ that pool, avoiding a single-account bottleneck. Full non-local workloads also r
 - [Architecture decisions](docs/adr/README.md)
 - [Capability status](docs/capability-status.md)
 - [v0.4.0 release notes](docs/releases/v0.4.0.md)
+- [v0.3.0 release notes](docs/releases/v0.3.0.md)
 - [v0.2.0 release notes](docs/releases/v0.2.0.md)
 
 ## Safety
 
 Public endpoints are restricted to short read-only checks. Authenticated writes and sustained load
 default to a local target and require `ALLOW_NON_LOCAL_LOAD=true` elsewhere. Tokens, generated
-runtime reports, and unreviewed baseline captures are excluded from version control.
+runtime reports, and unreviewed baseline captures are excluded from version control. The local
+observability stack ships with development credentials and anonymous Grafana viewer access; keep
+those ports local or rotate credentials before exposing the stack.

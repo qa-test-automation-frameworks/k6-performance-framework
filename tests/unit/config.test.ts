@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { getConfig } from '../../config';
 import { authenticatedThresholds } from '../../config/thresholds/authenticated';
 import { breakpointThresholds } from '../../config/thresholds/breakpoint';
@@ -92,6 +92,35 @@ describe('load thresholds', () => {
     ]) {
       expect(thresholds.checks).toEqual(['rate==1']);
     }
+  });
+
+  it('keeps stress and soak thresholds exploratory by default', () => {
+    expect(stressThresholds.http_req_duration).toContainEqual({
+      threshold: 'p(95)<2000',
+      abortOnFail: false,
+    });
+    expect(soakThresholds.http_req_failed).toContainEqual({
+      threshold: 'rate<0.01',
+      abortOnFail: false,
+    });
+  });
+
+  it('can promote stress and soak thresholds to release gates', async () => {
+    setTestEnv({ PERF_STRICT_THRESHOLDS: 'true' });
+    vi.resetModules();
+    const [{ stressThresholds: strictStress }, { soakThresholds: strictSoak }] = await Promise.all([
+      import('../../config/thresholds/stress'),
+      import('../../config/thresholds/soak'),
+    ]);
+
+    expect(strictStress.http_req_duration).toContainEqual({
+      threshold: 'p(95)<2000',
+      abortOnFail: true,
+    });
+    expect(strictSoak.http_req_failed).toContainEqual({
+      threshold: 'rate<0.01',
+      abortOnFail: true,
+    });
   });
 });
 

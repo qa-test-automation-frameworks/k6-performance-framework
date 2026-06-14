@@ -24,6 +24,9 @@ runner class. `npm run baseline:compare` rejects incompatible candidates before 
 Network targets, different profiles, and materially different runner classes require a separate
 reviewed file selected with `BASELINE_FILE`.
 
+Automated baseline regression comparison currently covers the load workload. Stress, spike, soak,
+and breakpoint runs are evaluated through absolute k6 thresholds and Grafana dashboard review.
+
 ## Common Signals
 
 | Signal                                     | Interpretation                                                        |

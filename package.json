@@ -37,6 +37,7 @@
     "docker:down": "docker compose -f docker/docker-compose.yml down -v",
     "docker:health": "node scripts/wait-observability.cjs",
     "load:observed": "npm run build && node scripts/platform-runner.cjs observed",
+    "observability:capture": "node scripts/capture-grafana-evidence.cjs",
     "baseline:compare": "node scripts/compare-performance.cjs",
     "baseline:aggregate": "node scripts/aggregate-baseline.cjs",
     "report:site": "node scripts/build-report-site.cjs",
