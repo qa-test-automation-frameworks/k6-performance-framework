@@ -10,15 +10,15 @@
   },
   "metrics": {
     "http_req_duration": {
-      "p(95)": 1300,
-      "p(99)": 2500
+      "p(95)": 1.9,
+      "p(99)": 2.3
     },
     "http_req_duration{name:GET /articles}": {
-      "p(95)": 1300,
-      "p(99)": 2500
+      "p(95)": 3,
+      "p(99)": 3.6
     },
     "http_req_failed": {
-      "rate": 0.01
+      "rate": 0
     }
   }
 }

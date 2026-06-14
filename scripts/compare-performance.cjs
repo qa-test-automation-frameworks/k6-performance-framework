@@ -3,6 +3,7 @@ const fs = require('node:fs');
 const baselinePath = process.env.BASELINE_FILE || 'baseline/load-summary.json';
 const candidatePath = process.env.CANDIDATE_FILE || 'reports/load-summary.json';
 const tolerance = Number(process.env.REGRESSION_TOLERANCE || '0.20');
+const errorRateLimit = Number(process.env.ERROR_RATE_LIMIT || '0.02');
 
 function read(path) {
   return JSON.parse(fs.readFileSync(path, 'utf8'));
@@ -38,30 +39,31 @@ if (incompatible.length) {
       .join(', ')}`,
   );
 }
-const comparisons = [
-  [
-    'p95',
-    value(baseline, 'http_req_duration', 'p(95)'),
-    value(candidate, 'http_req_duration', 'p(95)'),
-  ],
-  [
-    'p99',
-    value(baseline, 'http_req_duration', 'p(99)'),
-    value(candidate, 'http_req_duration', 'p(99)'),
-  ],
-];
-const failures = comparisons.filter(([, before, after]) => after > before * (1 + tolerance));
-const errorRate = value(candidate, 'http_req_failed', 'rate');
+const comparisons = Object.entries(baseline.metrics ?? {}).flatMap(([metric, values]) =>
+  Object.keys(values)
+    .filter((key) => key === 'p(95)' || key === 'p(99)')
+    .map((key) => [metric, key, value(baseline, metric, key), value(candidate, metric, key)]),
+);
+const failures = comparisons.filter(([, , before, after]) => after > before * (1 + tolerance));
+const failureRates = Object.entries(baseline.metrics ?? {})
+  .filter(([metric, values]) => metric.includes('failed') && typeof values.rate === 'number')
+  .map(([metric]) => [metric, value(candidate, metric, 'rate')]);
 
-console.log('| Metric | Baseline | Candidate | Change |');
-console.log('|---|---:|---:|---:|');
-for (const [name, before, after] of comparisons) {
+console.log('| Metric | Statistic | Baseline | Candidate | Change |');
+console.log('|---|---|---:|---:|---:|');
+for (const [metric, key, before, after] of comparisons) {
   console.log(
-    `| ${name} | ${before.toFixed(2)} | ${after.toFixed(2)} | ${((after / before - 1) * 100).toFixed(1)}% |`,
+    `| ${metric} | ${key} | ${before.toFixed(2)} | ${after.toFixed(2)} | ${((after / before - 1) * 100).toFixed(1)}% |`,
   );
 }
-if (errorRate >= 0.02) failures.push(['error rate', 0.02, errorRate]);
+for (const [metric, rate] of failureRates) {
+  if (rate >= errorRateLimit) failures.push([metric, 'rate', errorRateLimit, rate]);
+}
 if (failures.length) {
-  console.error(`Performance regression detected: ${failures.map(([name]) => name).join(', ')}`);
+  console.error(
+    `Performance regression detected: ${failures
+      .map(([metric, key]) => `${metric}.${key}`)
+      .join(', ')}`,
+  );
   process.exit(1);
 }

@@ -3,6 +3,14 @@ name: Scheduled soak
 on:
   schedule:
     - cron: '30 2 * * 0'
+  workflow_call:
+    inputs:
+      profile:
+        required: true
+        type: string
+      scenario:
+        required: true
+        type: string
   workflow_dispatch:
     inputs:
       profile:
@@ -20,6 +28,7 @@ on:
 
 permissions:
   contents: read
+  actions: read
 
 jobs:
   soak:
@@ -47,20 +56,67 @@ jobs:
             stress) script="dist/stress/articles-stress.js" ;;
             spike) script="dist/spike/traffic-spike.js" ;;
             soak) script="dist/soak/endurance-soak.js" ;;
-            breakpoint) script="dist/breakpoint/breakpoint-test.js" ;;
+            breakpoint)
+              node scripts/find-breakpoint.cjs
+              script=''
+              ;;
           esac
-          k6 run "$script"
+          if [ -n "$script" ]; then k6 run "$script"; fi
         env:
           SCENARIO: ${{ inputs.scenario || 'soak' }}
           TARGET_ENV: local
           BASE_URL: http://localhost:3000/api
-          TEST_PROFILE: ${{ inputs.profile == 'validation' && 'validation' || '' }}
+          TEST_PROFILE: ${{ inputs.profile || 'full' }}
           SUMMARY_NAME: ${{ inputs.scenario || 'soak' }}
           TARGET_ID: realworld-local
           TARGET_COMMIT: c8c66858a436a6e07f445fffe2253a65ff6dcb58
           FRAMEWORK_COMMIT: ${{ github.sha }}
           K6_VERSION: 2.0.0
           RUNNER_CLASS: github-hosted
+          PERF_STRICT_THRESHOLDS: ${{ inputs.profile == 'validation' && 'false' || 'true' }}
+      - name: Compare with latest compatible run
+        if: ${{ (inputs.profile || 'full') == 'full' }}
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ARTIFACT_NAME: advanced-${{ inputs.scenario || 'soak' }}-full
+          CANDIDATE_FILE: reports/${{ inputs.scenario || 'soak' }}-summary.json
+        run: |
+          mkdir -p reports/history
+          previous_run=''
+          while read -r candidate_run; do
+            rm -rf reports/history/*
+            if gh run download "$candidate_run" --name "$ARTIFACT_NAME" --dir reports/history; then
+              previous_run="$candidate_run"
+              break
+            fi
+          done < <(
+            gh run list --workflow scheduled-soak.yml --status success --limit 20 \
+              --json databaseId,headSha \
+              --jq ".[] | select(.headSha != \"${GITHUB_SHA}\") | .databaseId"
+          )
+          if [ -z "$previous_run" ]; then
+            echo "No previous compatible $ARTIFACT_NAME artifact is available; absolute thresholds remain authoritative."
+            exit 0
+          fi
+          if [ "${{ inputs.scenario || 'soak' }}" = 'breakpoint' ]; then
+            previous_file="$(find reports/history -name 'breakpoint-capacity.json' -print -quit)"
+            if [ -z "$previous_file" ]; then
+              echo "No compatible historical capacity result was downloaded."
+              exit 0
+            fi
+            PREVIOUS_FILE="$previous_file" \
+              CANDIDATE_FILE=reports/breakpoint-capacity.json \
+              npm run capacity:compare | tee reports/history-comparison.md
+          else
+            previous_file="$(find reports/history -name "${{ inputs.scenario || 'soak' }}-summary.json" -print -quit)"
+            if [ -z "$previous_file" ]; then
+              echo "No compatible historical summary was downloaded."
+              exit 0
+            fi
+            PREVIOUS_FILE="$previous_file" npm run history:compare | tee reports/history-comparison.md
+          fi
+          cat reports/history-comparison.md >> "$GITHUB_STEP_SUMMARY"
       - name: Publish performance summary
         if: always()
         run: |
@@ -69,5 +125,5 @@ jobs:
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         if: always()
         with:
-          name: soak-results
+          name: advanced-${{ inputs.scenario || 'soak' }}-${{ inputs.profile || 'full' }}
           path: reports/

@@ -2,10 +2,10 @@
 
 ## Workstation
 
-Install Node.js 20+, npm, k6 2.0+, Docker Desktop, and Git. Then run:
+Install Node.js 20+, npm 10.9.4, k6 2.0+, Docker Desktop, and Git. Then run:
 
 ```bash
-npm ci
+npx --yes npm@10.9.4 ci
 npm run typecheck
 npm run lint
 npm run test:unit
@@ -34,6 +34,9 @@ the run, `npm run observability:capture` exports the provisioned overview and en
 The OTEL output is an experimental k6 metrics path and does not guarantee parity with every
 standard k6 metric. The InfluxDB output remains the complete dashboard source; Prometheus exposes
 the OTLP metric subset for collector and exporter validation.
+
+Credential overrides use the same names in Compose and all automation:
+`INFLUXDB_ADMIN_TOKEN`, `GRAFANA_ADMIN_USER`, and `GRAFANA_ADMIN_PASSWORD`.
 
 ## Segmented Execution
 
@@ -87,8 +90,9 @@ selects a token deterministically from that pool.
 
 Capture at least three controlled full-profile runs on the same runner class, then aggregate them
 with `npm run baseline:aggregate`. Comparisons reject mismatched target IDs, commits, profiles,
-throughput settings, k6 versions, and runner classes. Use a distinct `BASELINE_FILE` for another
-environment or execution topology.
+throughput settings, k6 versions, and runner classes. Aggregate baselines retain common endpoint and
+business-metric percentiles, and comparison checks every retained p95/p99 value. Use a distinct
+`BASELINE_FILE` for another environment or execution topology.
 
 ## Troubleshooting
 

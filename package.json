@@ -15,6 +15,7 @@
     "opentelemetry"
   ],
   "scripts": {
+    "preinstall": "node scripts/check-npm-version.cjs",
     "build": "npm run typecheck && node esbuild.config.js",
     "health": "npm run build && k6 run --out json=reports/health-results.json dist/smoke/health-check.js",
     "smoke": "npm run build && k6 run --out json=reports/smoke-results.json dist/smoke/smoke-test.js",
@@ -39,6 +40,8 @@
     "load:observed": "npm run build && node scripts/platform-runner.cjs observed",
     "observability:capture": "node scripts/capture-grafana-evidence.cjs",
     "baseline:compare": "node scripts/compare-performance.cjs",
+    "capacity:compare": "node scripts/compare-capacity.cjs",
+    "history:compare": "node scripts/compare-history.cjs",
     "baseline:aggregate": "node scripts/aggregate-baseline.cjs",
     "report:site": "node scripts/build-report-site.cjs",
     "report": "node scripts/platform-runner.cjs report",

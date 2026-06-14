@@ -7,9 +7,21 @@ on:
 
 permissions:
   contents: write
+  actions: read
 
 jobs:
+  performance-evidence:
+    strategy:
+      fail-fast: false
+      matrix:
+        scenario: [stress, spike, soak, breakpoint]
+    uses: ./.github/workflows/scheduled-soak.yml
+    with:
+      profile: full
+      scenario: ${{ matrix.scenario }}
+
   release:
+    needs: performance-evidence
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0
@@ -21,9 +33,22 @@ jobs:
       - run: npm ci
       - run: npm run release:validate
       - run: npm run sbom
+      - name: Collect measured performance evidence
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p artifacts/performance
+          gh run download "$GITHUB_RUN_ID" --pattern 'advanced-*-full' \
+            --dir artifacts/performance
+          for scenario in stress spike soak breakpoint; do
+            test -f "artifacts/performance/advanced-${scenario}-full/${scenario}-summary.json"
+          done
+          tar -czf artifacts/performance-evidence.tar.gz -C artifacts/performance .
       - name: Create release checksums
         shell: bash
-        run: sha256sum artifacts/sbom.cdx.json > artifacts/SHA256SUMS
+        run: |
+          sha256sum artifacts/sbom.cdx.json artifacts/performance-evidence.tar.gz \
+            > artifacts/SHA256SUMS
       - name: Publish GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
@@ -33,7 +58,9 @@ jobs:
               --title "$GITHUB_REF_NAME"
           fi
           gh release upload "$GITHUB_REF_NAME" \
-            artifacts/sbom.cdx.json artifacts/SHA256SUMS --clobber
+            artifacts/sbom.cdx.json artifacts/performance-evidence.tar.gz \
+            artifacts/SHA256SUMS --clobber
           assets="$(gh release view "$GITHUB_REF_NAME" --json assets --jq '.assets[].name')"
           grep -qx 'sbom.cdx.json' <<<"$assets"
+          grep -qx 'performance-evidence.tar.gz' <<<"$assets"
           grep -qx 'SHA256SUMS' <<<"$assets"

@@ -1,13 +1,13 @@
 # Visual Performance Evidence
 
 Measured evidence must come from a seeded controlled target. The example panels below document the
-expected review format; they are intentionally labeled as examples and are not release evidence.
+expected review format and are intentionally labeled as examples. Release evidence is retained as
+workflow artifacts rather than represented by these static illustrations.
 
 ## Reviewed Baseline
 
-The committed aggregate is retained for regression wiring, but it must be refreshed through the
-controlled capture workflow before release because baseline compatibility now includes target,
-profile, k6 version, and runner-class provenance.
+The committed load aggregate is a reviewed three-run measurement and retains aggregate, endpoint,
+and business-metric percentiles plus target, profile, k6 version, and runner provenance.
 
 ## Overview
 
@@ -39,5 +39,6 @@ Failure evidence must show the metric, expected threshold, actual value, and bre
 6. Retain the PNG, JSON, and Markdown artifacts and link the matching Actions run.
 
 Only replace the example assets with captures whose source summaries and baseline metadata are
-retained. A release also requires completed full stress, spike, breakpoint, and soak workflow
-evidence; short validation profiles prove wiring only.
+retained. The release workflow calls the full stress, spike, breakpoint, and soak jobs and does not
+publish until all four complete successfully. Their JSON, Markdown, and HTML summaries are bundled
+as `performance-evidence.tar.gz` on the release. Short validation profiles prove wiring only.

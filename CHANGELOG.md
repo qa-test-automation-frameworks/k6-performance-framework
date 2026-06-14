@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Calibrated controlled read SLOs from retained endpoint measurements and expanded regression
+  comparison to aggregate, endpoint, and business percentiles.
+- Made release publication depend on strict full stress, spike, soak, and breakpoint evidence.
+- Added retained-run trend comparison for advanced workloads.
+- Unified observability credential overrides and validate them with non-default CI credentials.
+- Enforced npm 10.9.4 setup and deterministic LF formatting for Windows `.mjs` tests.
+- Expanded ownership coverage for release-critical documentation, scripts, and baselines.
 - Enforced endpoint-group SLOs with explicit metric ownership and complete business signals.
 - Added workload-specific journeys, deterministic setup-user pools, and non-local profile guards.
 - Added baseline compatibility provenance, failure-preserving launchers, and richer reports.

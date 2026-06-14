@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-13T18:39:23.785Z",
+  "generatedAt": "2026-06-14T07:07:46.553Z",
   "metadata": {
     "status": "measured",
     "sampleCount": 3,
@@ -20,6 +20,7 @@
     "runner": "ubuntu24-20260607.184.1",
     "runnerClass": "github-hosted",
     "workload": {
+      "name": "load",
       "targetRps": 20,
       "maxVus": 100,
       "profile": "full"
@@ -27,11 +28,74 @@
     "workflowRun": "https://github.com/qa-test-automation-frameworks/k6-performance-framework/actions/runs/27474987004"
   },
   "metrics": {
+    "custom_article_read_success_rate": {
+      "rate": 1
+    },
     "http_req_duration": {
       "p(95)": 2.4370673,
       "p(99)": 2.734138409999999
     },
+    "http_req_failed{name:GET /articles/:slug}": {
+      "rate": 0
+    },
     "http_req_failed": {
+      "rate": 0
+    },
+    "http_req_duration{name:GET /articles}": {
+      "p(95)": 2.652636549999999,
+      "p(99)": 2.8848457900000004
+    },
+    "custom_comment_success_rate": {
+      "rate": 1
+    },
+    "custom_tag_duration_ms": {
+      "p(95)": 1.3129104499999997,
+      "p(99)": 1.4245083800000005
+    },
+    "http_req_failed{name:GET /profiles/:username}": {
+      "rate": 0
+    },
+    "custom_tag_success_rate": {
+      "rate": 1
+    },
+    "custom_comment_duration_ms": {
+      "p(95)": 0.8568237500000001,
+      "p(99)": 1.0403216399999962
+    },
+    "http_req_duration{name:GET /articles/:slug}": {
+      "p(95)": 1.92028375,
+      "p(99)": 2.095376780000001
+    },
+    "http_req_duration{name:GET /profiles/:username}": {
+      "p(95)": 0.6553913,
+      "p(99)": 0.7202543000000007
+    },
+    "http_req_duration{name:GET /articles/:slug/comments}": {
+      "p(95)": 0.8568237500000001,
+      "p(99)": 1.0403216399999962
+    },
+    "http_req_failed{name:GET /articles/:slug/comments}": {
+      "rate": 0
+    },
+    "http_req_duration{name:GET /tags}": {
+      "p(95)": 1.3129104499999997,
+      "p(99)": 1.4245083800000005
+    },
+    "custom_profile_duration_ms": {
+      "p(95)": 0.6553913,
+      "p(99)": 0.7202543000000007
+    },
+    "custom_profile_success_rate": {
+      "rate": 1
+    },
+    "http_req_failed{name:GET /articles}": {
+      "rate": 0
+    },
+    "custom_article_read_duration_ms": {
+      "p(95)": 2.5993795499999997,
+      "p(99)": 2.8508517
+    },
+    "http_req_failed{name:GET /tags}": {
       "rate": 0
     },
     "http_reqs": {

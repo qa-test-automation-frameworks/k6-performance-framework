@@ -26,7 +26,7 @@ async function main() {
     const response = await fetch(`${grafanaUrl}/render/d/${uid}?${query}`, {
       headers: {
         Authorization: `Basic ${Buffer.from(
-          `${process.env.GRAFANA_USER || 'admin'}:${process.env.GRAFANA_PASSWORD || 'admin'}`,
+          `${process.env.GRAFANA_ADMIN_USER || 'admin'}:${process.env.GRAFANA_ADMIN_PASSWORD || 'admin'}`,
         ).toString('base64')}`,
       },
     });

@@ -42,25 +42,27 @@ and stable metric names. Write-heavy tests reject non-local targets unless expli
 Use `npm run breakpoint:search` to run a binary-search capacity probe. Its JSON output reports
 `lastHealthyVus`, `firstUnhealthyVus`, and `toleranceVus`.
 
-## Service Objectives
+## Controlled Load Service Objectives
 
 | Endpoint group |       p95 |       p99 | Error rate |
 | -------------- | --------: | --------: | ---------: |
 | Authentication |  < 800 ms | < 1500 ms |       < 1% |
-| Article reads  |  < 500 ms | < 1000 ms |       < 1% |
+| Article reads  |   < 10 ms |   < 20 ms |       < 1% |
 | Article writes | < 1000 ms | < 2000 ms |       < 2% |
-| Comments       |  < 750 ms | < 1500 ms |       < 2% |
-| Profiles       |  < 500 ms | < 1000 ms |       < 1% |
-| Tags           |  < 300 ms |  < 750 ms |       < 1% |
+| Comment reads  |    < 5 ms |   < 10 ms |       < 2% |
+| Profiles       |    < 5 ms |   < 10 ms |       < 1% |
+| Tags           |    < 5 ms |   < 10 ms |       < 1% |
 
 See [performance SLOs](docs/performance-slos.md) for enforcement details.
+The hosted read-only smoke test uses wider network-facing guardrails defined separately in
+`config/thresholds/smoke.ts`.
 
 ## Quick Start
 
-Prerequisites: Node.js 20+, k6 2.0+, Docker Desktop, and Docker Compose.
+Prerequisites: Node.js 20+, npm 10.9.4, k6 2.0+, Docker Desktop, and Docker Compose.
 
 ```bash
-npm ci
+npx --yes npm@10.9.4 ci
 npm run typecheck
 npm run lint
 npm run test:unit
@@ -117,8 +119,9 @@ that pool, avoiding a single-account bottleneck. Full non-local workloads also r
 
 - PR smoke posts an aggregate Markdown summary to same-repository pull requests.
 - Main load, regression, and advanced workload workflows provision a pinned RealWorld backend.
-- Regression checks enforce absolute thresholds and require a reviewed seeded baseline for relative
-  p95/p99 comparison.
+- Load regression checks compare aggregate, endpoint, and business-metric p95/p99 values with a
+  reviewed three-run baseline. Full advanced runs compare with their latest compatible retained run.
+- Release publication waits for full stress, spike, soak, and breakpoint evidence.
 - GitHub-hosted segmented validation proves partition wiring; the manual distributed workflow is
   reserved for authorized self-hosted runners and a shared controlled target.
 - Security CI runs npm audit, creates a CycloneDX SBOM, and scans the lockfile with OSV.

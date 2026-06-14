@@ -3,8 +3,8 @@ $grafanaUrl = if ($env:GRAFANA_URL) { $env:GRAFANA_URL } else { 'http://localhos
 $runId = if ($env:K6_RUN_ID) { $env:K6_RUN_ID } else { (Get-Date).ToUniversalTime().ToString('yyyyMMddTHHmmssZ') }
 $scenario = if ($env:K6_SCENARIO) { $env:K6_SCENARIO } else { 'articles-load' }
 $script = if ($env:K6_SCRIPT) { $env:K6_SCRIPT } else { 'dist/load/articles-load.js' }
-$grafanaUser = if ($env:GRAFANA_USER) { $env:GRAFANA_USER } else { 'admin' }
-$grafanaPassword = if ($env:GRAFANA_PASSWORD) { $env:GRAFANA_PASSWORD } else { 'admin' }
+$grafanaUser = if ($env:GRAFANA_ADMIN_USER) { $env:GRAFANA_ADMIN_USER } else { 'admin' }
+$grafanaPassword = if ($env:GRAFANA_ADMIN_PASSWORD) { $env:GRAFANA_ADMIN_PASSWORD } else { 'admin' }
 $credentials = [Convert]::ToBase64String(
   [Text.Encoding]::ASCII.GetBytes("${grafanaUser}:${grafanaPassword}")
 )

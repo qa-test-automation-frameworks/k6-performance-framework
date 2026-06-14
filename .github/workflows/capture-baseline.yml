@@ -35,6 +35,8 @@ jobs:
           TARGET_COMMIT=c8c66858a436a6e07f445fffe2253a65ff6dcb58 \
             FRAMEWORK_COMMIT="$GITHUB_SHA" \
             RUNNER_IMAGE="${ImageOS}-${ImageVersion}" \
+            WORKLOAD_NAME=load \
+            WORKFLOW_RUN_URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" \
             npm run baseline:aggregate -- \
             reports/baseline-1-summary.json \
             reports/baseline-2-summary.json \

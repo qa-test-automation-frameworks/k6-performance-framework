@@ -5,7 +5,7 @@
 Use Node.js 20 LTS or newer.
 
 ```bash
-npm ci
+npx --yes npm@10.9.4 ci
 npm run typecheck
 npm run lint
 npm run test:unit

@@ -39,3 +39,24 @@ jobs:
           echo "$output" | grep -q "Performance regression detected"
       - name: Prove a healthy candidate is accepted
         run: BASELINE_FILE=tests/regression-fixtures/measured-baseline.json CANDIDATE_FILE=tests/regression-fixtures/healthy-candidate.json npm run baseline:compare
+      - name: Prove endpoint-only regression is rejected
+        run: |
+          set +e
+          output=$(BASELINE_FILE=tests/regression-fixtures/measured-baseline.json CANDIDATE_FILE=tests/regression-fixtures/endpoint-regression-candidate.json npm run baseline:compare 2>&1)
+          status=$?
+          set -e
+          echo "$output"
+          test "$status" -ne 0
+          echo "$output" | grep -q 'http_req_duration{name:GET /articles}.p(95)'
+
+  windows-format:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm install --global npm@10.9.4
+      - run: npm ci
+      - run: npm run format:check

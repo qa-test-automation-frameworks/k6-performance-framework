@@ -1,6 +1,15 @@
 * @prayagv
 /.github/ @prayagv
+/baseline/ @prayagv
 /config/ @prayagv
 /docker/ @prayagv
+/docs/ @prayagv
+/scripts/ @prayagv
 /src/ @prayagv
 /tests/ @prayagv
+/CHANGELOG.md @prayagv
+/CONTRIBUTING.md @prayagv
+/README.md @prayagv
+/SECURITY.md @prayagv
+/package.json @prayagv
+/package-lock.json @prayagv

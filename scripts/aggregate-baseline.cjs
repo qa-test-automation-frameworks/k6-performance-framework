@@ -10,13 +10,48 @@ if (inputs.length < 3) {
   );
 }
 
-function readMetric(file, metric, key) {
-  const summary = JSON.parse(fs.readFileSync(file, 'utf8'));
+const summaries = inputs.map((file) => JSON.parse(fs.readFileSync(file, 'utf8')));
+
+function readMetric(summary, file, metric, key) {
   const value = summary.metrics?.[metric]?.[key];
   if (typeof value !== 'number') {
     throw new Error(`${file} is missing ${metric}.${key}`);
   }
   return value;
+}
+
+function commonMetricKeys() {
+  const firstMetrics = summaries[0]?.metrics ?? {};
+  return Object.entries(firstMetrics)
+    .filter(([name, values]) => {
+      const keys = Object.keys(values);
+      const isLatency =
+        name === 'http_req_duration' ||
+        name.startsWith('http_req_duration{name:') ||
+        (name.startsWith('custom_') && name.endsWith('_duration_ms'));
+      const isFailure =
+        name === 'http_req_failed' ||
+        name.startsWith('http_req_failed{name:') ||
+        (name.startsWith('custom_') && name.endsWith('_success_rate'));
+      return (
+        (isLatency && keys.some((key) => key === 'p(95)' || key === 'p(99)')) ||
+        (isFailure && keys.includes('rate'))
+      );
+    })
+    .map(([name]) => name)
+    .filter((name) => summaries.every((summary) => summary.metrics?.[name]));
+}
+
+function aggregateMetric(metric) {
+  const keys = new Set(summaries.flatMap((summary) => Object.keys(summary.metrics[metric] ?? {})));
+  return Object.fromEntries(
+    [...keys]
+      .filter((key) => ['p(95)', 'p(99)', 'rate'].includes(key))
+      .map((key) => [
+        key,
+        median(summaries.map((summary, index) => readMetric(summary, inputs[index], metric, key))),
+      ]),
+  );
 }
 
 function sha256(file) {
@@ -43,32 +78,45 @@ const baseline = {
     runner: process.env.RUNNER_IMAGE ?? process.platform,
     runnerClass: process.env.RUNNER_CLASS ?? 'github-hosted',
     workload: {
+      name: process.env.WORKLOAD_NAME ?? process.env.SUMMARY_NAME ?? 'load',
       targetRps: Number(process.env.TARGET_RPS || '20'),
       maxVus: Number(process.env.MAX_VUS || '100'),
       profile: process.env.TEST_PROFILE ?? 'full',
     },
   },
   metrics: {
-    http_req_duration: {
-      'p(95)': median(inputs.map((file) => readMetric(file, 'http_req_duration', 'p(95)'))),
-      'p(99)': median(inputs.map((file) => readMetric(file, 'http_req_duration', 'p(99)'))),
-    },
-    http_req_failed: {
-      rate: median(inputs.map((file) => readMetric(file, 'http_req_failed', 'rate'))),
-    },
+    ...Object.fromEntries(commonMetricKeys().map((metric) => [metric, aggregateMetric(metric)])),
     http_reqs: {
-      count: median(inputs.map((file) => readMetric(file, 'http_reqs', 'count'))),
-      rate: median(inputs.map((file) => readMetric(file, 'http_reqs', 'rate'))),
+      count: median(
+        summaries.map((summary, index) => readMetric(summary, inputs[index], 'http_reqs', 'count')),
+      ),
+      rate: median(
+        summaries.map((summary, index) => readMetric(summary, inputs[index], 'http_reqs', 'rate')),
+      ),
     },
     iterations: {
-      count: median(inputs.map((file) => readMetric(file, 'iterations', 'count'))),
-      rate: median(inputs.map((file) => readMetric(file, 'iterations', 'rate'))),
+      count: median(
+        summaries.map((summary, index) =>
+          readMetric(summary, inputs[index], 'iterations', 'count'),
+        ),
+      ),
+      rate: median(
+        summaries.map((summary, index) => readMetric(summary, inputs[index], 'iterations', 'rate')),
+      ),
     },
     dropped_iterations: {
-      count: median(inputs.map((file) => readMetric(file, 'dropped_iterations', 'count'))),
+      count: median(
+        summaries.map((summary, index) =>
+          readMetric(summary, inputs[index], 'dropped_iterations', 'count'),
+        ),
+      ),
     },
   },
 };
+
+if (process.env.WORKFLOW_RUN_URL) {
+  baseline.metadata.workflowRun = process.env.WORKFLOW_RUN_URL;
+}
 
 fs.mkdirSync(path.dirname(output), { recursive: true });
 fs.writeFileSync(output, `${JSON.stringify(baseline, null, 2)}\n`);

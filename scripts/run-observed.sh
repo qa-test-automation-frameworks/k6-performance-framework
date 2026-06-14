@@ -10,7 +10,7 @@ annotate() {
   if [[ "${SKIP_ANNOTATIONS:-false}" == "true" ]]; then return; fi
   local text="$1"
   curl --fail --silent --show-error \
-    -u "${GRAFANA_USER:-admin}:${GRAFANA_PASSWORD:-admin}" \
+    -u "${GRAFANA_ADMIN_USER:-admin}:${GRAFANA_ADMIN_PASSWORD:-admin}" \
     -H "Content-Type: application/json" \
     -d "{\"text\":\"${text}\",\"tags\":[\"k6\",\"${scenario}\",\"${run_id}\"]}" \
     "${grafana_url}/api/annotations" >/dev/null

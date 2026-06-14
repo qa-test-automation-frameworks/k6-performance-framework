@@ -14,18 +14,21 @@ failure review format.
 
 ## Regression Rules
 
-The absolute thresholds in k6 remain authoritative. Relative comparison rejects p95 or p99 latency
-that exceeds the reviewed baseline by more than 20%, and rejects request failure rates at or above
-2%. A baseline is valid only when it is the median of at least three controlled full-profile runs
-against the pinned RealWorld backend.
+The absolute thresholds in k6 remain authoritative. Load comparison rejects any retained aggregate,
+endpoint, or business-metric p95/p99 latency that exceeds the reviewed baseline by more than 20%,
+and rejects request failure rates at or above 2%. A baseline is valid only when it is the median of
+at least three controlled full-profile runs against the pinned RealWorld backend.
 
 The committed baseline is valid only for the recorded target, workload profile, k6 version, and
 runner class. `npm run baseline:compare` rejects incompatible candidates before comparing metrics.
 Network targets, different profiles, and materially different runner classes require a separate
 reviewed file selected with `BASELINE_FILE`.
 
-Automated baseline regression comparison currently covers the load workload. Stress, spike, soak,
-and breakpoint runs are evaluated through absolute k6 thresholds and Grafana dashboard review.
+Full stress, spike, soak, and breakpoint runs enforce strict absolute thresholds and compare
+percentile trends with the latest compatible retained artifact when one exists. A missing history
+does not weaken absolute thresholds; it only means the first run establishes the comparison source.
+Breakpoint history compares `lastHealthyVus` from the binary-search result and rejects a capacity
+loss greater than 20%.
 
 ## Common Signals
 
