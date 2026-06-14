@@ -3,12 +3,46 @@
 [![PR smoke](https://github.com/qa-test-automation-frameworks/k6-performance-framework/actions/workflows/pr-smoke.yml/badge.svg)](https://github.com/qa-test-automation-frameworks/k6-performance-framework/actions/workflows/pr-smoke.yml)
 [![Quality](https://github.com/qa-test-automation-frameworks/k6-performance-framework/actions/workflows/quality.yml/badge.svg)](https://github.com/qa-test-automation-frameworks/k6-performance-framework/actions/workflows/quality.yml)
 [![Security](https://github.com/qa-test-automation-frameworks/k6-performance-framework/actions/workflows/security.yml/badge.svg)](https://github.com/qa-test-automation-frameworks/k6-performance-framework/actions/workflows/security.yml)
+[![Main load](https://github.com/qa-test-automation-frameworks/k6-performance-framework/actions/workflows/main-load.yml/badge.svg)](https://github.com/qa-test-automation-frameworks/k6-performance-framework/actions/workflows/main-load.yml)
+[![Performance reports](https://img.shields.io/badge/reports-live-b9f447)](https://qa-test-automation-frameworks.github.io/k6-performance-framework/)
+[![Release](https://img.shields.io/github/v/release/qa-test-automation-frameworks/k6-performance-framework)](https://github.com/qa-test-automation-frameworks/k6-performance-framework/releases/latest)
 [![k6](https://img.shields.io/badge/k6-2.0.0-purple)](https://grafana.com/docs/k6/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-blue)](https://www.typescriptlang.org/)
 
-Typed k6 performance automation for the RealWorld API, with controlled CI targets, SLO-based
-thresholds, regression baselines, Grafana/InfluxDB observability, OpenTelemetry, and six workload
-types.
+Performance engineering as a governed system: typed k6 workloads, controlled targets,
+SLO-based gates, reviewed regression baselines, Grafana/InfluxDB observability,
+OpenTelemetry, and six distinct workload models for the RealWorld API.
+
+## Reviewer Proof
+
+| Evidence | Direct link |
+| --- | --- |
+| Live reports | [Published performance evidence](https://qa-test-automation-frameworks.github.io/k6-performance-framework/) |
+| Current release | [v0.4.0](https://github.com/qa-test-automation-frameworks/k6-performance-framework/releases/tag/v0.4.0) |
+| Primary CI | [Main load workflow](https://github.com/qa-test-automation-frameworks/k6-performance-framework/actions/workflows/main-load.yml) |
+| Safety and quality | [Quality](https://github.com/qa-test-automation-frameworks/k6-performance-framework/actions/workflows/quality.yml) · [Security](https://github.com/qa-test-automation-frameworks/k6-performance-framework/actions/workflows/security.yml) |
+| Repository activity | [Default-branch commits](https://github.com/qa-test-automation-frameworks/k6-performance-framework/commits/main/) · [Pull requests](https://github.com/qa-test-automation-frameworks/k6-performance-framework/pulls?q=is%3Apr) |
+| Architecture and decisions | [Architecture](docs/architecture.md) · [ADR index](docs/adr/README.md) |
+| Failure evidence | [Threshold failure example](docs/images/threshold-failure-example.svg) · [Interpretation guide](docs/results-interpretation.md) |
+
+![Performance framework evidence overview](docs/images/performance-overview-example.svg)
+
+## What This Framework Proves
+
+| Engineering question | Implemented answer |
+| --- | --- |
+| How is unsafe load prevented? | Public targets are read-only; sustained and write-heavy workloads require a controlled target and explicit override. |
+| How are regressions distinguished from noise? | Reviewed three-run baselines, p95/p99 comparisons, tolerance rules, and compatible-run selection. |
+| How is performance made diagnosable? | Tagged metrics, JSON and Markdown summaries, Grafana/InfluxDB dashboards, and OpenTelemetry export. |
+| How does the suite model different risks? | Smoke, load, stress, spike, soak, and breakpoint workloads with separate intent and thresholds. |
+| How does CI remain credible? | Quality, security, main-load, reports, scheduled-soak, and release gates publish durable evidence. |
+
+## Release Summary
+
+Release `v0.4.0` establishes the review-ready performance platform: controlled
+load targets, advanced workload gates, regression tooling, report publication,
+observability capture, security scanning, and documented operational limits.
+See [release notes](docs/releases/v0.4.0.md) and the [changelog](CHANGELOG.md).
 
 ## Architecture
 
