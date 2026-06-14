@@ -39,4 +39,4 @@
 
 - Initialized Phase 0 repository scaffold.
 - Added TypeScript, ESLint, Prettier, and esbuild bootstrap configuration.
-- Added roadmap and initial architecture decision records.
+- Added initial architecture decision records.

@@ -29,5 +29,5 @@ Contributors must run and maintain a multi-container local stack. Dashboard and 
 | Option                      | Pros                                              | Cons                                                 | Rejected Because                                       |
 | --------------------------- | ------------------------------------------------- | ---------------------------------------------------- | ------------------------------------------------------ |
 | k6 Cloud                    | Managed storage and dashboards                    | Account dependency and hosted-service limits         | Does not demonstrate local observability engineering   |
-| Prometheus and Grafana      | Familiar ecosystem                                | Requires a k6 remote-write path and additional setup | InfluxDB is the roadmap's direct k6 output target      |
+| Prometheus and Grafana      | Familiar ecosystem                                | Requires a k6 remote-write path and additional setup | InfluxDB provides the direct k6 output target          |
 | InfluxDB, Grafana, and OTEL | Self-hosted, customizable, vendor-neutral routing | More components to operate                           | Best fit for local reproducibility and portfolio depth |
