@@ -10,7 +10,7 @@ Accepted
 
 ## Context
 
-The framework needs to demonstrate Staff SDET-level engineering discipline while supporting k6 performance tests, reusable service objects, typed configuration, and maintainable test data contracts.
+The framework needs disciplined engineering practices while supporting k6 performance tests, reusable service objects, typed configuration, and maintainable test data contracts.
 
 ## Decision
 
@@ -18,7 +18,7 @@ Use TypeScript 5.4+ instead of plain JavaScript for source, configuration, scena
 
 ## Rationale
 
-TypeScript provides type safety, IDE completions, and compile-time guardrails with no runtime cost in k6 after bundling. Strict compiler settings also support the framework's zero-`any` standard and make the portfolio codebase easier to review.
+TypeScript provides type safety, IDE completions, and compile-time guardrails with no runtime cost in k6 after bundling. Strict compiler settings also support the framework's zero-`any` standard and make the codebase easier to review.
 
 ## Consequences
 
