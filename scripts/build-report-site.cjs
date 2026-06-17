@@ -3,6 +3,14 @@ const path = require('node:path');
 
 const output = 'site';
 fs.mkdirSync(output, { recursive: true });
+const escapeHtml = (value) =>
+  String(value ?? '')
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;');
+const inlineJson = (value) => JSON.stringify(value).replaceAll('<', '\\u003c');
 const summaries = fs.existsSync('reports')
   ? fs.readdirSync('reports').filter((name) => name.endsWith('-summary.json'))
   : [];
@@ -44,7 +52,7 @@ const rows = reportData
       targetId,
       profile,
     }) =>
-      `<tr><td>${name}</td><td>${targetId}</td><td>${profile}</td><td>${p95?.toFixed(2) ?? '-'}</td><td>${p99?.toFixed(2) ?? '-'}</td><td>${errorRate?.toFixed(4) ?? '-'}</td><td>${throughput?.toFixed(2) ?? '-'}</td><td>${droppedIterations ?? '-'}</td><td>${thresholdStatus ? 'PASS' : 'FAIL'}</td></tr>`,
+      `<tr><td>${escapeHtml(name)}</td><td>${escapeHtml(targetId)}</td><td>${escapeHtml(profile)}</td><td>${p95?.toFixed(2) ?? '-'}</td><td>${p99?.toFixed(2) ?? '-'}</td><td>${errorRate?.toFixed(4) ?? '-'}</td><td>${throughput?.toFixed(2) ?? '-'}</td><td>${droppedIterations ?? '-'}</td><td>${thresholdStatus ? 'PASS' : 'FAIL'}</td></tr>`,
   )
   .join('');
 const evidence =
@@ -56,7 +64,7 @@ const html = `<!doctype html><html><head><meta charset="utf-8"><title>k6 Perform
 <div class="chart"><canvas id="latency-chart"></canvas></div>
   <table><thead><tr><th>Run</th><th>Target</th><th>Profile</th><th>p95 ms</th><th>p99 ms</th><th>Error rate</th><th>Req/s</th><th>Dropped</th><th>Thresholds</th></tr></thead><tbody>${evidence}</tbody></table>
 <script>
-const reports = ${JSON.stringify(reportData)};
+const reports = ${inlineJson(reportData)};
 new Chart(document.getElementById('latency-chart'), {
   type: 'line',
   data: {
