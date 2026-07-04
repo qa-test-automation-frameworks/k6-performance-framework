@@ -1,0 +1,10 @@
+schemaVersion: 1
+repository: k6-performance-framework
+items: []
+policy:
+  summary: >
+    No quarantined performance checks are currently tracked. Non-blocking or
+    validation-only capabilities are documented in docs/capability-status.md
+    rather than hidden behind quarantine.
+  reviewCadence: per-release
+
