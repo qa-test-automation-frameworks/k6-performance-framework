@@ -4,6 +4,9 @@ npm-cache-new/
 dist/
 coverage/
 .codegraph/
+.codebase-memory/
+codebase-memory/
+.agent/index-codebase-memory.sh
 .idea/
 reports/*
 !reports/.gitkeep
