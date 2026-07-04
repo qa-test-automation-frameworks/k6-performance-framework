@@ -24,6 +24,7 @@ OpenTelemetry, and six distinct workload models for the RealWorld API.
 | Repository activity | [Default-branch commits](https://github.com/qa-test-automation-frameworks/k6-performance-framework/commits/main/) · [Pull requests](https://github.com/qa-test-automation-frameworks/k6-performance-framework/pulls?q=is%3Apr) |
 | Architecture and decisions | [Architecture](docs/architecture.md) · [ADR index](docs/adr/README.md) |
 | Failure evidence | [Threshold failure example](docs/images/threshold-failure-example.svg) · [Interpretation guide](docs/results-interpretation.md) |
+| Reviewed baseline report | [Human-openable load report](docs/reports/reviewed-load-report.md) |
 
 ![Performance framework evidence overview](docs/images/performance-overview-example.svg)
 
@@ -77,6 +78,15 @@ Use `npm run breakpoint:search` to run a binary-search capacity probe. Its JSON 
 `lastHealthyVus`, `firstUnhealthyVus`, and `toleranceVus`.
 
 ## Controlled Load Service Objectives
+
+### Scale and Scope
+
+These objectives are controlled-target guardrails for a local RealWorld backend
+running on a GitHub-hosted Ubuntu runner. They are not production service SLOs
+and should not be compared to internet-facing latency targets. The reviewed
+baseline currently represents a 20 RPS full load profile with 100 max VUs; see
+the [human-openable load report](docs/reports/reviewed-load-report.md) for the
+source workflow, target commit, framework commit, and measured percentiles.
 
 | Endpoint group |       p95 |       p99 | Error rate |
 | -------------- | --------: | --------: | ---------: |
