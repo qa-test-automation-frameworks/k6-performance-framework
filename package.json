@@ -21,6 +21,7 @@
     "smoke": "npm run build && k6 run --out json=reports/smoke-results.json dist/smoke/smoke-test.js",
     "smoke:ci": "npm run smoke",
     "load": "npm run build && k6 run --out json=reports/load-results.json dist/load/articles-load.js",
+    "load:500rps": "npm run build && TARGET_RPS=500 MAX_VUS=800 k6 run --out json=reports/load-500rps-results.json dist/load/articles-load.js",
     "load:journey": "npm run build && k6 run --out json=reports/user-journey-results.json dist/load/user-journey-load.js",
     "stress": "npm run build && k6 run --out json=reports/stress-results.json dist/stress/articles-stress.js",
     "stress:auth": "npm run build && k6 run --out json=reports/auth-stress-results.json dist/stress/auth-stress.js",

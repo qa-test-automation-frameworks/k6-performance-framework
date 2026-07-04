@@ -38,3 +38,19 @@ export const observabilityProbeThresholds: ThresholdSet = {
   http_req_failed: ['rate<0.02'],
   http_reqs: ['count>0'],
 };
+
+export const realisticScaleLoadThresholds: ThresholdSet = {
+  ...loadThresholds,
+  http_req_duration: ['p(95)<80', 'p(99)<150'],
+  'http_req_duration{name:GET /articles}': ['p(95)<60', 'p(99)<120'],
+  'http_req_duration{name:GET /articles/:slug}': ['p(95)<60', 'p(99)<120'],
+  'http_req_duration{name:GET /articles/:slug/comments}': ['p(95)<50', 'p(99)<100'],
+  'http_req_duration{name:GET /profiles/:username}': ['p(95)<50', 'p(99)<100'],
+  'http_req_duration{name:GET /tags}': ['p(95)<50', 'p(99)<100'],
+  custom_article_read_duration_ms: ['p(95)<60', 'p(99)<120'],
+  custom_comment_duration_ms: ['p(95)<50', 'p(99)<100'],
+  custom_profile_duration_ms: ['p(95)<50', 'p(99)<100'],
+  custom_tag_duration_ms: ['p(95)<50', 'p(99)<100'],
+  dropped_iterations: ['count<50'],
+  http_reqs: ['rate>=500'],
+};

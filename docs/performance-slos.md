@@ -13,6 +13,27 @@ not comparable with the GitHub-hosted controlled baseline.
 | Profiles       |    < 5 ms |   < 10 ms |       < 1% |
 | Tags           |    < 5 ms |   < 10 ms |       < 1% |
 
+## Realistic-Scale Read Path
+
+The read-only article browsing path also has a 500 RPS profile:
+
+```bash
+npm run load:500rps
+```
+
+That profile keeps the same endpoint coverage but uses wider latency objectives because the runner,
+Docker target, and host scheduler become part of the measurement:
+
+| Endpoint group |      p95 |      p99 | Error rate |
+| -------------- | -------: | -------: | ---------: |
+| Article reads  |  < 60 ms | < 120 ms |       < 1% |
+| Comment reads  |  < 50 ms | < 100 ms |       < 2% |
+| Profiles       |  < 50 ms | < 100 ms |       < 1% |
+| Tags           |  < 50 ms | < 100 ms |       < 1% |
+
+The aggregate request-rate threshold is `http_reqs >= 500/s`; runs that cannot maintain the arrival
+rate are rejected by the dropped-iteration budget.
+
 Smoke tests abort quickly when checks, latency, or request failure thresholds breach. Load tests
 enforce the primary p95 and p99 objectives; stress and breakpoint tests intentionally identify the
 point at which these objectives degrade.
