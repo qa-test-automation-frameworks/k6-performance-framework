@@ -1,15 +1,17 @@
 {
   "schemaVersion": 1,
   "repository": "k6-performance-framework",
-  "evidenceState": "evidence-stale",
+  "evidenceState": "review-ready",
   "evidenceClass": ["controlled", "scheduled-load"],
   "verifiedRef": "main",
-  "verifiedSha": null,
-  "workflow": {"name": "pr-smoke.yml", "runId": null, "runUrl": null, "branch": "main", "event": null, "conclusion": null, "completedAt": null},
+  "verifiedSha": "29a5ed9f24ca6bfdf5222d4193e72130a814fe4a",
+  "workflow": {"name": "main-load.yml", "runId": 29137781908, "runUrl": "https://github.com/qa-test-automation-frameworks/k6-performance-framework/actions/runs/29137781908", "branch": "main", "event": "push", "conclusion": "success", "completedAt": "2026-07-11T03:26:58Z"},
   "target": {"name": "repository-controlled Conduit-compatible service", "environment": "controlled"},
-  "results": [],
+  "results": [
+    {"command": "main-load.yml full profile", "totalRequests": 32250, "httpReqFailedRate": 0, "durationSeconds": 481.005, "maxVus": 100, "targetRps": 20}
+  ],
   "reportUrl": "https://qa-test-automation-frameworks.github.io/k6-performance-framework/",
   "artifactRetention": "Published reviewed baseline plus CI artifacts",
   "limitationsUrl": "https://github.com/qa-test-automation-frameworks/k6-performance-framework/blob/main/docs/known-issues.md",
-  "generatedAt": "2026-07-11T00:00:00Z"
+  "generatedAt": "2026-07-11T04:25:00Z"
 }
