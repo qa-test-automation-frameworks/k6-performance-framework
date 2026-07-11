@@ -19,6 +19,12 @@ under `reports/`.
 | Runner | `ubuntu24-20260607.184.1` (`github-hosted`) |
 | Workflow run | <https://github.com/qa-test-automation-frameworks/k6-performance-framework/actions/runs/27474987004> |
 
+The aggregate and source-run review rule are documented in
+[`docs/baseline-provenance.md`](../baseline-provenance.md). A future report must
+retain the three source summaries, target/framework SHAs, baseline compatibility
+decision, and artifact-retention state; if those inputs expire, the evidence state
+must become `evidence-unavailable` rather than silently reusing this snapshot.
+
 ## Workload
 
 | Field | Value |
@@ -60,4 +66,3 @@ under `reports/`.
 These numbers describe a controlled local API path and are used to detect
 regressions against the reviewed baseline. They are not production service
 objectives, capacity claims, or internet-facing latency guarantees.
-

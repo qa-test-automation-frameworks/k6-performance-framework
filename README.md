@@ -40,7 +40,7 @@ OpenTelemetry, and six distinct workload models for the RealWorld API.
 
 ## Release Summary
 
-Release `v0.4.0` establishes the review-ready performance platform: controlled
+Release `v0.4.0` establishes the governed performance reference: controlled
 load targets, advanced workload gates, regression tooling, report publication,
 observability capture, security scanning, and documented operational limits.
 See [release notes](docs/releases/v0.4.0.md) and the [changelog](CHANGELOG.md).
@@ -182,6 +182,9 @@ that pool, avoiding a single-account bottleneck. Full non-local workloads also r
 - [CI workflow map](docs/ci-map.md)
 - [Cross-commit regression demonstration](docs/cross-commit-regression.md)
 - [Visual performance evidence](docs/evidence.md)
+- [Baseline provenance and review decision](docs/baseline-provenance.md)
+- [Current verification record](docs/evidence/latest-verification.md)
+- [Real-service experiment guide](docs/enterprise-experiment-guide.md)
 - [Architecture decisions](docs/adr/README.md)
 - [Capability status](docs/capability-status.md)
 - [v0.4.0 release notes](docs/releases/v0.4.0.md)
