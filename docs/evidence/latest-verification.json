@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "repository": "k6-performance-framework",
+  "evidenceState": "evidence-stale",
+  "evidenceClass": ["controlled", "scheduled-load"],
+  "verifiedRef": "main",
+  "verifiedSha": null,
+  "workflow": {"name": "pr-smoke.yml", "runId": null, "runUrl": null, "branch": "main", "event": null, "conclusion": null, "completedAt": null},
+  "target": {"name": "repository-controlled Conduit-compatible service", "environment": "controlled"},
+  "results": [],
+  "reportUrl": "https://qa-test-automation-frameworks.github.io/k6-performance-framework/",
+  "artifactRetention": "Published reviewed baseline plus CI artifacts",
+  "limitationsUrl": "https://github.com/qa-test-automation-frameworks/k6-performance-framework/blob/main/docs/known-issues.md",
+  "generatedAt": "2026-07-11T00:00:00Z"
+}

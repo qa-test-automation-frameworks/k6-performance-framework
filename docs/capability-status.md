@@ -10,7 +10,8 @@
 | Observability                   | Complete       | Provisioning, ingestion, annotations, queries, and PNG capture workflow  |
 | Security and dependency gates   | Complete       | npm audit, OSV, SBOM, and secret scanning                                |
 | Advanced workload validation    | Complete       | Strict full stress, spike, soak, and breakpoint release gate             |
-| Performance evidence            | Complete       | Reviewed load baseline and release-attached advanced artifacts           |
+| Performance implementation     | Complete       | Reviewed load baseline and release-attached advanced artifacts           |
+| Current performance evidence   | Stale          | Refresh the verification record after the next reviewed baseline         |
 
 This document reports implementation and validation separately. It intentionally does not assign a
 self-score.
