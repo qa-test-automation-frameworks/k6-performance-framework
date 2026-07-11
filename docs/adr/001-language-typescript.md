@@ -29,4 +29,4 @@ The project requires a build step before k6 execution. Contributors must maintai
 | Option     | Pros                                                        | Cons                                                      | Rejected Because                                          |
 | ---------- | ----------------------------------------------------------- | --------------------------------------------------------- | --------------------------------------------------------- |
 | JavaScript | Native k6 authoring, no compile step                        | Weaker contracts, fewer guardrails, less portfolio signal | Does not meet the strict typing and maintainability goals |
-| TypeScript | Strong types, IDE support, zero runtime cost after bundling | Requires build tooling                                    | Best fit for production-grade maintainability             |
+| TypeScript | Strong types, IDE support, zero runtime cost after bundling | Requires build tooling                                    | Best fit for long-term maintainability and review clarity |
