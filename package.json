@@ -54,17 +54,17 @@
     "hooks:install": "git config core.hooksPath .githooks"
   },
   "devDependencies": {
-    "@cyclonedx/cyclonedx-npm": "5.0.0",
+    "@cyclonedx/cyclonedx-npm": "6.0.0",
     "@types/k6": "2.0.0",
-    "@typescript-eslint/eslint-plugin": "7.18.0",
-    "@typescript-eslint/parser": "7.18.0",
-    "@vitest/coverage-v8": "4.1.8",
+    "@typescript-eslint/eslint-plugin": "8.63.0",
+    "@typescript-eslint/parser": "8.63.0",
+    "@vitest/coverage-v8": "4.1.10",
     "esbuild": "0.28.1",
-    "eslint": "8.57.1",
-    "glob": "10.5.0",
-    "prettier": "3.8.3",
-    "typescript": "5.9.3",
-    "vitest": "4.1.8"
+    "eslint": "10.7.0",
+    "glob": "13.0.6",
+    "prettier": "3.9.5",
+    "typescript": "7.0.2",
+    "vitest": "4.1.10"
   },
   "engines": {
     "node": ">=20.0.0"
