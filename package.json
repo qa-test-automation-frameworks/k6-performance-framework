@@ -3,7 +3,7 @@
   "version": "0.4.0",
   "license": "MIT",
   "packageManager": "npm@10.9.4",
-  "description": "Production-grade k6 TypeScript performance test automation framework for Conduit RealWorld API",
+  "description": "Governed k6 TypeScript performance reference framework for the Conduit RealWorld API",
   "homepage": "https://qa-test-automation-frameworks.github.io/k6-performance-framework/",
   "repository": "github:qa-test-automation-frameworks/k6-performance-framework",
   "keywords": [
