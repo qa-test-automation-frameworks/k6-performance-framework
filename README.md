@@ -171,6 +171,9 @@ that pool, avoiding a single-account bottleneck. Full non-local workloads also r
 - Security CI runs npm audit, creates a CycloneDX SBOM, and scans the lockfile with OSV.
 - [Published performance reports](https://qa-test-automation-frameworks.github.io/k6-performance-framework/)
 
+This is the most CI-heavy repository in the portfolio; see the [CI workflow map](docs/ci-map.md)
+for what each workflow is for and why it exists as a separate gate.
+
 ## Documentation
 
 - [Architecture](docs/architecture.md)
