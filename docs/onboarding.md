@@ -19,6 +19,12 @@ backend and observability stack. These are separate prerequisites for those path
 
 ## Local Observability
 
+The k6 container reaches a host backend through `host.docker.internal`, which is
+not loopback inside the container. After starting your owned local backend, set
+`ALLOW_NON_LOCAL_LOAD=true` explicitly for observed load. Compose defaults this
+flag to false; the regular target authorization guard remains enforced. CI grants
+it only in the job that starts the pinned API on its own runner.
+
 ```bash
 npm run docker:up
 npm run docker:health

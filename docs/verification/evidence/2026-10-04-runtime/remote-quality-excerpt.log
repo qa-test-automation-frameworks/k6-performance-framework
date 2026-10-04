@@ -1,0 +1,11 @@
+2026-10-04T12:05:59.1693080Z   node-version-file: .nvmrc
+2026-10-04T12:05:59.7658824Z node: v24.21.0
+2026-10-04T12:06:00.1460394Z ##[group]Run npm install --global npm@10.9.4
+2026-10-04T12:06:00.1462316Z [36;1mnpm install --global npm@10.9.4[0m
+2026-10-04T12:06:14.7050374Z All matched files use Prettier code style!
+2026-10-04T12:06:17.5498899Z [2m      Tests [22m [1m[32m106 passed[39m[22m[2m | [22m[33m1 skipped[39m[90m (107)[39m
+2026-10-04T12:06:33.1827532Z healthy: expected outcome verified; native exit 0, independently observed 5001 measurement requests
+2026-10-04T12:06:39.3702157Z boundary-delayed: expected outcome verified; native exit 0, independently observed 301 measurement requests
+2026-10-04T12:06:45.4729941Z under-driven: expected outcome verified; native exit 99, independently observed 10 measurement requests
+2026-10-04T12:06:51.6073055Z http-error: expected outcome verified; native exit 99, independently observed 60 measurement requests
+2026-10-04T12:06:58.5271735Z request-timeout: expected outcome verified; native exit 99, independently observed 15 measurement requests

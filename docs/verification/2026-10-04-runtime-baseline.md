@@ -46,6 +46,15 @@ sandboxed unit attempt had six failures: a temporary diagnostic probe demonstrat
 that execution restriction. The probe was removed and no assertions were weakened.
 
 Native logs and source hashes are retained in `evidence/2026-10-04-runtime/`.
-Exact-revision remote CI and Windows installation remain pending until inspected;
-older Node20 runs do not verify this change. Other repository runtime baselines
+At exact head8844f1b, [Quality37200941929](https://github.com/qa-test-automation-frameworks/k6-performance-framework/actions/runs/37200941929)
+passed Linux106-test/transport and Windows installation/format jobs. Native logs
+record Node24.21.0/npm10.9.4. [Security37200941934](https://github.com/qa-test-automation-frameworks/k6-performance-framework/actions/runs/37200941934)
+also passed. The disposable first-success path passed on repeat.
+
+[Observability37200941900](https://github.com/qa-test-automation-frameworks/k6-performance-framework/actions/runs/37200941900)
+failed with native k6 exit107 because `host.docker.internal` is not loopback and
+Compose did not forward explicit load authorization. A separate repair forwards
+the flag with defaultfalse and authorizes only the workflow step that starts the
+pinned owned backend. Full telemetry verification needs the new native Docker run;
+quality success does not imply observability success. Other repository runtime baselines
 and portfolio-wide R01/R03 remain separate work.

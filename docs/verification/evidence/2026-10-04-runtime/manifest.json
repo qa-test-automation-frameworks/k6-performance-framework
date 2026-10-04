@@ -51,7 +51,7 @@
     },
     {
       "path": ".github/workflows/observability.yml",
-      "sha256": "6f979471f00ef3a1027670053090559c1f83ce700417d955400a2a2eb977d7c0"
+      "sha256": "12fbf40fa36caa9aa3600da8d202f02f99eb6899f65ba33d74a2308934bcee30"
     },
     {
       "path": ".github/workflows/pages.yml",
@@ -104,6 +104,10 @@
       "sha256": "062135282ea9dfe31a5c04bf21a972a8d6b2e856ce1105aa707d77a9ed0a5f15"
     },
     {
+      "path": "clean-repeat.log",
+      "sha256": "5de97f7c37d9da342a4136c3273cd2d43dae0ba734d25c4cd61a9a34f90e47e0"
+    },
+    {
       "path": "coverage.log",
       "sha256": "cb4af59320422dd3a8b0af9d5719de6be5db2e6a5bcee6b5e2e388c13a5e0211"
     },
@@ -124,8 +128,29 @@
       "sha256": "bcf9c0e1d32496ac033ff167ebd68e317d570f4f2db6869a594618a26c61c45a"
     },
     {
+      "path": "remote-quality-excerpt.log",
+      "sha256": "ddbdfcc4a3ca981e9524a2cb82b7a434bb5ecbeabdd447291e70b1c37977df40"
+    },
+    {
+      "path": "remote-quality-jobs.json",
+      "sha256": "923ac1c7c494a3f2eb87e19919a1013429caa2cca9d2b79bed801d7cf1dffa5b"
+    },
+    {
+      "path": "remote-quality-run.json",
+      "sha256": "1fc5d3b0ba78ea7c89bef9f67df6ded5370f40617b122d9b30da57508c5dbfef"
+    },
+    {
+      "path": "remote-security-run.json",
+      "sha256": "f2d8a0cc8726339b77a48af1ed88047624c93030dfad3e30eb84ac8628dcaa27"
+    },
+    {
+      "path": "remote-windows-excerpt.log",
+      "sha256": "2913b102436265b042494326331e3bb7560d2e016a407a6fc6df7e198aa1e251"
+    },
+    {
       "path": "transport.log",
       "sha256": "34a1d0389aa1e1d6ad5bac9dbd5b6e2ea05732fe983aa5b2d76573647596c84c"
     }
-  ]
+  ],
+  "remoteRuntimeTestedHead": "8844f1b9bf5fe0f547f83212ff7aa455d9f48e91"
 }

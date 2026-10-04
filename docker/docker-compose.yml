@@ -83,6 +83,7 @@ services:
       - 'host.docker.internal:host-gateway'
     environment:
       TARGET_ENV: local
+      ALLOW_NON_LOCAL_LOAD: ${ALLOW_NON_LOCAL_LOAD:-false}
       BASE_URL: ${BASE_URL:-http://host.docker.internal:3000/api}
       K6_INFLUXDB_ORGANIZATION: k6
       K6_INFLUXDB_BUCKET: k6

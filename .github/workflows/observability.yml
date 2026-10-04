@@ -49,6 +49,9 @@ jobs:
           K6_VERSION: 2.0.0
           RUNNER_CLASS: github-hosted
           OBSERVABILITY_PROBE: 'true'
+          # The job starts the pinned owned API on this runner before container load.
+          BASE_URL: http://host.docker.internal:3000/api
+          ALLOW_NON_LOCAL_LOAD: 'true'
         run: |
           K6_RUN_ID="ci-${GITHUB_RUN_ID}" npm run load:observed
           sleep 10
