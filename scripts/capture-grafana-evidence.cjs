@@ -20,6 +20,7 @@ async function main() {
       to: 'now',
       width: '1600',
       height: '900',
+      kiosk: '1',
       'var-environment': environment,
       'var-run_id': runId,
     });

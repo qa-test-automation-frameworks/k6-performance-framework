@@ -1,6 +1,7 @@
 const fs = require('node:fs');
 const crypto = require('node:crypto');
 const path = require('node:path');
+const { workloadIdentity, assertCompatibleWorkloads } = require('./workload-identity.cjs');
 
 const inputs = process.argv.slice(2);
 const output = process.env.BASELINE_OUTPUT || 'baseline/load-summary.json';
@@ -11,6 +12,13 @@ if (inputs.length < 3) {
 }
 
 const summaries = inputs.map((file) => JSON.parse(fs.readFileSync(file, 'utf8')));
+const workload = workloadIdentity(summaries[0]?.metadata);
+for (const summary of summaries) {
+  assertCompatibleWorkloads(summaries[0].metadata, summary.metadata);
+  if (summary.failures?.length || summary.achievedLoad?.valid === false) {
+    throw new Error('Failed or invalid load experiment cannot form a baseline');
+  }
+}
 
 function readMetric(summary, file, metric, key) {
   const value = summary.metrics?.[metric]?.[key];
@@ -79,9 +87,7 @@ const baseline = {
     runnerClass: process.env.RUNNER_CLASS ?? 'github-hosted',
     workload: {
       name: process.env.WORKLOAD_NAME ?? process.env.SUMMARY_NAME ?? 'load',
-      targetRps: Number(process.env.TARGET_RPS || '20'),
-      maxVus: Number(process.env.MAX_VUS || '100'),
-      profile: process.env.TEST_PROFILE ?? 'full',
+      ...workload,
     },
   },
   metrics: {

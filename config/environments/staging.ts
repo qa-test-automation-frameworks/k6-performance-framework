@@ -4,7 +4,7 @@ export const stagingConfig: EnvConfig = {
   environment: 'staging',
   baseUrl: 'https://api.realworld.show/api',
   timeouts: { http: 30_000 },
-  rps: { target: 50, max: 400 },
+  arrival: { iterationsPerSecond: 50, maxVus: 400 },
   tags: { env: 'staging', app: 'conduit' },
   allowsWrites: false,
 };

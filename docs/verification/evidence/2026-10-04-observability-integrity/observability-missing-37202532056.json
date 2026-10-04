@@ -1,0 +1,121 @@
+{
+  "runId": "missing-37202532056",
+  "environment": "local",
+  "queryEvidence": [
+    {
+      "dashboard": "k6-performance",
+      "panel": "Virtual Users",
+      "rows": 0,
+      "optional": false,
+      "disposition": "unavailable"
+    },
+    {
+      "dashboard": "k6-performance",
+      "panel": "Requests per Second",
+      "rows": 0,
+      "optional": false,
+      "disposition": "unavailable"
+    },
+    {
+      "dashboard": "k6-performance",
+      "panel": "HTTP Duration p95",
+      "rows": 0,
+      "optional": false,
+      "disposition": "unavailable"
+    },
+    {
+      "dashboard": "k6-performance",
+      "panel": "Error Rate",
+      "rows": 0,
+      "optional": false,
+      "disposition": "unavailable"
+    },
+    {
+      "dashboard": "k6-performance",
+      "panel": "Article Read p95",
+      "rows": 0,
+      "optional": false,
+      "disposition": "unavailable"
+    },
+    {
+      "dashboard": "k6-performance",
+      "panel": "Article Write p95",
+      "rows": 0,
+      "optional": true,
+      "disposition": "unavailable"
+    },
+    {
+      "dashboard": "k6-performance",
+      "panel": "Business Errors",
+      "rows": 0,
+      "optional": true,
+      "disposition": "unavailable"
+    },
+    {
+      "dashboard": "k6-endpoints",
+      "panel": "Endpoint p95 Latency",
+      "rows": 0,
+      "optional": false,
+      "disposition": "unavailable"
+    },
+    {
+      "dashboard": "k6-endpoints",
+      "panel": "Endpoint Error Rate",
+      "rows": 0,
+      "optional": false,
+      "disposition": "unavailable"
+    },
+    {
+      "dashboard": "k6-soak-stability",
+      "panel": "Latency Distribution",
+      "refId": "A",
+      "rows": 0,
+      "optional": false,
+      "disposition": "unavailable"
+    },
+    {
+      "dashboard": "k6-soak-stability",
+      "panel": "Latency Distribution",
+      "refId": "B",
+      "rows": 0,
+      "optional": false,
+      "disposition": "unavailable"
+    },
+    {
+      "dashboard": "k6-soak-stability",
+      "panel": "Latency Distribution",
+      "refId": "C",
+      "rows": 0,
+      "optional": false,
+      "disposition": "unavailable"
+    },
+    {
+      "dashboard": "k6-soak-stability",
+      "panel": "Error Rate Stability",
+      "rows": 0,
+      "optional": false,
+      "disposition": "unavailable"
+    },
+    {
+      "dashboard": "k6-soak-stability",
+      "panel": "Active Virtual Users",
+      "rows": 0,
+      "optional": false,
+      "disposition": "unavailable"
+    }
+  ],
+  "missingRequired": [
+    "k6-performance/Virtual Users",
+    "k6-performance/Requests per Second",
+    "k6-performance/HTTP Duration p95",
+    "k6-performance/Error Rate",
+    "k6-performance/Article Read p95",
+    "k6-endpoints/Endpoint p95 Latency",
+    "k6-endpoints/Endpoint Error Rate",
+    "k6-soak-stability/Latency Distribution",
+    "k6-soak-stability/Latency Distribution",
+    "k6-soak-stability/Latency Distribution",
+    "k6-soak-stability/Error Rate Stability",
+    "k6-soak-stability/Active Virtual Users"
+  ]
+}

@@ -2,7 +2,7 @@
 
 ## Workstation
 
-Install Node.js 20+, npm 10.9.4, k6 2.0+, Docker Desktop, and Git. Then run:
+Install Node.js 24.21.0 (see `.nvmrc`), npm 10.9.4, and Git for the initial framework checks. Then run:
 
 ```bash
 npx --yes npm@10.9.4 ci
@@ -13,7 +13,17 @@ npm run build
 npm run hooks:install
 ```
 
+The initial checks need no Docker, k6 binary, target credentials, or running application.
+Install k6 2.0.0 for transport/load checks and Docker with Compose for the local
+backend and observability stack. These are separate prerequisites for those paths.
+
 ## Local Observability
+
+The k6 container reaches a host backend through `host.docker.internal`, which is
+not loopback inside the container. After starting your owned local backend, set
+`ALLOW_NON_LOCAL_LOAD=true` explicitly for observed load. Compose defaults this
+flag to false; the regular target authorization guard remains enforced. CI grants
+it only in the job that starts the pinned API on its own runner.
 
 ```bash
 npm run docker:up

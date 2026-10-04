@@ -9,7 +9,7 @@ const config: EnvConfig = {
   environment: 'staging',
   baseUrl: 'https://example.test/api/',
   timeouts: { http: 5_000 },
-  rps: { target: 1, max: 2 },
+  arrival: { iterationsPerSecond: 1, maxVus: 2 },
   tags: { env: 'staging', app: 'conduit' },
   allowsWrites: true,
 };

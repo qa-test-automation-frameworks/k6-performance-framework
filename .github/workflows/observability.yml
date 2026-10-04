@@ -27,7 +27,7 @@ jobs:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
       - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
         with:
-          node-version: 20
+          node-version-file: .nvmrc
           cache: npm
       - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6
         with:
@@ -49,10 +49,20 @@ jobs:
           K6_VERSION: 2.0.0
           RUNNER_CLASS: github-hosted
           OBSERVABILITY_PROBE: 'true'
+          # The job starts the pinned owned API on this runner before container load.
+          BASE_URL: http://host.docker.internal:3000/api
+          ALLOW_NON_LOCAL_LOAD: 'true'
         run: |
           K6_RUN_ID="ci-${GITHUB_RUN_ID}" npm run load:observed
           sleep 10
-          node scripts/validate-observability.cjs
+          K6_RUN_ID="ci-${GITHUB_RUN_ID}" node scripts/validate-observability.cjs
+          set +e
+          K6_RUN_ID="missing-${GITHUB_RUN_ID}" node scripts/validate-observability.cjs > reports/observability-negative.log 2>&1
+          status=$?
+          set -e
+          cat reports/observability-negative.log
+          test "$status" -ne 0
+          grep -q 'No rows for required run-scoped dashboard queries' reports/observability-negative.log
           K6_RUN_ID="ci-${GITHUB_RUN_ID}" node scripts/capture-grafana-evidence.cjs
       - name: Export diagnostics
         if: always()

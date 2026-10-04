@@ -15,24 +15,22 @@ not comparable with the GitHub-hosted controlled baseline.
 
 ## Realistic-Scale Read Path
 
-The read-only article browsing path also has a 500 RPS profile:
+The separate request-rate experiment configures 500 one-request arrivals/s:
 
 ```bash
 npm run load:500rps
 ```
 
-That profile keeps the same endpoint coverage but uses wider latency objectives because the runner,
-Docker target, and host scheduler become part of the measurement:
+It is an 80/20 article-list/tag-list mix, with no client retries, redirects or think
+time. The default is 10s warm-up, a 2s settling gap and a 60s measurement window.
+Measurement-scoped objectives are p95 <80ms, p99 <150ms, error rate <1%, all status
+checks passing, no dropped iterations and at least 98% of the configured arrival
+count. The report exposes both configured and achieved rates. This is a distinct
+workload from the multi-request journey; no comment/profile coverage is claimed.
 
-| Endpoint group |      p95 |      p99 | Error rate |
-| -------------- | -------: | -------: | ---------: |
-| Article reads  |  < 60 ms | < 120 ms |       < 1% |
-| Comment reads  |  < 50 ms | < 100 ms |       < 2% |
-| Profiles       |  < 50 ms | < 100 ms |       < 1% |
-| Tags           |  < 50 ms | < 100 ms |       < 1% |
-
-The aggregate request-rate threshold is `http_reqs >= 500/s`; runs that cannot maintain the arrival
-rate are rejected by the dropped-iteration budget.
+The predeclared 98% fraction is an engineering counting tolerance, not a
+statistical confidence interval. A valid measured 490/s result is reported as
+490/s, never relabeled as achieved 500/s. See [units and measurement rules](workload-units.md).
 
 Smoke tests abort quickly when checks, latency, or request failure thresholds breach. Load tests
 enforce the primary p95 and p99 objectives; stress and breakpoint tests intentionally identify the
@@ -48,7 +46,7 @@ headroom over the three-run endpoint p95/p99 measurements retained in
 limits; they must not be described as baseline-calibrated until a three-run authenticated baseline
 is retained.
 
-The load measurement window is eight minutes at the configured arrival rate after target startup
+The journey profile schedules eight minutes at the configured iteration-arrival rate after target startup
 and deterministic seeding. Endpoint objectives assume the default local profile and bounded request
 tags. Results from other environments require a separate reviewed baseline.
 

@@ -1,0 +1,45 @@
+{
+  "runtime": "k6 v2.0.0 (commit/8c3be52cc1, go1.26.3, linux/amd64)",
+  "sourceFilesSha256": {
+    "scripts/verify-request-rate.cjs": "671ddf6d0f9d4c2a6ddf6964273f52a2079e60c17ce43744c5cd98660c95faac",
+    "tests/load/request-rate-load.ts": "f036bc4fc7e1a360532fa4dfdf62c97bbd6489edad15d4db3f3b835fd1ac2ffa",
+    "config/workloads.ts": "ed8b828e319e260612041352882b653412a0895ce09278b67e23a5644854a825",
+    "src/helpers/achieved-load.ts": "49270fcdf4c6cbf9f905a98e50573ef0683a15719dccc8326acbf040c3419658",
+    "src/helpers/summary.ts": "ada3177a8c742a51c3836f856e47cef2510e343dcbf073aafa8a9e789116ea42"
+  },
+  "entryPoint": "dist/load/request-rate-load.js",
+  "entryPointSha256": "cd271e9787746663d1ddc7207bb4dae856775f7c30296e77ecc5d8d928b1e169",
+  "mode": "request-timeout",
+  "nativeExit": 99,
+  "signal": null,
+  "observed": {
+    "warmup": 6,
+    "measurement": 15,
+    "other": 0,
+    "articles": 12,
+    "tags": 3
+  },
+  "achievedLoad": {
+    "valid": true,
+    "reasons": [],
+    "configuredRequestsPerSecond": 5,
+    "measurementSeconds": 3,
+    "minimumAchievedFraction": 0.98,
+    "completedIterations": 15,
+    "startedRequests": 15,
+    "requests": 15,
+    "droppedIterations": 0,
+    "achievedIterationsPerSecond": 5,
+    "achievedRequestsPerSecond": 5
+  },
+  "failures": [
+    "Threshold: http_req_duration{scenario:request_measurement}: expected p(95)<80; actual 1000.4420477",
+    "Threshold: http_req_duration{scenario:request_measurement}: expected p(99)<150; actual 1000.51293194",
+    "Threshold: checks{scenario:request_measurement}: expected rate==1; actual 0",
+    "Threshold: http_req_failed{scenario:request_measurement}: expected rate<0.01; actual 1",
+    "Checks: 21 failed"
+  ],
+  "nominalMeasurementRequests": 15,
+  "maximumMeasurementRequests": 16,
+  "limitation": "Executor/count validation fixture; colocated generator and target; not application capacity evidence."
+}

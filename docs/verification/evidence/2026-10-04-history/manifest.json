@@ -1,0 +1,126 @@
+{
+  "parent_sha": "5b9fdc6cd8b51cef98c39dc1245ad44ee29dff0c",
+  "source_sha256": {
+    "scripts/compare-history.cjs": "5515cd71b194298480d40888c9ed7f1ec2c46ac05bc538c667ace974c2f10758",
+    "scripts/compare-performance.cjs": "1c3071b76bd42e346b60fc8840887108a0b08a334d5aa74539d5adcbde0c172f",
+    "scripts/workload-identity.cjs": "774f5d6a5b56a85fff07d6a0a8cf1341a65931b6808a015a95f5b0dec9fc46f2",
+    "scripts/check-history-identity.cjs": "e824f676b8cd4203a0e058ea75579f657e4f892916d644ace1ff0cf6438e2690",
+    ".github/scripts/select-history.sh": "032dc3dfb46a3e9dad216443414c07cec4778caa91d9cc2371ca952e8da11b35",
+    ".github/workflows/scheduled-soak.yml": "8da5b3717d2462ae7e38211db67c62c8278dfe9bf47ba919dae21e3548499d98",
+    "tests/unit/history-selection.test.mjs": "9a2c22753f950db46dd5843aa087b7a34ea2c0d997b6e8badcc526ce5f2d9ef1",
+    "tests/unit/regression-tools.test.mjs": "5aa3ebd520b084fe6a86792067259fe439b9d2fb9f67e2e2cf3f18fbbc448907"
+  },
+  "artifacts": [
+    {
+      "file": "k6-original-soak-state.json",
+      "sha256": "11a0192fb5ce1b0df7119ec756eb6d600898c6829d2b0b6243b6456b311f5999",
+      "native_sha256": "11a0192fb5ce1b0df7119ec756eb6d600898c6829d2b0b6243b6456b311f5999"
+    },
+    {
+      "file": "k6-original-candidate-state.json",
+      "sha256": "d6b1607ad5b9b48d0ffe3a50ae74954a2917aaa9838e17dbb7778d7e4c466cb2",
+      "native_sha256": "d6b1607ad5b9b48d0ffe3a50ae74954a2917aaa9838e17dbb7778d7e4c466cb2"
+    },
+    {
+      "file": "k6-original-soak-artifacts.json",
+      "sha256": "48d5444dcf4a579fd23f2f44e6a8109e0b9ce5eea634608ca592e96f8720dc88",
+      "native_sha256": "48d5444dcf4a579fd23f2f44e6a8109e0b9ce5eea634608ca592e96f8720dc88"
+    },
+    {
+      "file": "k6-original-candidate-artifacts.json",
+      "sha256": "43aaac456b942e906ce2589be6f0a36d20b11e10034d54517515d2e808ad0dcd",
+      "native_sha256": "43aaac456b942e906ce2589be6f0a36d20b11e10034d54517515d2e808ad0dcd"
+    },
+    {
+      "file": "k6-original-baseline-artifacts.json",
+      "sha256": "244563f989470892c537c9a4622920af0d228ee4528f7d00c64a06d6cd95856c",
+      "native_sha256": "244563f989470892c537c9a4622920af0d228ee4528f7d00c64a06d6cd95856c"
+    },
+    {
+      "file": "k6-original-soak-native.log.gz",
+      "sha256": "3c0dfbaf3dc0dc3c421c9eadc55b5c1ebddb5c02b6512ca251b584bf9f981b67",
+      "native_sha256": "3f4e81328d563dea836078a74540b15d82619b9e812e48bd2a057b5087aa9462"
+    },
+    {
+      "file": "k6-original-candidate-native.log.gz",
+      "sha256": "6d1cf37e2aac9c59a4384f998d826e2f93533d32e35da5390dbb5c37154b517f",
+      "native_sha256": "4286a66bcd283a1de4f9313982fe72f027bf880b48c23828dcfeedf3ceb4416b"
+    },
+    {
+      "file": "k6-original-soak-reproduced-before.log.gz",
+      "sha256": "9b0aeb6427972fe8e369b84b66f70cf9e135ff1c9808a7606d370293081ea3ac",
+      "native_sha256": "786c93964e3e213622cb4f8cc3ebdf5de2f29b73081e6f5a8cabaf888c590e23"
+    },
+    {
+      "file": "k6-original-soak-reproduced-after.log.gz",
+      "sha256": "a9ef8090db6b46f52f0f4633db0772947dab01ca3df695e1cd23fdc7c5aab4b1",
+      "native_sha256": "122a9983336884adc10425244e54bbef3a392f8dbb21a3a11b2c592469ccd304"
+    },
+    {
+      "file": "k6-original-candidate-reproduced-after.log.gz",
+      "sha256": "f21797975057917b63bf11bae9127627832bddcdef5dc977e55eb1222b3119ba",
+      "native_sha256": "6ca2e928c76e1b77ebd0ec16988be8140157e77a102fbd29493e39f03ca9d286"
+    },
+    {
+      "file": "k6-original-baseline-summary.json",
+      "sha256": "aee021503eebd5dede7b7c7f28a72d5a06b4e070d7a640a3ae14f7528190319f",
+      "native_sha256": "aee021503eebd5dede7b7c7f28a72d5a06b4e070d7a640a3ae14f7528190319f"
+    },
+    {
+      "file": "k6-original-candidate-summary.json",
+      "sha256": "f2807cc90aa71824a30473de264d966911f3414eef5ba98eda56490148d167dc",
+      "native_sha256": "f2807cc90aa71824a30473de264d966911f3414eef5ba98eda56490148d167dc"
+    },
+    {
+      "file": "k6-history-selection-native.log.gz",
+      "sha256": "ce298668570d57942d9f8c6e87333b835471e2fa9f2ae683f620cfb64554fd6b",
+      "native_sha256": "ead71a423e089cfd1a8783ff1b0459e639f4110186df79d0c75530fa496bdaad"
+    },
+    {
+      "file": "k6-history-selection-comparison.log.gz",
+      "sha256": "f7e71a38c4bfea161c114ab1ee42be7aeadcbc26421e1f2ffd5bd57545e52376",
+      "native_sha256": "e3cef8fa16b6d1add36044b6f4acc7e5ef14dc59a03040de41e96961a218a5ca"
+    },
+    {
+      "file": "k6-history-coverage.log.gz",
+      "sha256": "9354df35d8b4d7589af775afeb8d2d5a59f817d1f7e6d2b492bc465d4f7e24e3",
+      "native_sha256": "ab04d05416f83aa785a59aa3ec9752c46f5abf0823b016522460417b1c2c87cf"
+    },
+    {
+      "file": "k6-history-build.log.gz",
+      "sha256": "dab964068d915b2ac868e6f33e2eaca7dd9e8fac6c8116d0af768b5a85d061b8",
+      "native_sha256": "778f97743ceaa9c4cd173568bd789b6b93ee2c73bc54e29407deea1914b8f728"
+    },
+    {
+      "file": "k6-history-lint.log.gz",
+      "sha256": "aa69c356e3f6358d3b5cd2a227b2245d0a47fc5fed7c0c1e65ce5dc518d96213",
+      "native_sha256": "4a8f08f9a35b8ad7d47f3c8a404d4db2023dc0612c7d988ebe379230bd657fe2"
+    },
+    {
+      "file": "k6-history-format.log.gz",
+      "sha256": "e919d5e7c12248de0be617078df145c080110f5ea3167cecc7be0bdf7a575beb",
+      "native_sha256": "67429f5eeca4e93de7dce72960eed34d05594ec89fe66612c6f217fb42e33c6d"
+    },
+    {
+      "file": "soak-previous.json",
+      "sha256": "5f299494fa9c6c256c3fdc0dd34a49acbec88e405be6ceb9ffe2e410d5a56855",
+      "native_sha256": "5f299494fa9c6c256c3fdc0dd34a49acbec88e405be6ceb9ffe2e410d5a56855"
+    },
+    {
+      "file": "soak-candidate.json",
+      "sha256": "eb559cc4a071fd97071f2a5b53353170dbe1d9bf398ad5af5cb59be90dea14cf",
+      "native_sha256": "eb559cc4a071fd97071f2a5b53353170dbe1d9bf398ad5af5cb59be90dea14cf"
+    },
+    {
+      "file": "lookup-history-selection.json",
+      "sha256": "0e09cfe446661eb69fc54add779f447d1931d5b94c20c15f66b39f1b0dd38bf3",
+      "native_sha256": "0e09cfe446661eb69fc54add779f447d1931d5b94c20c15f66b39f1b0dd38bf3"
+    },
+    {
+      "file": "lookup-soak-summary.json",
+      "sha256": "a513fdf42badc7048967706bb62bdefa4742d7770fde2840b036e15d5c079863",
+      "native_sha256": "a513fdf42badc7048967706bb62bdefa4742d7770fde2840b036e15d5c079863"
+    }
+  ],
+  "scope": "Recovered historical measurements and local checks; no new baseline or noise calibration."
+}

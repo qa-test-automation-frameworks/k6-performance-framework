@@ -1,0 +1,35 @@
+{
+  "runtime": "k6 v2.0.0 (commit/8c3be52cc1, go1.26.3, linux/amd64)",
+  "sourceFilesSha256": {
+    "scripts/verify-request-rate.cjs": "89a6c9ade3e2699b497613f6ec96dd7cc7afcaf686bb47d257e2ba6ed05c2db6",
+    "tests/load/request-rate-load.ts": "124c5deac4a7d51d766b42a406ce3f9fbb64a59c370a020cc431f54e727ab9c9",
+    "config/workloads.ts": "1537fba8971d114965ef41a5f9cf46cd2287ca44de1660664eb445d4f6a6c2cf",
+    "src/helpers/achieved-load.ts": "78e50ec3ba6fd50b5cfdd3d23691005d6e47af46deae08e8cb1050e11d6109a4",
+    "src/helpers/summary.ts": "c51c51cc0e611780dfacf1e4595d8cc6ad6bc268442451c3ba1fd2a0b927a0e0"
+  },
+  "mode": "healthy",
+  "nativeExit": 0,
+  "signal": null,
+  "observed": {
+    "warmup": 500,
+    "measurement": 5000,
+    "other": 0,
+    "articles": 4000,
+    "tags": 1000
+  },
+  "achievedLoad": {
+    "valid": true,
+    "reasons": [],
+    "configuredRequestsPerSecond": 500,
+    "measurementSeconds": 10,
+    "minimumAchievedFraction": 0.98,
+    "completedIterations": 5000,
+    "requests": 5000,
+    "droppedIterations": 0,
+    "achievedIterationsPerSecond": 500,
+    "achievedRequestsPerSecond": 500
+  },
+  "failures": [],
+  "expectedMeasurementRequests": 5000,
+  "limitation": "Executor/count validation fixture; colocated generator and target; not application capacity evidence."
+}

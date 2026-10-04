@@ -1,0 +1,108 @@
+{
+  "runId": "ci-37201994516",
+  "environment": "local",
+  "queryEvidence": [
+    {
+      "dashboard": "k6-performance",
+      "panel": "Virtual Users",
+      "rows": 2,
+      "optional": false,
+      "disposition": "passed"
+    },
+    {
+      "dashboard": "k6-performance",
+      "panel": "Requests per Second",
+      "rows": 122,
+      "optional": false,
+      "disposition": "passed"
+    },
+    {
+      "dashboard": "k6-performance",
+      "panel": "HTTP Duration p95",
+      "rows": 122,
+      "optional": false,
+      "disposition": "passed"
+    },
+    {
+      "dashboard": "k6-performance",
+      "panel": "Error Rate",
+      "rows": 122,
+      "optional": false,
+      "disposition": "passed"
+    },
+    {
+      "dashboard": "k6-performance",
+      "panel": "Article Read p95",
+      "rows": 61,
+      "optional": false,
+      "disposition": "passed"
+    },
+    {
+      "dashboard": "k6-performance",
+      "panel": "Article Write p95",
+      "rows": 0,
+      "optional": true,
+      "disposition": "unavailable"
+    },
+    {
+      "dashboard": "k6-performance",
+      "panel": "Business Errors",
+      "rows": 0,
+      "optional": true,
+      "disposition": "unavailable"
+    },
+    {
+      "dashboard": "k6-endpoints",
+      "panel": "Endpoint p95 Latency",
+      "rows": 122,
+      "optional": false,
+      "disposition": "passed"
+    },
+    {
+      "dashboard": "k6-endpoints",
+      "panel": "Endpoint Error Rate",
+      "rows": 122,
+      "optional": false,
+      "disposition": "passed"
+    },
+    {
+      "dashboard": "k6-soak-stability",
+      "panel": "Latency Distribution",
+      "refId": "A",
+      "rows": 22,
+      "optional": false,
+      "disposition": "passed"
+    },
+    {
+      "dashboard": "k6-soak-stability",
+      "panel": "Latency Distribution",
+      "refId": "B",
+      "rows": 22,
+      "optional": false,
+      "disposition": "passed"
+    },
+    {
+      "dashboard": "k6-soak-stability",
+      "panel": "Latency Distribution",
+      "refId": "C",
+      "rows": 22,
+      "optional": false,
+      "disposition": "passed"
+    },
+    {
+      "dashboard": "k6-soak-stability",
+      "panel": "Error Rate Stability",
+      "rows": 22,
+      "optional": false,
+      "disposition": "passed"
+    },
+    {
+      "dashboard": "k6-soak-stability",
+      "panel": "Active Virtual Users",
+      "rows": 11,
+      "optional": false,
+      "disposition": "passed"
+    }
+  ],
+  "missingRequired": []
+}

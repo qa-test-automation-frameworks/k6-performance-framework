@@ -1,0 +1,301 @@
+{
+  "failures": [],
+  "generatedAt": "2026-09-20T09:58:59.270Z",
+  "metrics": {
+      "http_req_duration": {
+        "p(95)": 11.981545899999997,
+        "p(99)": 14.566375240000006,
+        "avg": 5.220183815247522,
+        "min": 0.393333,
+        "med": 4.4792380000000005,
+        "max": 23.679724,
+        "p(90)": 10.3931827
+      },
+      "http_req_duration{name:GET /articles/:slug}": {
+        "med": 0,
+        "max": 0,
+        "p(90)": 0,
+        "p(95)": 0,
+        "p(99)": 0,
+        "avg": 0,
+        "min": 0
+      },
+      "iterations": {
+        "count": 148312,
+        "rate": 19.01237567678927
+      },
+      "data_received": {
+        "rate": 13654.908905996728,
+        "count": 106519400
+      },
+      "custom_article_read_duration_ms": {
+        "avg": 6.365214673613637,
+        "min": 0.839507,
+        "med": 5.609923,
+        "max": 23.679724,
+        "p(90)": 11.4746247,
+        "p(95)": 13.004259949999996,
+        "p(99)": 15.271484779999987
+      },
+      "iteration_duration": {
+        "max": 1030.706585,
+        "p(90)": 1018.9011374,
+        "p(95)": 1020.50359285,
+        "p(99)": 1022.67951793,
+        "avg": 1011.4342810443495,
+        "min": 1001.669168,
+        "med": 1010.9593295
+      },
+      "http_req_failed": {
+        "passes": 0,
+        "fails": 296624,
+        "rate": 0
+      },
+      "checks": {
+        "rate": 1,
+        "passes": 296624,
+        "fails": 0
+      },
+      "http_req_tls_handshaking": {
+        "avg": 0,
+        "min": 0,
+        "med": 0,
+        "max": 0,
+        "p(90)": 0,
+        "p(95)": 0,
+        "p(99)": 0
+      },
+      "http_req_duration{expected_response:true}": {
+        "min": 0.393333,
+        "med": 4.4792380000000005,
+        "max": 23.679724,
+        "p(90)": 10.3931827,
+        "p(95)": 11.981545899999997,
+        "p(99)": 14.566375240000006,
+        "avg": 5.220183815247522
+      },
+      "http_req_sending": {
+        "min": 0.002253,
+        "med": 0.008452,
+        "max": 3.064709,
+        "p(90)": 0.019429,
+        "p(95)": 0.022694,
+        "p(99)": 0.094051,
+        "avg": 0.012672851869707905
+      },
+      "custom_tag_duration_ms": {
+        "avg": 4.075152956881411,
+        "min": 0.393333,
+        "med": 3.2909215,
+        "max": 20.046322,
+        "p(90)": 8.879528399999996,
+        "p(95)": 10.477396849999996,
+        "p(99)": 12.789263209999971
+      },
+      "vus": {
+        "max": 20,
+        "value": 1,
+        "min": 0
+      },
+      "http_req_waiting": {
+        "p(90)": 10.3594709,
+        "p(95)": 11.946740349999994,
+        "p(99)": 14.52705695,
+        "avg": 5.181514475730199,
+        "min": 0.360044,
+        "med": 4.4395855,
+        "max": 23.399682
+      },
+      "http_reqs": {
+        "count": 296624,
+        "rate": 38.02475135357854
+      },
+      "http_req_connecting": {
+        "p(90)": 0,
+        "p(95)": 0,
+        "p(99)": 0,
+        "avg": 0.000010991608905550463,
+        "min": 0,
+        "med": 0,
+        "max": 0.189113
+      },
+      "group_duration": {
+        "avg": 10.774109526403635,
+        "min": 1.506217,
+        "med": 10.328081000000001,
+        "max": 30.281285,
+        "p(90)": 18.169571299999998,
+        "p(95)": 19.75411009999999,
+        "p(99)": 21.92763739999999
+      },
+      "custom_business_errors_total": {
+        "count": 0,
+        "rate": 0
+      },
+      "custom_article_read_success_rate": {
+        "rate": 1,
+        "passes": 148312,
+        "fails": 0
+      },
+      "http_req_duration{name:GET /tags}": {
+        "p(99)": 12.789263209999971,
+        "avg": 4.075152956881411,
+        "min": 0.393333,
+        "med": 3.2909215,
+        "max": 20.046322,
+        "p(90)": 8.879528399999996,
+        "p(95)": 10.477396849999996
+      },
+      "http_req_blocked": {
+        "p(90)": 0.005768,
+        "p(95)": 0.00625,
+        "p(99)": 0.007281,
+        "avg": 0.0035058455114887897,
+        "min": 0.000851,
+        "med": 0.002944,
+        "max": 1.110199
+      },
+      "custom_tag_success_rate": {
+        "rate": 1,
+        "passes": 148312,
+        "fails": 0
+      },
+      "http_req_duration{name:GET /articles}": {
+        "avg": 6.365214673613637,
+        "min": 0.839507,
+        "med": 5.609923,
+        "max": 23.679724,
+        "p(90)": 11.4746247,
+        "p(95)": 13.004259949999996,
+        "p(99)": 15.271484779999987
+      },
+      "data_sent": {
+        "count": 26369858,
+        "rate": 3380.398395541742
+      },
+      "vus_max": {
+        "value": 20,
+        "min": 20,
+        "max": 20
+      },
+      "http_req_receiving": {
+        "min": 0.00665,
+        "med": 0.023095,
+        "max": 3.28986,
+        "p(90)": 0.040821,
+        "p(95)": 0.047631,
+        "p(99)": 0.06360293000000017,
+        "avg": 0.025996487647661548
+      }
+    },
+  "metadata": {
+      "environment": "local",
+      "frameworkCommit": "6740414c0c81329c73a8329abc5351a723fb28d5",
+      "k6Version": "2.0.0",
+      "maxVus": 100,
+      "profile": "full",
+      "runnerClass": "github-hosted",
+      "targetCommit": "c8c66858a436a6e07f445fffe2253a65ff6dcb58",
+      "targetId": "realworld-local",
+      "targetRps": 20
+    },
+  "rootGroup": {
+      "checks": [],
+      "name": "",
+      "path": "",
+      "id": "d41d8cd98f00b204e9800998ecf8427e",
+      "groups": [
+          {
+            "path": "::soak readers",
+            "id": "4d818fcf65591b1cd1ea8504d8b3573e",
+            "groups": [],
+            "checks": [
+                {
+                  "passes": 148312,
+                  "fails": 0,
+                  "name": "soak list articles: status 200",
+                  "path": "::soak readers::soak list articles: status 200",
+                  "id": "cd3b6bdc0b3f1812d274b9c6354d1fb9"
+                },
+                {
+                  "passes": 148312,
+                  "fails": 0,
+                  "name": "soak list tags: status 200",
+                  "path": "::soak readers::soak list tags: status 200",
+                  "id": "5fb9b480fe160cb06bfc34a97a895f3f"
+                }
+              ],
+            "name": "soak readers"
+          }
+        ]
+    },
+  "state": {
+      "testRunDurationMs": 7800813.665862,
+      "isStdOutTTY": false,
+      "isStdErrTTY": false
+    },
+  "thresholds": {
+      "custom_business_errors_total": {
+        "count<10": {
+          "ok": true
+        }
+      },
+      "custom_article_read_success_rate": {
+        "rate>0.99": {
+          "ok": true
+        }
+      },
+      "http_req_duration{name:GET /tags}": {
+        "p(95)<500": {
+          "ok": true
+        },
+        "p(99)<1000": {
+          "ok": true
+        }
+      },
+      "custom_tag_success_rate": {
+        "rate>0.99": {
+          "ok": true
+        }
+      },
+      "http_req_duration{name:GET /articles}": {
+        "p(95)<750": {
+          "ok": true
+        },
+        "p(99)<1500": {
+          "ok": true
+        }
+      },
+      "http_req_duration": {
+        "p(95)<1200": {
+          "ok": true
+        },
+        "p(99)<2500": {
+          "ok": true
+        }
+      },
+      "http_req_duration{name:GET /articles/:slug}": {
+        "p(95)<750": {
+          "ok": true
+        },
+        "p(99)<1500": {
+          "ok": true
+        }
+      },
+      "iterations": {
+        "rate>5": {
+          "ok": true
+        }
+      },
+      "http_req_failed": {
+        "rate<0.01": {
+          "ok": true
+        }
+      },
+      "checks": {
+        "rate==1": {
+          "ok": true
+        }
+      }
+    }
+}

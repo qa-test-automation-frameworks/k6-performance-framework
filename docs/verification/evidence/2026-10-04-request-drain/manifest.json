@@ -1,0 +1,203 @@
+{
+  "parent_sha": "8400ca12dd0cfc6cd6541b39508d0d51a4826137",
+  "source_sha256": {
+    "config/workloads.ts": "ed8b828e319e260612041352882b653412a0895ce09278b67e23a5644854a825",
+    "tests/load/request-rate-load.ts": "f036bc4fc7e1a360532fa4dfdf62c97bbd6489edad15d4db3f3b835fd1ac2ffa",
+    "src/helpers/achieved-load.ts": "49270fcdf4c6cbf9f905a98e50573ef0683a15719dccc8326acbf040c3419658",
+    "src/helpers/summary.ts": "ada3177a8c742a51c3836f856e47cef2510e343dcbf073aafa8a9e789116ea42",
+    "scripts/check-achieved-load.cjs": "7de062a91df3c32780d31fa0a3dc7fadab06cc5bdc41a054e90dc22f134a2ac8",
+    "scripts/workload-identity.cjs": "f3c961557054d636e90193a8e0ac92a7bb3db4349c8aceadc53b51d183f191dc",
+    "scripts/verify-request-rate.cjs": "671ddf6d0f9d4c2a6ddf6964273f52a2079e60c17ce43744c5cd98660c95faac",
+    "tests/unit/achieved-load.test.ts": "f39d81e4a31f1ab24fb475175a8ff5ec16d0cd3dd75b7a7df2c946318c8195c6",
+    "tests/unit/regression-tools.test.mjs": "74ba30b30b7c075f7536204d4a3f36f199d975452445c228f105038b8beebffe"
+  },
+  "artifacts": [
+    {
+      "file": "k6-boundary-negative-control.log.gz",
+      "sha256": "fa4b1b3d860a368a75bb1cc33f955e4766d2086c1950757260160cf646d852ca",
+      "native_sha256": "97784b02e7d2c49d6e7672527414e6a374a4021294d9609af2ff00f5f6ce6f03"
+    },
+    {
+      "file": "k6-boundary-accounted-negative.log.gz",
+      "sha256": "fd39d1ae5fd0d8e58803a1853dc2706cd8896c7258734988f36910a80a97de0c",
+      "native_sha256": "a460574fd35437e331c3837c068d735f7588840ce00a0443a3b5efaf12e62db0"
+    },
+    {
+      "file": "k6-boundary-achieved-negative.log.gz",
+      "sha256": "0a65a6fb3c0eeb141f1e120bc5c3fc0b17748871b50fcd60ac40a69f06d4c0b7",
+      "native_sha256": "c9bf39ed47d1ef13e0fcbae457aa1b33f7d5707b338af8a5893c7092bb2d9af5"
+    },
+    {
+      "file": "k6-boundary-full-harness.log.gz",
+      "sha256": "8a6104a07ae0ed81d41fcf133ec136eb401caf27d77d05209b570beed9ea67ab",
+      "native_sha256": "d77296f3d239979fe607f2b782047f2dafe5c7475edfeaeb973f393b9f0a1570"
+    },
+    {
+      "file": "k6-boundary-build.log.gz",
+      "sha256": "dab964068d915b2ac868e6f33e2eaca7dd9e8fac6c8116d0af768b5a85d061b8",
+      "native_sha256": "778f97743ceaa9c4cd173568bd789b6b93ee2c73bc54e29407deea1914b8f728"
+    },
+    {
+      "file": "k6-boundary-coverage.log.gz",
+      "sha256": "d6f51b93e9edbb9687596765cde3e0167cd94b60b3b48121e5187420da721846",
+      "native_sha256": "9b66fd0600982e396e860d0ac923e7d6d1990b5f6779803ef7950aec20ae6b9b"
+    },
+    {
+      "file": "k6-boundary-lint.log.gz",
+      "sha256": "aa69c356e3f6358d3b5cd2a227b2245d0a47fc5fed7c0c1e65ce5dc518d96213",
+      "native_sha256": "4a8f08f9a35b8ad7d47f3c8a404d4db2023dc0612c7d988ebe379230bd657fe2"
+    },
+    {
+      "file": "k6-boundary-format.log.gz",
+      "sha256": "e919d5e7c12248de0be617078df145c080110f5ea3167cecc7be0bdf7a575beb",
+      "native_sha256": "67429f5eeca4e93de7dce72960eed34d05594ec89fe66612c6f217fb42e33c6d"
+    },
+    {
+      "file": "k6-boundary-zero-drain.js.gz",
+      "sha256": "21f5483a0d486a854eb8ed12a54f3e2da84cac99269f2ca8ee08e6eacf9bc3d4",
+      "native_sha256": "2830f718f357bbf9c16ee235dd44a05c56b72d6bc5d95376906b858402a2d2c4"
+    },
+    {
+      "file": "k6-boundary-accounted-zero-drain.js.gz",
+      "sha256": "1c4875d4d0b528854c1f077746c816fdbe47131aa246b042f6a96f699bf28404",
+      "native_sha256": "64c8fe8e29200b39d1b830fa6ccf39e0cb92e38260c6f20ade332774d4c82ad1"
+    },
+    {
+      "file": "k6-security-performance-state.json",
+      "sha256": "0478fbf564030654af230834d077257a46dcba0d07501ad193dc14f539dff67c",
+      "native_sha256": "0478fbf564030654af230834d077257a46dcba0d07501ad193dc14f539dff67c"
+    },
+    {
+      "file": "original-negative-boundary-delayed-observed.json",
+      "sha256": "171c52228860cd39de782b231a7aad81cb46c806357f1e8ac92cc813d093b2cd",
+      "native_sha256": "171c52228860cd39de782b231a7aad81cb46c806357f1e8ac92cc813d093b2cd"
+    },
+    {
+      "file": "original-negative-boundary-delayed-summary.json",
+      "sha256": "f75b7ba4a59cf35a34bbb3f204263c9d3c59d4d94e49409014111a905b8b1184",
+      "native_sha256": "f75b7ba4a59cf35a34bbb3f204263c9d3c59d4d94e49409014111a905b8b1184"
+    },
+    {
+      "file": "original-negative-boundary-delayed-stderr.log.gz",
+      "sha256": "f61f27bd17de546264aa58f40f3aafaac7021e0ef69c17f6b1b4cd7664a037ec",
+      "native_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "accounted-negative-boundary-delayed-observed.json",
+      "sha256": "053d604d4969c576639792278c38a8409168b2ea40a204298b84461a15521a98",
+      "native_sha256": "053d604d4969c576639792278c38a8409168b2ea40a204298b84461a15521a98"
+    },
+    {
+      "file": "accounted-negative-boundary-delayed-summary.json",
+      "sha256": "00afe970923a9a02ecf180e30f513f73396507ef428be8b3c9964420c4feac3b",
+      "native_sha256": "00afe970923a9a02ecf180e30f513f73396507ef428be8b3c9964420c4feac3b"
+    },
+    {
+      "file": "accounted-negative-boundary-delayed-stderr.log.gz",
+      "sha256": "f61f27bd17de546264aa58f40f3aafaac7021e0ef69c17f6b1b4cd7664a037ec",
+      "native_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "positive-healthy-observed.json",
+      "sha256": "ee0e32e2c94211b7c66d71ac959fb9dfddafc23f20e6bc86469afceb5618e46c",
+      "native_sha256": "ee0e32e2c94211b7c66d71ac959fb9dfddafc23f20e6bc86469afceb5618e46c"
+    },
+    {
+      "file": "positive-healthy-summary.json",
+      "sha256": "6d5b61d1a09cbd376cd79709c55d456c48103e75b06dfeb5ba98b33781a7c3bf",
+      "native_sha256": "6d5b61d1a09cbd376cd79709c55d456c48103e75b06dfeb5ba98b33781a7c3bf"
+    },
+    {
+      "file": "positive-healthy-stderr.log.gz",
+      "sha256": "f61f27bd17de546264aa58f40f3aafaac7021e0ef69c17f6b1b4cd7664a037ec",
+      "native_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "positive-boundary-delayed-observed.json",
+      "sha256": "1ca3f4dcafa4a62fa091c627c72f8114aa167594f5b821d9415fc5b3fa0fbc82",
+      "native_sha256": "1ca3f4dcafa4a62fa091c627c72f8114aa167594f5b821d9415fc5b3fa0fbc82"
+    },
+    {
+      "file": "positive-boundary-delayed-summary.json",
+      "sha256": "79b6e1c0998004515ef623c23704d5112ce0a170bec0a10c05925cb122e26012",
+      "native_sha256": "79b6e1c0998004515ef623c23704d5112ce0a170bec0a10c05925cb122e26012"
+    },
+    {
+      "file": "positive-boundary-delayed-stderr.log.gz",
+      "sha256": "f61f27bd17de546264aa58f40f3aafaac7021e0ef69c17f6b1b4cd7664a037ec",
+      "native_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "positive-under-driven-observed.json",
+      "sha256": "815dc63e2d2483057a3570dc4fa6201279c2cb316a1c2a2f7b2866596c5477ac",
+      "native_sha256": "815dc63e2d2483057a3570dc4fa6201279c2cb316a1c2a2f7b2866596c5477ac"
+    },
+    {
+      "file": "positive-under-driven-summary.json",
+      "sha256": "886e1a243d9751d0f2bd098150aa002bbb49ec6a4356f14082b4afd8e9d709aa",
+      "native_sha256": "886e1a243d9751d0f2bd098150aa002bbb49ec6a4356f14082b4afd8e9d709aa"
+    },
+    {
+      "file": "positive-under-driven-stderr.log.gz",
+      "sha256": "3416cbffb84d6bb7d5013340ccbda77f666c9f92b09199b3e92b793ac816be26",
+      "native_sha256": "e209350664a2a99c56ff2e11c4abf902b3584ba459f0e96701de4b4ba00c4489"
+    },
+    {
+      "file": "positive-http-error-observed.json",
+      "sha256": "51f7a1174adaab4d5eaeee8848b950e5e971b4978a70219364310b95dda54381",
+      "native_sha256": "51f7a1174adaab4d5eaeee8848b950e5e971b4978a70219364310b95dda54381"
+    },
+    {
+      "file": "positive-http-error-summary.json",
+      "sha256": "2c621940d624c5dd5f9443ae63c0c8e5b53d2d90c33b77b26791a976e70d42e7",
+      "native_sha256": "2c621940d624c5dd5f9443ae63c0c8e5b53d2d90c33b77b26791a976e70d42e7"
+    },
+    {
+      "file": "positive-http-error-stderr.log.gz",
+      "sha256": "41a4a85f13e7a9d74999ac4d7719236244daca78c762bdd71ffc095a9ed3c502",
+      "native_sha256": "3c972c50d41ec40600ebb358a0840699da0bd017725af2bfc85d57816d9fedf3"
+    },
+    {
+      "file": "positive-request-timeout-observed.json",
+      "sha256": "5d477685a773770bc63dfa33525b1dfbf19dc8516cf4905171b874b7d0ae3785",
+      "native_sha256": "5d477685a773770bc63dfa33525b1dfbf19dc8516cf4905171b874b7d0ae3785"
+    },
+    {
+      "file": "positive-request-timeout-summary.json",
+      "sha256": "64a1bcede76d362958c31e2c9d372ab3faddb37808a074b662163be3e42c63ea",
+      "native_sha256": "64a1bcede76d362958c31e2c9d372ab3faddb37808a074b662163be3e42c63ea"
+    },
+    {
+      "file": "positive-request-timeout-stderr.log.gz",
+      "sha256": "ce36516b2616e3bce066f065f55896f1165b9c06a70951023270e8cadd87e72e",
+      "native_sha256": "c31e215c8bffe85db41c5ce53ae36797e00bffe7307f0560305d01ac2cbf636b"
+    },
+    {
+      "file": "k6-drain-quality-native.log.gz",
+      "sha256": "aeee03793c03e02a370fc60e0bdf5c50a135eb52d41c0ce722515cdd45143583",
+      "native_sha256": "b2e4900dfc095a4e2ad7f163cdf0ad44f1de13b7a8850c3095ad2c0d46d41ae0"
+    },
+    {
+      "file": "k6-drain-security-native.log.gz",
+      "sha256": "99958792329f1e5ed87405ebc2c116c981caa4d5bb4a71b1a3711e8b0677647e",
+      "native_sha256": "dc20ebedb6a932529d96988baa50b84113b02ba4580885df8f976d393f07189b"
+    },
+    {
+      "file": "k6-drain-quality-state.json",
+      "sha256": "9bb78bcf5a6470c7d83af51ba3359dd28c1433a7f80aa7b3ef7dc40bde396240",
+      "native_sha256": "9bb78bcf5a6470c7d83af51ba3359dd28c1433a7f80aa7b3ef7dc40bde396240"
+    },
+    {
+      "file": "k6-drain-security-state.json",
+      "sha256": "56d02eff612b9d7ea9ffd0399bd90ebe5eec531a825b466dbf299566e1c7146d",
+      "native_sha256": "56d02eff612b9d7ea9ffd0399bd90ebe5eec531a825b466dbf299566e1c7146d"
+    },
+    {
+      "file": "k6-drain-remote-runs.json",
+      "sha256": "9b92a2c4b5df8aefcc71ef31639fc8d6816c7bc072807c54cf4bec19222b36a9",
+      "native_sha256": "9b92a2c4b5df8aefcc71ef31639fc8d6816c7bc072807c54cf4bec19222b36a9"
+    }
+  ],
+  "remote_tested_head_sha": "96f2fcf22e0bf55f26e3289e7123c9c9519231c0",
+  "remote_tested_merge_sha": "0912c485772517d30dd6fc5952e3dbd794e80cd4"
+}

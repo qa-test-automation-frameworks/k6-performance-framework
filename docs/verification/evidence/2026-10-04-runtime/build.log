@@ -1,0 +1,8 @@
+
+> k6-performance-framework@0.4.0 build
+> npm run typecheck && node esbuild.config.js
+
+
+> k6-performance-framework@0.4.0 typecheck
+> tsc --noEmit
+

@@ -84,9 +84,18 @@ Use `npm run breakpoint:search` to run a binary-search capacity probe. Its JSON 
 These objectives are controlled-target guardrails for a local RealWorld backend
 running on a GitHub-hosted Ubuntu runner. They are not production service SLOs
 and should not be compared to internet-facing latency targets. The reviewed
-baseline currently represents a 20 RPS full load profile with 100 max VUs; see
+baseline represents a 20-arrival-iterations/s journey profile with 100 max VUs; each
+iteration can make multiple HTTP requests. Historical `targetRps` fields contain
+iteration rates, not fixed request throughput. See
 the [human-openable load report](docs/reports/reviewed-load-report.md) for the
 source workflow, target commit, framework commit, and measured percentiles.
+
+Use `TARGET_ITERATIONS_PER_SECOND` to configure the existing journey. `TARGET_RPS`
+now fails with a migration message rather than silently changing units. For a
+separate one-request-per-arrival experiment, run `npm run load:500rps` against your
+owned local target; its report separates warm-up from achieved measurement load.
+See [workload units and verification](docs/workload-units.md). Neither a configured
+rate nor a passing counting fixture proves application capacity.
 
 | Endpoint group |       p95 |       p99 | Error rate |
 | -------------- | --------: | --------: | ---------: |
@@ -103,7 +112,7 @@ The hosted read-only smoke test uses wider network-facing guardrails defined sep
 
 ## Quick Start
 
-Prerequisites: Node.js 20+, npm 10.9.4, k6 2.0+, Docker Desktop, and Docker Compose.
+Prerequisites: Node.js 24.21.0 (see `.nvmrc`), npm 10.9.4, k6 2.0+, Docker Desktop, and Docker Compose.
 
 ```bash
 npx --yes npm@10.9.4 ci

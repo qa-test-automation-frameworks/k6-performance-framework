@@ -38,7 +38,7 @@ jobs:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
       - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
         with:
-          node-version: 20
+          node-version-file: .nvmrc
           cache: npm
       - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6
         with:
@@ -74,47 +74,26 @@ jobs:
           K6_VERSION: 2.0.0
           RUNNER_CLASS: github-hosted
           PERF_STRICT_THRESHOLDS: ${{ inputs.profile == 'validation' && 'false' || 'true' }}
-      - name: Compare with latest compatible run
+      - name: Locate historical comparison input
+        id: history
         if: ${{ (inputs.profile || 'full') == 'full' }}
-        shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
-          ARTIFACT_NAME: advanced-${{ inputs.scenario || 'soak' }}-full
+          SCENARIO: ${{ inputs.scenario || 'soak' }}
+          CANDIDATE_FILE: reports/${{ inputs.scenario || 'soak' }}-summary.json
+        run: bash .github/scripts/select-history.sh
+      - name: Compare retained historical input
+        if: ${{ (inputs.profile || 'full') == 'full' && steps.history.outputs.available == 'true' }}
+        shell: bash
+        env:
+          SCENARIO: ${{ inputs.scenario || 'soak' }}
+          PREVIOUS_FILE: ${{ steps.history.outputs.previous_file }}
           CANDIDATE_FILE: reports/${{ inputs.scenario || 'soak' }}-summary.json
         run: |
-          mkdir -p reports/history
-          previous_run=''
-          while read -r candidate_run; do
-            rm -rf reports/history/*
-            if gh run download "$candidate_run" --name "$ARTIFACT_NAME" --dir reports/history; then
-              previous_run="$candidate_run"
-              break
-            fi
-          done < <(
-            gh run list --workflow scheduled-soak.yml --status success --limit 20 \
-              --json databaseId,headSha \
-              --jq ".[] | select(.headSha != \"${GITHUB_SHA}\") | .databaseId"
-          )
-          if [ -z "$previous_run" ]; then
-            echo "No previous compatible $ARTIFACT_NAME artifact is available; absolute thresholds remain authoritative."
-            exit 0
-          fi
-          if [ "${{ inputs.scenario || 'soak' }}" = 'breakpoint' ]; then
-            previous_file="$(find reports/history -name 'breakpoint-capacity.json' -print -quit)"
-            if [ -z "$previous_file" ]; then
-              echo "No compatible historical capacity result was downloaded."
-              exit 0
-            fi
-            PREVIOUS_FILE="$previous_file" \
-              CANDIDATE_FILE=reports/breakpoint-capacity.json \
-              npm run capacity:compare | tee reports/history-comparison.md
+          if [ "$SCENARIO" = 'breakpoint' ]; then
+            CANDIDATE_FILE=reports/breakpoint-capacity.json npm run capacity:compare | tee reports/history-comparison.md
           else
-            previous_file="$(find reports/history -name "${{ inputs.scenario || 'soak' }}-summary.json" -print -quit)"
-            if [ -z "$previous_file" ]; then
-              echo "No compatible historical summary was downloaded."
-              exit 0
-            fi
-            PREVIOUS_FILE="$previous_file" npm run history:compare | tee reports/history-comparison.md
+            npm run history:compare | tee reports/history-comparison.md
           fi
           cat reports/history-comparison.md >> "$GITHUB_STEP_SUMMARY"
       - name: Publish performance summary
