@@ -93,5 +93,22 @@ that producer/comparator; this repair does not certify it or claim application c
   experiment or a new measurement comparison claim.
 
 Native logs, recovered inputs, capture availability response and source hashes
-are in `evidence/2026-10-04-history/`. Remote validation of the changed workflow
-and repeat-run study remain separate until actual execution is inspected.
+are in `evidence/2026-10-04-history/`. Remote verification below covers workflow execution. The repeat-run study remains
+separate D04 work.
+
+## Exact-revision remote verification
+
+At head `b2083bd6cc8864b9bf606d2512f688334d5ccf77`,
+[Quality 37199666025](https://github.com/qa-test-automation-frameworks/k6-performance-framework/actions/runs/37199666025)
+and [Security 37199666063](https://github.com/qa-test-automation-frameworks/k6-performance-framework/actions/runs/37199666063)
+completed successfully. These used the runtime configured at that revision; they
+do not verify the subsequent Node 24 change.
+
+The actual manual [full-profile spike 37199685506](https://github.com/qa-test-automation-frameworks/k6-performance-framework/actions/runs/37199685506)
+completed successfully against the owned local target. Native job `111428626475`
+ran the controlled test and lookup successfully, then **skipped** the historical
+comparison. Artifact `11302272514` records disposition `unavailable`, reason
+`no_retained_compatible_primary_input`. This verifies truthful absence handling;
+it does not establish a passed regression comparison, new baseline, or calibrated
+noise tolerance. Native summary, selection and API metadata with hashes are retained
+in `evidence/2026-10-04-history-remote/`.
