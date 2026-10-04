@@ -55,7 +55,14 @@ jobs:
         run: |
           K6_RUN_ID="ci-${GITHUB_RUN_ID}" npm run load:observed
           sleep 10
-          node scripts/validate-observability.cjs
+          K6_RUN_ID="ci-${GITHUB_RUN_ID}" node scripts/validate-observability.cjs
+          set +e
+          K6_RUN_ID="missing-${GITHUB_RUN_ID}" node scripts/validate-observability.cjs > reports/observability-negative.log 2>&1
+          status=$?
+          set -e
+          cat reports/observability-negative.log
+          test "$status" -ne 0
+          grep -q 'No rows for required run-scoped dashboard queries' reports/observability-negative.log
           K6_RUN_ID="ci-${GITHUB_RUN_ID}" node scripts/capture-grafana-evidence.cjs
       - name: Export diagnostics
         if: always()

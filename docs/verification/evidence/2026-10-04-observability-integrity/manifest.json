@@ -1,0 +1,28 @@
+{
+  "sourceHead": "cb8cfb82a7312d1d99f54d18eab93c02236560dc",
+  "runId": 37201276341,
+  "artifactId": 11302804058,
+  "note": "Original integration passed presence checks but did not establish usable dashboard images or successful panel queries.",
+  "files": [
+    {
+      "path": "jobs.json",
+      "sha256": "5510822f4126f1cf79c5aa4c2f3b16b40f5554d22f2e01c3bb8a443e6f17ca30"
+    },
+    {
+      "path": "observed-summary.json",
+      "sha256": "b5735f6365879ee98bf5a188fb6100e2289769a62a287760b2c329c0ce6f6087"
+    },
+    {
+      "path": "original-blocked-overview.png",
+      "sha256": "aed0d95c8d908987dd68f39565684e290f3a4fab1ade4213c6544f278768a103"
+    },
+    {
+      "path": "original-query-errors.txt",
+      "sha256": "fe21d8ea8fe9d692abd6adda19916e69b6eebb045ef50c0bb8e8a4b783694113"
+    },
+    {
+      "path": "run.json",
+      "sha256": "2ac3334d09a2c10cf9483811f7f5818593f257127a5ef4b46d1d566556a2dfe4"
+    }
+  ]
+}

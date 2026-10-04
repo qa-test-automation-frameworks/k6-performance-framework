@@ -32,6 +32,7 @@ services:
       INFLUXDB_ADMIN_TOKEN: ${INFLUXDB_ADMIN_TOKEN:-k6-local-development-token}
     volumes:
       - grafana-data:/var/lib/grafana
+      - ./grafana/grafana.ini:/etc/grafana/grafana.ini:ro
       - ./grafana/provisioning:/etc/grafana/provisioning:ro
     depends_on:
       influxdb:
