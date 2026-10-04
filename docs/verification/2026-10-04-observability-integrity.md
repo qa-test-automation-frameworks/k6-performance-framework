@@ -59,3 +59,21 @@ The installed v13.0.2
 accepts kiosk1, so capture now uses that value instead of the ineffective legacy tv
 value. The existing d7e8 PNG still includes navigation and is labeled accordingly.
 The new numeric-row and kiosk changes require their own exact-revision run.
+
+## Numeric samples and inspected renders
+
+At exact860feb2, [Docker37202532056](https://github.com/qa-test-automation-frameworks/k6-performance-framework/actions/runs/37202532056)
+passed all12 required provisioned queries with finite numeric values, including
+zero-valued error samples. Positive records now report2/4 actual numeric values
+where the previous implementation counted61/122 rows containing empty windows.
+The nonexistent-run control still failed with the intended reason; optional write
+and business-error metrics remained unavailable. The overview, endpoint and soak
+PNGs were visually inspected: no announcement overlay/navigation chrome, actual
+read/error/duration samples displayed. These tiny-probe images remain distinct
+from a long-running soak/load experiment; the OTEL-rate panel has no data.
+
+Inspection also exposed an automatic endpoint percentage axis reaching10000%.
+The provisioned error panels now explicitly use fraction-to-percent display with
+min0/max1, matching the exporter mean's0..1 domain. This final display correction
+needs native rendering at the subsequent revision; it does not change metric data
+or thresholds. Native860feb2 records/images remain labeled with that tested head.
