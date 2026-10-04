@@ -53,4 +53,17 @@ function assertCompatibleWorkloads(before, after) {
   return a;
 }
 
-module.exports = { workloadIdentity, assertCompatibleWorkloads };
+function assertCompatibleHistory(previous, candidate) {
+  const identity = assertCompatibleWorkloads(previous, candidate);
+  const fields = ['targetId', 'targetCommit', 'environment', 'profile', 'k6Version', 'runnerClass'];
+  const incompatible = fields.filter(
+    (field) =>
+      previous?.[field] === undefined ||
+      candidate?.[field] === undefined ||
+      previous[field] !== candidate[field],
+  );
+  if (incompatible.length) throw new Error(`Incompatible history: ${incompatible.join(', ')}`);
+  return identity;
+}
+
+module.exports = { workloadIdentity, assertCompatibleWorkloads, assertCompatibleHistory };

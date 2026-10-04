@@ -5,6 +5,17 @@ const baselinePath = process.env.BASELINE_FILE || 'baseline/load-summary.json';
 const candidatePath = process.env.CANDIDATE_FILE || 'reports/load-summary.json';
 const tolerance = Number(process.env.REGRESSION_TOLERANCE || '0.20');
 const errorRateLimit = Number(process.env.ERROR_RATE_LIMIT || '0.02');
+if (
+  !Number.isFinite(tolerance) ||
+  tolerance < 0 ||
+  !Number.isFinite(errorRateLimit) ||
+  errorRateLimit < 0 ||
+  errorRateLimit > 1
+) {
+  throw new Error(
+    'Comparison limits must be finite non-negative fractions; error-rate limit must be at most 1',
+  );
+}
 
 function read(path) {
   return JSON.parse(fs.readFileSync(path, 'utf8'));
@@ -12,12 +23,16 @@ function read(path) {
 
 function value(summary, metric, key) {
   const result = summary.metrics?.[metric]?.[key];
-  if (typeof result !== 'number') throw new Error(`Missing ${metric}.${key}`);
+  if (!Number.isFinite(result) || result < 0)
+    throw new Error(`Missing or invalid ${metric}.${key}`);
   return result;
 }
 
 const baseline = read(baselinePath);
 const candidate = read(candidatePath);
+if ((candidate.failures?.length ?? 0) > 0 || candidate.achievedLoad?.valid === false) {
+  throw new Error('Cannot compare a failed or invalid candidate experiment');
+}
 if (baseline.metadata?.status !== 'measured' || baseline.metadata?.sampleCount < 3) {
   throw new Error('Baseline must contain at least three measured controlled runs');
 }
@@ -45,16 +60,17 @@ const comparisons = Object.entries(baseline.metrics ?? {}).flatMap(([metric, val
     .filter((key) => key === 'p(95)' || key === 'p(99)')
     .map((key) => [metric, key, value(baseline, metric, key), value(candidate, metric, key)]),
 );
+if (comparisons.length === 0) throw new Error('No comparable percentile metrics found');
 const failures = comparisons.filter(([, , before, after]) => after > before * (1 + tolerance));
 const failureRates = Object.entries(baseline.metrics ?? {})
   .filter(([metric, values]) => metric.includes('failed') && typeof values.rate === 'number')
   .map(([metric]) => [metric, value(candidate, metric, 'rate')]);
 
-console.log('| Metric | Statistic | Baseline | Candidate | Change |');
-console.log('|---|---|---:|---:|---:|');
+console.log('| Metric | Statistic | Baseline (ms) | Candidate (ms) | Delta (ms) | Change |');
+console.log('|---|---|---:|---:|---:|---:|');
 for (const [metric, key, before, after] of comparisons) {
   console.log(
-    `| ${metric} | ${key} | ${before.toFixed(2)} | ${after.toFixed(2)} | ${((after / before - 1) * 100).toFixed(1)}% |`,
+    `| ${metric} | ${key} | ${before.toFixed(4)} | ${after.toFixed(4)} | ${(after - before).toFixed(4)} | ${(before === 0 ? (after === 0 ? 0 : Number.POSITIVE_INFINITY) : (after / before - 1) * 100).toFixed(1)}% |`,
   );
 }
 for (const [metric, rate] of failureRates) {
