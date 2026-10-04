@@ -112,7 +112,7 @@ The hosted read-only smoke test uses wider network-facing guardrails defined sep
 
 ## Quick Start
 
-Prerequisites: Node.js 20+, npm 10.9.4, k6 2.0+, Docker Desktop, and Docker Compose.
+Prerequisites: Node.js 24.21.0 (see `.nvmrc`), npm 10.9.4, k6 2.0+, Docker Desktop, and Docker Compose.
 
 ```bash
 npx --yes npm@10.9.4 ci
