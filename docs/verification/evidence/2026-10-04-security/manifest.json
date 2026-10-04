@@ -1,0 +1,81 @@
+{
+  "parent_sha": "0f7f347f68bb03e0ec4174b5431669670a9b5908",
+  "source_sha256": {
+    "package.json": "692a5e68afd9dcaad447f0e5e7cb835b9d9d38894163d52e7e89648be1d11951",
+    "package-lock.json": "eda767eacfd997b8d48d85656069c27d690c9b46f3084fceab8c4b51f7bf06bc",
+    ".eslintrc.js": "4e77f60c645978f08f300ebbf4ce456b525528eb829db2fa911b966166368190",
+    "vitest.config.js": "2df80da9cbee0faaea2262d8659ae43fb289815698af0e87fa9a4f65eccf892c"
+  },
+  "artifacts": [
+    {
+      "file": "k6-security-current.json",
+      "sha256": "cd08b30fd77013d80b1757fa901c9a661ebca529daade39b25b1bfa601cc95b9",
+      "native_sha256": "cd08b30fd77013d80b1757fa901c9a661ebca529daade39b25b1bfa601cc95b9"
+    },
+    {
+      "file": "k6-security-final.json",
+      "sha256": "9c1e4490a0c2dd2a6bb8552309b7db892cf95a5fc215ea9c562b90c9515fb99f",
+      "native_sha256": "9c1e4490a0c2dd2a6bb8552309b7db892cf95a5fc215ea9c562b90c9515fb99f"
+    },
+    {
+      "file": "k6-security-osv.json",
+      "sha256": "54345d5194d238b6017d0f3181f392109ce35023cc6b4bdfa8c134943dcb578e",
+      "native_sha256": "54345d5194d238b6017d0f3181f392109ce35023cc6b4bdfa8c134943dcb578e"
+    },
+    {
+      "file": "k6-security-osv.stderr",
+      "sha256": "190cb6e0759bbd092da9c7fdb56cb36014d0d0ecc63891ff401d37a927f5d333",
+      "native_sha256": "190cb6e0759bbd092da9c7fdb56cb36014d0d0ecc63891ff401d37a927f5d333"
+    },
+    {
+      "file": "k6-security-ci-install.log.gz",
+      "sha256": "0e7333d1f029b9819eae137da7b5a752ced21ca744c3f76fb9ec09007deed06b",
+      "native_sha256": "119fc8365328ea1082e2646b6941bc24bad48db057051e399a4e9c8c9a0fd893"
+    },
+    {
+      "file": "k6-security-lint.log.gz",
+      "sha256": "aa69c356e3f6358d3b5cd2a227b2245d0a47fc5fed7c0c1e65ce5dc518d96213",
+      "native_sha256": "4a8f08f9a35b8ad7d47f3c8a404d4db2023dc0612c7d988ebe379230bd657fe2"
+    },
+    {
+      "file": "k6-security-coverage.log.gz",
+      "sha256": "4e13ee722bfc6afc2a0a127a3136a92cbbdae2aa3e31a9bd61d1903a19c56115",
+      "native_sha256": "44b5d3cca020c9198375fb008972b420f72b1b94ab0c33061c02d7ea150f4cee"
+    },
+    {
+      "file": "k6-security-build.log.gz",
+      "sha256": "dab964068d915b2ac868e6f33e2eaca7dd9e8fac6c8116d0af768b5a85d061b8",
+      "native_sha256": "778f97743ceaa9c4cd173568bd789b6b93ee2c73bc54e29407deea1914b8f728"
+    },
+    {
+      "file": "k6-security-format.log.gz",
+      "sha256": "e919d5e7c12248de0be617078df145c080110f5ea3167cecc7be0bdf7a575beb",
+      "native_sha256": "67429f5eeca4e93de7dce72960eed34d05594ec89fe66612c6f217fb42e33c6d"
+    },
+    {
+      "file": "k6-security-sbom.log.gz",
+      "sha256": "1e699cc4a3b46d05c285f370de3cffbdd315eafaeef05ff5c1a9257e16107329",
+      "native_sha256": "d8d3c386181cbcbf7eb190bcd813bcf6c9dd7b205e1ce66f8dc9a56c3cfc5208"
+    },
+    {
+      "file": "k6-security-request-rate.log.gz",
+      "sha256": "66590761834cbfbcb65fd721f25ec34124586fd0a3fe6e31c1eac2333e4c1a8d",
+      "native_sha256": "35f336464868d033d6a2340d8fd5f81ca01b15683d2b8df788aace8c57079b46"
+    },
+    {
+      "file": "k6-security-patch-relock.log.gz",
+      "sha256": "0c641bd359cb76e0b6c72c034a80b4ce7482332cedfcafa8134f65aa9977b340",
+      "native_sha256": "38624c4d4e311fa99a8994ca9012e59a62647abb6ddc55166333bf4516eb96cc"
+    },
+    {
+      "file": "k6-security-pinned-vite-relock.log.gz",
+      "sha256": "d4846d50671c67337ae8b4bd15e6a0e0643a43f0010dd9a7f63f8efd905e1727",
+      "native_sha256": "1c7e65b5e49117a03b5257a52d5cab24c7fd1145703f5da768ab50354d766eff"
+    },
+    {
+      "file": "sbom.cdx.json.gz",
+      "sha256": "ce94e9c887ac74892a623ac69886b32738cdca26a14f57983ccc10c799be1944",
+      "native_sha256": "4b380008476b27ea842d842f9700d9ea13183ad99caee9f616053f0799b2d780"
+    }
+  ]
+}
