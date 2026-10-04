@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
+import workloadTools from '../../scripts/workload-identity.cjs';
 
 function run(script, env, args = []) {
   return spawnSync(process.execPath, [script, ...args], {
@@ -13,6 +14,33 @@ function run(script, env, args = []) {
 }
 
 describe('performance comparison tools', () => {
+  it('requires the declared drain and separates interrupted from drained cohorts', () => {
+    const metadata = {
+      workloadSchema: 'single-request-arrival-v2',
+      targetIterationsPerSecond: 100,
+      targetRequestsPerSecond: 100,
+      maxVus: 20,
+      profile: 'full',
+      measurementSeconds: 3,
+      warmupSeconds: 1,
+      minimumAchievedFraction: 0.98,
+      requestDrainSeconds: 2,
+    };
+    expect(workloadTools.assertCompatibleWorkloads(metadata, { ...metadata })).toMatchObject({
+      requestDrainSeconds: 2,
+    });
+    expect(() =>
+      workloadTools.assertCompatibleWorkloads(
+        { ...metadata, workloadSchema: 'single-request-arrival-v1' },
+        metadata,
+      ),
+    ).toThrow('Incompatible workload');
+    for (const requestDrainSeconds of [undefined, 0, 1, 3]) {
+      expect(() => workloadTools.workloadIdentity({ ...metadata, requestDrainSeconds })).toThrow(
+        'completion drain',
+      );
+    }
+  });
   it('compares historical journey units with their explicit renamed equivalent', () => {
     const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'k6-units-'));
     const candidate = JSON.parse(

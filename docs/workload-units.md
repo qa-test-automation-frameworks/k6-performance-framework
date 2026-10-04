@@ -16,9 +16,11 @@ HTTP request counts.
 - The legacy comparison adapter interprets historical `targetRps` only as journey
   iterations. Raw historical summaries/baselines remain unchanged. No historical
   request measurement is manufactured.
-- `journey-arrival-v1` and `single-request-arrival-v1` cannot be compared. Request
+- `journey-arrival-v1`, historical `single-request-arrival-v1`, and current
+  `single-request-arrival-v2` cannot be compared across schemas. Request
   profiles also require matching rate, VU limit, warm-up, measurement duration and
-  minimum achieved fraction. Missing identities fail instead of assuming defaults.
+  minimum achieved fraction; v2 also requires the declared 2s completion drain.
+  Missing identities fail instead of assuming defaults.
 - Baseline aggregation derives workload identity from input runs and rejects
   mixed identities or explicitly failed/invalid experiments. Environment
   variables cannot relabel input rates. Further statistical/source-provenance
@@ -35,11 +37,15 @@ Each globally numbered scenario iteration performs exactly one direct HTTP GET:
 four article-list requests followed by one tag-list request. No retry wrapper,
 redirect following, sleep or setup HTTP request is used. Native HTTP/check metrics
 are tagged by scenario. Warm-up is followed by a 2s settling gap before an
-independently scheduled measurement scenario. Both scenarios use zero graceful
-stop, so unfinished requests are not intentionally counted after the window.
+independently scheduled measurement scenario. Both scenarios allow a bounded 2s
+completion drain after arrivals stop. The request timeout remains 1s. No new
+arrivals are scheduled during the drain; requests started in the window can finish
+and record metrics. A started-attempt counter must equal completed HTTP requests
+and iterations, so interrupted requests cannot silently produce a valid summary.
 
 Achieved rates are completed measurement iterations and HTTP requests divided by
-the **configured measurement duration**. They are measurement-cohort rates, not
+the **configured measurement duration**, including drained completions belonging
+to that arrival cohort. They are measurement-cohort rates, not
 the native summary's entire-test denominator, which includes warm-up and the gap.
 Native full-run values remain available as raw metrics. Counts, denominator,
 dropped iterations, errors and latency objectives remain visible. Missing counts,
@@ -61,10 +67,17 @@ npm run verify:request-rate
 
 Requires the pinned k6 runtime on PATH. This starts a disposable loopback HTTP
 fixture and compares server-observed requests with native k6 metrics. It checks
-5,000 requests over a 10s healthy measurement at 500 arrivals/s, an under-driven
-single-VU profile, and a 503 response profile. The two negative profiles must fail
+the nominal 5,000-request cohort over 10s at 500 arrivals/s, a 50ms delayed
+response boundary probe, an under-driven single-VU profile, a 503 response profile,
+and requests exceeding the 1s HTTP timeout. k6 can admit one extra boundary arrival;
+the verifier enforces nominal through nominal+1 (the existing native upper bound),
+exact received/completed equality, and the exact mix for the actual cohort size.
+It reports actual counts without substituting nominal values. The negative profiles must fail
 the intended native threshold/check with exit99; timeout, startup failure or an
 unrelated nonzero exit does not count as successful negative verification.
+
+See [the drain repair proof](verification/2026-10-04-request-drain.md) for the
+native zero-drain control, actual delayed-response results and compatibility checks.
 
 Evidence is written to `reports/request-rate-verification/`: native JSON/Markdown/
 HTML summaries, stdout/stderr and independently observed counts. CI uploads it

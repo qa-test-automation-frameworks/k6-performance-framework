@@ -7,6 +7,11 @@ const crypto = require('node:crypto');
 const { spawn, spawnSync } = require('node:child_process');
 
 const outputDirectory = 'reports/request-rate-verification';
+const entryPoint = process.env.REQUEST_RATE_ENTRYPOINT || 'dist/load/request-rate-load.js';
+const entryPointSha256 = crypto
+  .createHash('sha256')
+  .update(fs.readFileSync(entryPoint))
+  .digest('hex');
 fs.mkdirSync(outputDirectory, { recursive: true });
 const runtime = spawnSync(process.env.K6_BINARY || 'k6', ['version'], { encoding: 'utf8' });
 if (runtime.status !== 0 || !/^k6 v2\.0\.0\b/.test(runtime.stdout)) {
@@ -37,6 +42,8 @@ async function verify(mode, rate, seconds, maxVus) {
       response.end(JSON.stringify({ articles: [], articlesCount: 0, tags: ['fixture'] }));
     };
     if (mode === 'under-driven') setTimeout(respond, 250);
+    else if (mode === 'boundary-delayed') setTimeout(respond, 50);
+    else if (mode === 'request-timeout') setTimeout(respond, 1200);
     else respond();
   });
   await new Promise((resolve, reject) => {
@@ -68,13 +75,9 @@ async function verify(mode, rate, seconds, maxVus) {
   let result;
   try {
     result = await new Promise((resolve, reject) => {
-      const child = spawn(
-        process.env.K6_BINARY || 'k6',
-        ['run', '--quiet', 'dist/load/request-rate-load.js'],
-        {
-          env,
-        },
-      );
+      const child = spawn(process.env.K6_BINARY || 'k6', ['run', '--quiet', entryPoint], {
+        env,
+      });
       const timer = setTimeout(() => child.kill('SIGTERM'), (seconds + 20) * 1000);
       child.stdout.on('data', (chunk) => {
         stdout += chunk;
@@ -101,13 +104,16 @@ async function verify(mode, rate, seconds, maxVus) {
   const verdict = {
     runtime: runtime.stdout.trim(),
     sourceFilesSha256,
+    entryPoint,
+    entryPointSha256,
     mode,
     nativeExit: result.code,
     signal: result.signal,
     observed,
     achievedLoad: summary.achievedLoad,
     failures: summary.failures,
-    expectedMeasurementRequests: rate * seconds,
+    nominalMeasurementRequests: rate * seconds,
+    maximumMeasurementRequests: rate * seconds + 1,
     limitation:
       'Executor/count validation fixture; colocated generator and target; not application capacity evidence.',
   };
@@ -122,11 +128,17 @@ async function verify(mode, rate, seconds, maxVus) {
       `${mode}: native HTTP count does not match independently observed server requests`,
     );
   }
-  if (mode === 'healthy') {
+  if (mode === 'healthy' || mode === 'boundary-delayed') {
     if (result.code !== 0 || !summary.achievedLoad.valid || summary.failures.length) {
       throw new Error('Healthy fixture failed: inspect native logs and achieved-load evidence');
     }
-    if (observed.measurement !== rate * seconds || observed.tags !== observed.measurement / 5) {
+    // Match the existing native nominal..nominal+1 arrival-cohort upper bound.
+    // Never tolerate a mismatch between received and completed native requests.
+    if (
+      observed.measurement < rate * seconds ||
+      observed.measurement > rate * seconds + 1 ||
+      observed.tags !== Math.floor(observed.measurement / 5)
+    ) {
       throw new Error('Healthy fixture did not produce the declared request count/mix');
     }
   } else if (mode === 'under-driven') {
@@ -149,9 +161,15 @@ async function verify(mode, rate, seconds, maxVus) {
 }
 
 (async () => {
+  if (process.env.REQUEST_RATE_VERIFICATION_MODE === 'boundary') {
+    await verify('boundary-delayed', 100, 3, 20);
+    return;
+  }
   await verify('healthy', 500, 10, 20);
+  await verify('boundary-delayed', 100, 3, 20);
   await verify('under-driven', 20, 3, 1);
   await verify('http-error', 20, 3, 20);
+  await verify('request-timeout', 5, 3, 20);
 })().catch((error) => {
   console.error(error);
   process.exitCode = 1;

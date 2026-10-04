@@ -1,4 +1,8 @@
-import { getRequestRateProfile, getWorkloadProfile } from '../../config/workloads';
+import {
+  getRequestRateProfile,
+  getWorkloadProfile,
+  REQUEST_DRAIN_SECONDS,
+} from '../../config/workloads';
 import { assessAchievedLoad } from './achieved-load';
 import type { AchievedLoad } from './achieved-load';
 
@@ -54,6 +58,7 @@ export interface PerformanceSummary {
     measurementSeconds: number | null;
     warmupSeconds: number | null;
     minimumAchievedFraction: number | null;
+    requestDrainSeconds: number | null;
   };
   rootGroup: unknown;
   state: unknown;
@@ -138,6 +143,7 @@ export function createSummary(data: SummaryData): Record<string, string> {
   const achievedLoad = requestProfile
     ? assessAchievedLoad(requestProfile, {
         iterations: data.metrics['iterations{scenario:request_measurement}']?.values.count,
+        started: data.metrics['request_attempts{scenario:request_measurement}']?.values.count,
         requests: data.metrics['http_reqs{scenario:request_measurement}']?.values.count,
         dropped: data.metrics['dropped_iterations{scenario:request_measurement}']?.values.count,
       })
@@ -162,13 +168,14 @@ export function createSummary(data: SummaryData): Record<string, string> {
       runnerClass: __ENV.RUNNER_CLASS ?? 'local',
       targetCommit: __ENV.TARGET_COMMIT ?? 'unknown',
       targetId: __ENV.TARGET_ID ?? __ENV.TARGET_ENV ?? 'local',
-      workloadSchema: requestProfile ? 'single-request-arrival-v1' : 'journey-arrival-v1',
+      workloadSchema: requestProfile ? 'single-request-arrival-v2' : 'journey-arrival-v1',
       targetIterationsPerSecond:
         requestProfile?.requestsPerSecond ?? workload.targetIterationsPerSecond,
       targetRequestsPerSecond: requestProfile?.requestsPerSecond ?? null,
       measurementSeconds: requestProfile?.measurementSeconds ?? null,
       warmupSeconds: requestProfile?.warmupSeconds ?? null,
       minimumAchievedFraction: requestProfile?.minimumAchievedFraction ?? null,
+      requestDrainSeconds: requestProfile ? REQUEST_DRAIN_SECONDS : null,
     },
     rootGroup: data.root_group,
     state: data.state,
@@ -209,6 +216,7 @@ export function createSummary(data: SummaryData): Record<string, string> {
     ...(achievedLoad
       ? [
           `**Measurement:** ${achievedLoad.measurementSeconds}s scheduled arrival window, excluding warm-up and the 2s settling gap`,
+          `**Completion drain:** at most ${summary.metadata.requestDrainSeconds}s; counts include completion of requests started in the scheduled arrival window, with throughput divided by that window`,
           `**Achieved:** ${achievedLoad.achievedIterationsPerSecond ?? 'unknown'} completed iterations/s; ${achievedLoad.achievedRequestsPerSecond ?? 'unknown'} requests/s; ${achievedLoad.droppedIterations ?? 'unknown'} dropped iterations`,
           `**Load validity:** ${achievedLoad.valid ? 'VALID' : 'INVALID'} (predeclared minimum fraction ${achievedLoad.minimumAchievedFraction})`,
         ]

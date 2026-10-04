@@ -1,4 +1,6 @@
 import { getConfig } from '.';
+// A single request has a 1s timeout; allow completion and metric recording before shutdown.
+export const REQUEST_DRAIN_SECONDS = 2;
 import type {
   EnvironmentName,
   StagedWorkload,

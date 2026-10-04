@@ -41,7 +41,12 @@ describe('workload unit migration and achieved load', () => {
 
   it('calculates both achieved units using the predeclared measurement window', () => {
     expect(
-      assessAchievedLoad(profile, { iterations: 30000, requests: 30000, dropped: 0 }),
+      assessAchievedLoad(profile, {
+        iterations: 30000,
+        started: 30000,
+        requests: 30000,
+        dropped: 0,
+      }),
     ).toMatchObject({
       valid: true,
       achievedRequestsPerSecond: 500,
@@ -50,12 +55,17 @@ describe('workload unit migration and achieved load', () => {
   });
 
   it.each([
-    [{ iterations: 10000, requests: 30000, dropped: 0 }, 'contract violated'],
-    [{ iterations: 29000, requests: 29000, dropped: 0 }, 'below predeclared minimum'],
-    [{ iterations: 30000, requests: 30000, dropped: 1 }, 'Generator dropped'],
-    [{ iterations: 30000, requests: 60000, dropped: 0 }, 'Request count exceeds'],
-    [{ iterations: 30000, requests: Number.NaN, dropped: 0 }, 'Missing or invalid'],
-    [{ iterations: 30000, requests: 30000 }, 'Missing or invalid'],
+    [{ iterations: 10000, started: 30000, requests: 30000, dropped: 0 }, 'contract violated'],
+    [
+      { iterations: 29000, started: 29000, requests: 29000, dropped: 0 },
+      'below predeclared minimum',
+    ],
+    [{ iterations: 30000, started: 30000, requests: 30000, dropped: 1 }, 'Generator dropped'],
+    [{ iterations: 30000, started: 30000, requests: 60000, dropped: 0 }, 'Request count exceeds'],
+    [{ iterations: 30000, started: 30000, requests: Number.NaN, dropped: 0 }, 'Missing or invalid'],
+    [{ iterations: 30000, started: 30000, requests: 30000 }, 'Missing or invalid'],
+    [{ iterations: 30000, requests: 30000, dropped: 0 }, 'Missing or invalid'],
+    [{ iterations: 30000, started: 30001, requests: 30000, dropped: 0 }, 'bounded drain'],
   ])('rejects invalid measurement %j', (counts, reason) => {
     const result = assessAchievedLoad(profile, counts);
     expect(result.valid).toBe(false);
@@ -78,6 +88,7 @@ describe('workload unit migration and achieved load', () => {
         http_reqs: { values: { count: 35000, rate: 420 } },
         'http_reqs{scenario:request_measurement}': { values: { count: 30000, rate: 420 } },
         'iterations{scenario:request_measurement}': { values: { count: 30000 } },
+        'request_attempts{scenario:request_measurement}': { values: { count: 30000 } },
         'dropped_iterations{scenario:request_measurement}': { values: { count: 0 } },
       },
       root_group: {},
@@ -87,6 +98,27 @@ describe('workload unit migration and achieved load', () => {
     expect(summary.achievedLoad.achievedRequestsPerSecond).toBe(500);
     expect(summary.metadata.targetRequestsPerSecond).toBe(500);
     expect(summary.metadata.targetIterationsPerSecond).toBe(500);
+    expect(summary.metadata.workloadSchema).toBe('single-request-arrival-v2');
+    expect(summary.metadata.requestDrainSeconds).toBe(2);
     expect(summary.metadata).not.toHaveProperty('targetRps');
+  });
+
+  it('permits one boundary arrival but rejects an oversized cohort', () => {
+    expect(
+      assessAchievedLoad(profile, {
+        iterations: 30001,
+        started: 30001,
+        requests: 30001,
+        dropped: 0,
+      }).valid,
+    ).toBe(true);
+    expect(
+      assessAchievedLoad(profile, {
+        iterations: 30002,
+        started: 30002,
+        requests: 30002,
+        dropped: 0,
+      }).reasons,
+    ).toContain('Request count exceeds configured arrival cohort');
   });
 });

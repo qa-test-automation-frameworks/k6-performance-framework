@@ -7,12 +7,14 @@ function workloadIdentity(metadata) {
   const iterations = legacy ? workload.targetRps : workload?.targetIterationsPerSecond;
   const requests = schema === 'journey-arrival-v1' ? null : workload?.targetRequestsPerSecond;
   if (
-    !['journey-arrival-v1', 'single-request-arrival-v1'].includes(schema) ||
+    !['journey-arrival-v1', 'single-request-arrival-v1', 'single-request-arrival-v2'].includes(
+      schema,
+    ) ||
     !Number.isSafeInteger(iterations) ||
     iterations <= 0 ||
     !Number.isSafeInteger(workload?.maxVus) ||
     workload.maxVus <= 0 ||
-    (schema === 'single-request-arrival-v1' && requests !== iterations)
+    (schema !== 'journey-arrival-v1' && requests !== iterations)
   ) {
     throw new Error('Missing, invalid or unsupported workload identity');
   }
@@ -23,13 +25,19 @@ function workloadIdentity(metadata) {
     maxVus: workload.maxVus,
     profile: workload.profile,
   };
-  if (schema === 'single-request-arrival-v1') {
+  if (schema !== 'journey-arrival-v1') {
     for (const field of ['measurementSeconds', 'warmupSeconds', 'minimumAchievedFraction']) {
       if (!Number.isFinite(workload[field]) || workload[field] <= 0) {
         throw new Error(`Missing request-rate ${field}`);
       }
       identity[field] = workload[field];
     }
+  }
+  if (schema === 'single-request-arrival-v2') {
+    if (workload.requestDrainSeconds !== 2) {
+      throw new Error('Missing or unsupported request-rate completion drain');
+    }
+    identity.requestDrainSeconds = workload.requestDrainSeconds;
   }
   return identity;
 }
