@@ -11,9 +11,12 @@ export interface LoadTargetPolicy {
  */
 export function assertAuthorizedLoadTarget(policy: LoadTargetPolicy): void {
   const config = getConfig();
-  if (config.environment !== 'local' && __ENV.ALLOW_NON_LOCAL_LOAD !== 'true') {
+  const loopback = /^https?:\/\/(?:localhost|127\.0\.0\.1|\[::1\])(?::\d+)?(?:\/|$)/i.test(
+    config.baseUrl,
+  );
+  if ((config.environment !== 'local' || !loopback) && __ENV.ALLOW_NON_LOCAL_LOAD !== 'true') {
     throw new Error(
-      `${policy.workload} ${policy.write ? 'write' : 'load'} traffic requires local TARGET_ENV or ALLOW_NON_LOCAL_LOAD=true`,
+      `${policy.workload} ${policy.write ? 'write' : 'load'} traffic requires a loopback local target or explicit owned-target ALLOW_NON_LOCAL_LOAD=true`,
     );
   }
 }

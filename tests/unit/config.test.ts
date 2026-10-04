@@ -44,14 +44,16 @@ describe('getConfig', () => {
   });
 
   it('validates and applies workload overrides', () => {
-    setTestEnv({ TARGET_RPS: '12', MAX_VUS: '40', THINK_TIME_SECONDS: '0.5' });
+    setTestEnv({ TARGET_ITERATIONS_PER_SECOND: '12', MAX_VUS: '40', THINK_TIME_SECONDS: '0.5' });
     expect(getWorkloadProfile()).toMatchObject({
-      targetRps: 12,
+      targetIterationsPerSecond: 12,
       maxVus: 40,
       thinkTimeSeconds: 0.5,
     });
-    setTestEnv({ TARGET_RPS: '0' });
-    expect(() => getWorkloadProfile()).toThrow('TARGET_RPS must be a positive number');
+    setTestEnv({ TARGET_ITERATIONS_PER_SECOND: '0' });
+    expect(() => getWorkloadProfile()).toThrow(
+      'TARGET_ITERATIONS_PER_SECOND must be a positive number',
+    );
   });
 
   it('authorizes controlled non-local writes only with an explicit override', () => {
@@ -70,6 +72,14 @@ describe('getConfig', () => {
     setTestEnv({ TARGET_ENV: 'staging', ALLOW_NON_LOCAL_LOAD: 'true' });
     expect(() => assertAuthorizedLoadTarget({ workload: 'Stress' })).not.toThrow();
   });
+
+  it.each(['https://public.example/api', 'http://localhost.evil.test/api'])(
+    'does not authorize a remote URL merely because TARGET_ENV is local: %s',
+    (baseUrl) => {
+      setTestEnv({ TARGET_ENV: 'local', BASE_URL: baseUrl });
+      expect(() => assertAuthorizedLoadTarget({ workload: 'Load' })).toThrow('loopback');
+    },
+  );
 });
 
 describe('load thresholds', () => {
@@ -145,7 +155,7 @@ describe('workload builders', () => {
     });
     expect(
       constantArrivalRate(
-        { validation: false, targetRps: 12, maxVus: 40, thinkTimeSeconds: 1 },
+        { validation: false, targetIterationsPerSecond: 12, maxVus: 40, thinkTimeSeconds: 1 },
         '5m',
       ),
     ).toMatchObject({

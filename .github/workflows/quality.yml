@@ -25,6 +25,19 @@ jobs:
       - run: npm run format:check
       - run: npm run test:coverage
       - run: npm run build
+      - uses: grafana/setup-k6-action@db07bd9765aac508ef18982e52ab937fe633a065
+        with:
+          k6-version: 2.0.0
+      - name: Verify actual request counts and intentional load failures
+        run: npm run verify:request-rate
+        env:
+          FRAMEWORK_COMMIT: ${{ github.sha }}
+          K6_VERSION: 2.0.0
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        if: always()
+        with:
+          name: request-rate-count-verification
+          path: reports/request-rate-verification/
       - name: Prove the regression fixture is rejected
         run: |
           set +e

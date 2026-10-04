@@ -1,4 +1,5 @@
 const fs = require('node:fs');
+const { assertCompatibleWorkloads } = require('./workload-identity.cjs');
 
 const baselinePath = process.env.BASELINE_FILE || 'baseline/load-summary.json';
 const candidatePath = process.env.CANDIDATE_FILE || 'reports/load-summary.json';
@@ -20,11 +21,11 @@ const candidate = read(candidatePath);
 if (baseline.metadata?.status !== 'measured' || baseline.metadata?.sampleCount < 3) {
   throw new Error('Baseline must contain at least three measured controlled runs');
 }
+assertCompatibleWorkloads(baseline.metadata, candidate.metadata);
 const compatibilityFields = [
   ['targetId', baseline.metadata?.targetId, candidate.metadata?.targetId],
   ['targetCommit', baseline.metadata?.targetCommit, candidate.metadata?.targetCommit],
   ['profile', baseline.metadata?.workload?.profile, candidate.metadata?.profile],
-  ['targetRps', baseline.metadata?.workload?.targetRps, candidate.metadata?.targetRps],
   ['maxVus', baseline.metadata?.workload?.maxVus, candidate.metadata?.maxVus],
   ['k6Version', baseline.metadata?.k6Version, candidate.metadata?.k6Version],
   ['runnerClass', baseline.metadata?.runnerClass, candidate.metadata?.runnerClass],

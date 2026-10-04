@@ -90,6 +90,50 @@ function positiveNumber(name: string, fallback: number): number {
   return value;
 }
 
+function rejectLegacyRate(): void {
+  if (__ENV.TARGET_RPS !== undefined) {
+    throw new Error(
+      'TARGET_RPS is ambiguous and has been removed. For the existing journey use ' +
+        'TARGET_ITERATIONS_PER_SECOND (old arrival-iteration semantics); for one request per ' +
+        'iteration use REQUESTS_PER_SECOND with the dedicated request-rate entry point.',
+    );
+  }
+}
+
+function positiveInteger(name: string, fallback: number): number {
+  const value = positiveNumber(name, fallback);
+  if (!Number.isSafeInteger(value)) throw new Error(`${name} must be a positive safe integer`);
+  return value;
+}
+
+export interface RequestRateProfile {
+  requestsPerSecond: number;
+  maxVus: number;
+  warmupSeconds: number;
+  measurementSeconds: number;
+  minimumAchievedFraction: number;
+}
+
+/** One HTTP request per arrival; durations and acceptance fixed before execution. */
+export function getRequestRateProfile(): RequestRateProfile {
+  rejectLegacyRate();
+  const minimumAchievedFraction = positiveNumber('MINIMUM_ACHIEVED_FRACTION', 0.98);
+  if (minimumAchievedFraction > 1) {
+    throw new Error('MINIMUM_ACHIEVED_FRACTION must be at most 1');
+  }
+  const profile = {
+    requestsPerSecond: positiveInteger('REQUESTS_PER_SECOND', 500),
+    maxVus: positiveInteger('MAX_VUS', 100),
+    warmupSeconds: positiveInteger('WARMUP_SECONDS', 10),
+    measurementSeconds: positiveInteger('MEASUREMENT_SECONDS', 60),
+    minimumAchievedFraction,
+  };
+  if (!Number.isSafeInteger(profile.requestsPerSecond * profile.measurementSeconds)) {
+    throw new Error('Configured measurement request count exceeds safe integer range');
+  }
+  return profile;
+}
+
 /**
  * Resolves bounded workload controls from environment variables and target defaults.
  * @returns Validated workload profile.
@@ -97,10 +141,14 @@ function positiveNumber(name: string, fallback: number): number {
  */
 export function getWorkloadProfile(): WorkloadProfile {
   const config = getConfig();
+  rejectLegacyRate();
   return {
     validation: __ENV.TEST_PROFILE === 'validation',
-    targetRps: positiveNumber('TARGET_RPS', config.rps.target),
-    maxVus: positiveNumber('MAX_VUS', config.rps.max),
+    targetIterationsPerSecond: positiveInteger(
+      'TARGET_ITERATIONS_PER_SECOND',
+      config.arrival.iterationsPerSecond,
+    ),
+    maxVus: positiveInteger('MAX_VUS', config.arrival.maxVus),
     thinkTimeSeconds: positiveNumber('THINK_TIME_SECONDS', 1),
   };
 }
@@ -196,7 +244,7 @@ export function perVuIterations(
 export function constantArrivalRate(profile: WorkloadProfile, duration: string): WorkloadScenario {
   return {
     executor: 'constant-arrival-rate',
-    rate: profile.targetRps,
+    rate: profile.targetIterationsPerSecond,
     timeUnit: '1s',
     duration,
     preAllocatedVUs: Math.min(20, profile.maxVus),

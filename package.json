@@ -21,7 +21,7 @@
     "smoke": "npm run build && k6 run --out json=reports/smoke-results.json dist/smoke/smoke-test.js",
     "smoke:ci": "npm run smoke",
     "load": "npm run build && k6 run --out json=reports/load-results.json dist/load/articles-load.js",
-    "load:500rps": "npm run build && TARGET_RPS=500 MAX_VUS=800 k6 run --out json=reports/load-500rps-results.json dist/load/articles-load.js",
+    "load:500rps": "npm run build && WORKLOAD_MODE=request-rate REQUESTS_PER_SECOND=500 MAX_VUS=100 SUMMARY_NAME=request-rate-500 k6 run --out json=reports/request-rate-500-results.json dist/load/request-rate-load.js && node scripts/check-achieved-load.cjs reports/request-rate-500-summary.json",
     "load:journey": "npm run build && k6 run --out json=reports/user-journey-results.json dist/load/user-journey-load.js",
     "stress": "npm run build && k6 run --out json=reports/stress-results.json dist/stress/articles-stress.js",
     "stress:auth": "npm run build && k6 run --out json=reports/auth-stress-results.json dist/stress/auth-stress.js",
@@ -51,7 +51,9 @@
     "audit": "npm audit --audit-level=moderate",
     "secrets:scan": "node scripts/scan-secrets.cjs",
     "release:validate": "node scripts/validate-release-version.cjs",
-    "hooks:install": "git config core.hooksPath .githooks"
+    "hooks:install": "git config core.hooksPath .githooks",
+    "load:request-rate": "npm run build && WORKLOAD_MODE=request-rate SUMMARY_NAME=request-rate k6 run dist/load/request-rate-load.js && node scripts/check-achieved-load.cjs reports/request-rate-summary.json",
+    "verify:request-rate": "node scripts/verify-request-rate.cjs"
   },
   "devDependencies": {
     "@cyclonedx/cyclonedx-npm": "5.0.0",

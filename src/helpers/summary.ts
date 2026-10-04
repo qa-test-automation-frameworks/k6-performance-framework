@@ -1,3 +1,7 @@
+import { getRequestRateProfile, getWorkloadProfile } from '../../config/workloads';
+import { assessAchievedLoad } from './achieved-load';
+import type { AchievedLoad } from './achieved-load';
+
 interface MetricValues {
   avg?: number;
   count?: number;
@@ -31,6 +35,7 @@ interface SummaryData {
 }
 
 export interface PerformanceSummary {
+  achievedLoad: AchievedLoad | null;
   failures: string[];
   generatedAt: string;
   metrics: Record<string, MetricValues>;
@@ -43,7 +48,12 @@ export interface PerformanceSummary {
     runnerClass: string;
     targetCommit: string;
     targetId: string;
-    targetRps: number | null;
+    workloadSchema: string;
+    targetIterationsPerSecond: number;
+    targetRequestsPerSecond: number | null;
+    measurementSeconds: number | null;
+    warmupSeconds: number | null;
+    minimumAchievedFraction: number | null;
   };
   rootGroup: unknown;
   state: unknown;
@@ -124,11 +134,20 @@ function htmlThresholdRows(summary: PerformanceSummary): string {
  */
 export function createSummary(data: SummaryData): Record<string, string> {
   const workload = getWorkloadProfile();
+  const requestProfile = __ENV.WORKLOAD_MODE === 'request-rate' ? getRequestRateProfile() : null;
+  const achievedLoad = requestProfile
+    ? assessAchievedLoad(requestProfile, {
+        iterations: data.metrics['iterations{scenario:request_measurement}']?.values.count,
+        requests: data.metrics['http_reqs{scenario:request_measurement}']?.values.count,
+        dropped: data.metrics['dropped_iterations{scenario:request_measurement}']?.values.count,
+      })
+    : null;
   const checkFailures = data.metrics.checks?.values.fails ?? 0;
   const interruptedIterations =
     data.metrics.interrupted_iterations?.values.count ?? data.state.interruptedIterations ?? 0;
   const setupErrors = data.state.setupErrors ?? 0;
   const summary: PerformanceSummary = {
+    achievedLoad,
     failures: [],
     generatedAt: new Date().toISOString(),
     metrics: Object.fromEntries(
@@ -138,12 +157,18 @@ export function createSummary(data: SummaryData): Record<string, string> {
       environment: __ENV.TARGET_ENV ?? 'local',
       frameworkCommit: __ENV.FRAMEWORK_COMMIT ?? 'unknown',
       k6Version: __ENV.K6_VERSION ?? '2.0.0',
-      maxVus: workload.maxVus,
+      maxVus: requestProfile?.maxVus ?? workload.maxVus,
       profile: __ENV.TEST_PROFILE ?? 'full',
       runnerClass: __ENV.RUNNER_CLASS ?? 'local',
       targetCommit: __ENV.TARGET_COMMIT ?? 'unknown',
       targetId: __ENV.TARGET_ID ?? __ENV.TARGET_ENV ?? 'local',
-      targetRps: workload.targetRps,
+      workloadSchema: requestProfile ? 'single-request-arrival-v1' : 'journey-arrival-v1',
+      targetIterationsPerSecond:
+        requestProfile?.requestsPerSecond ?? workload.targetIterationsPerSecond,
+      targetRequestsPerSecond: requestProfile?.requestsPerSecond ?? null,
+      measurementSeconds: requestProfile?.measurementSeconds ?? null,
+      warmupSeconds: requestProfile?.warmupSeconds ?? null,
+      minimumAchievedFraction: requestProfile?.minimumAchievedFraction ?? null,
     },
     rootGroup: data.root_group,
     state: data.state,
@@ -162,6 +187,9 @@ export function createSummary(data: SummaryData): Record<string, string> {
       }),
   );
   summary.failures = [
+    ...(achievedLoad && !achievedLoad.valid
+      ? achievedLoad.reasons.map((reason) => `Invalid load experiment: ${reason}`)
+      : []),
     ...failedThresholds.map((failure) => `Threshold: ${failure}`),
     ...(checkFailures > 0 ? [`Checks: ${checkFailures} failed`] : []),
     ...(setupErrors > 0 ? [`Setup: ${setupErrors} error(s)`] : []),
@@ -175,6 +203,18 @@ export function createSummary(data: SummaryData): Record<string, string> {
     `**Run status:** ${summary.failures.length ? 'FAILED' : 'PASSED'}`,
     `**Target:** ${summary.metadata.targetId} (${summary.metadata.targetCommit})`,
     `**Profile:** ${summary.metadata.profile} on ${summary.metadata.runnerClass}`,
+    `**Workload schema:** ${summary.metadata.workloadSchema}`,
+    `**Configured arrival:** ${summary.metadata.targetIterationsPerSecond} iterations/s`,
+    `**Configured requests:** ${summary.metadata.targetRequestsPerSecond ?? 'not fixed by journey arrival'}${requestProfile ? ' requests/s' : ''}`,
+    ...(achievedLoad
+      ? [
+          `**Measurement:** ${achievedLoad.measurementSeconds}s scheduled arrival window, excluding warm-up and the 2s settling gap`,
+          `**Achieved:** ${achievedLoad.achievedIterationsPerSecond ?? 'unknown'} completed iterations/s; ${achievedLoad.achievedRequestsPerSecond ?? 'unknown'} requests/s; ${achievedLoad.droppedIterations ?? 'unknown'} dropped iterations`,
+          `**Load validity:** ${achievedLoad.valid ? 'VALID' : 'INVALID'} (predeclared minimum fraction ${achievedLoad.minimumAchievedFraction})`,
+        ]
+      : [
+          `**Observed full-run rates:** ${summary.metrics.iterations?.rate ?? 'unknown'} iterations/s; ${summary.metrics.http_reqs?.rate ?? 'unknown'} requests/s (native full-run denominator, not a separated steady-state window)`,
+        ]),
     ...(summary.failures.length ? ['', ...summary.failures.map((failure) => `- ${failure}`)] : []),
     '',
     '| Metric | p50 | p90 | p95 | p99 | max | Rate | Count |',
@@ -238,4 +278,3 @@ export function createSummary(data: SummaryData): Record<string, string> {
     stdout: markdown,
   };
 }
-import { getWorkloadProfile } from '../../config/workloads';

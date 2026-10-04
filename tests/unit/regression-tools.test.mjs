@@ -13,6 +13,50 @@ function run(script, env, args = []) {
 }
 
 describe('performance comparison tools', () => {
+  it('compares historical journey units with their explicit renamed equivalent', () => {
+    const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'k6-units-'));
+    const candidate = JSON.parse(
+      fs.readFileSync('tests/regression-fixtures/healthy-candidate.json'),
+    );
+    candidate.metadata.workloadSchema = 'journey-arrival-v1';
+    candidate.metadata.targetIterationsPerSecond = candidate.metadata.targetRps;
+    candidate.metadata.targetRequestsPerSecond = null;
+    delete candidate.metadata.targetRps;
+    const file = path.join(directory, 'candidate.json');
+    fs.writeFileSync(file, JSON.stringify(candidate));
+    const result = run('scripts/compare-performance.cjs', {
+      BASELINE_FILE: 'tests/regression-fixtures/measured-baseline.json',
+      CANDIDATE_FILE: file,
+    });
+    expect(result.status).toBe(0);
+  });
+
+  it.each(['compare-performance.cjs', 'compare-history.cjs'])(
+    'rejects a journey-to-request profile comparison through %s',
+    (script) => {
+      const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'k6-schema-'));
+      const candidate = JSON.parse(
+        fs.readFileSync('tests/regression-fixtures/healthy-candidate.json'),
+      );
+      Object.assign(candidate.metadata, {
+        workloadSchema: 'single-request-arrival-v1',
+        targetIterationsPerSecond: 20,
+        targetRequestsPerSecond: 20,
+        measurementSeconds: 60,
+        warmupSeconds: 10,
+        minimumAchievedFraction: 0.98,
+      });
+      const file = path.join(directory, 'candidate.json');
+      fs.writeFileSync(file, JSON.stringify(candidate));
+      const result = run(`scripts/${script}`, {
+        BASELINE_FILE: 'tests/regression-fixtures/measured-baseline.json',
+        PREVIOUS_FILE: 'tests/regression-fixtures/healthy-candidate.json',
+        CANDIDATE_FILE: file,
+      });
+      expect(result.status).toBe(1);
+      expect(result.stderr).toContain('Incompatible workload');
+    },
+  );
   it('rejects unsupported npm versions with the bootstrap command', () => {
     const result = run('scripts/check-npm-version.cjs', {
       npm_config_user_agent: 'npm/11.6.2 node/v24.13.0 win32 x64',
@@ -36,6 +80,8 @@ describe('performance comparison tools', () => {
     const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'k6-history-'));
     const metadata = {
       targetId: 'realworld-local',
+      targetRps: 20,
+      maxVus: 100,
       profile: 'full',
       k6Version: '2.0.0',
       runnerClass: 'github-hosted',
@@ -83,6 +129,7 @@ describe('performance comparison tools', () => {
       fs.writeFileSync(
         file,
         JSON.stringify({
+          metadata: { targetRps: 20, maxVus: 100, profile: 'full' },
           metrics: {
             http_req_duration: { 'p(95)': number, 'p(99)': number + 1 },
             'http_req_duration{name:GET /articles}': {

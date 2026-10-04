@@ -1,4 +1,5 @@
 const fs = require('node:fs');
+const { assertCompatibleWorkloads } = require('./workload-identity.cjs');
 
 const previousPath = process.env.PREVIOUS_FILE;
 const candidatePath = process.env.CANDIDATE_FILE;
@@ -10,6 +11,7 @@ if (!previousPath || !candidatePath) {
 
 const previous = JSON.parse(fs.readFileSync(previousPath, 'utf8'));
 const candidate = JSON.parse(fs.readFileSync(candidatePath, 'utf8'));
+assertCompatibleWorkloads(previous.metadata, candidate.metadata);
 const compatibilityFields = ['targetId', 'profile', 'k6Version', 'runnerClass'];
 const incompatible = compatibilityFields.filter(
   (field) =>
