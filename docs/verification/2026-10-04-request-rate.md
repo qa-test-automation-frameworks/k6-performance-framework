@@ -50,7 +50,17 @@ application with repeated raw runs, resource limits and uncertainty. F08 still
 requires diagnosis of real historical-comparison failures.
 
 Quality CI now runs this same counting harness and uploads results on failure.
-Remote validation and public main publication must be inspected separately; local
-success is not a claim that those have occurred. No latency baseline was renewed
+Remote [Quality run 37181546564](https://github.com/qa-test-automation-frameworks/k6-performance-framework/actions/runs/37181546564)
+passed at PR head `70892896af889656cc382230f8b9fefab92d4c79`, including the native
+counting step and Windows formatting. Its downloaded artifact records tested PR
+merge revision `c2222109076e45af651a5d9fc574bbcc5fca49df`; these are different
+provenance fields. All three remote source-hash maps match the committed counting
+implementation. Remote counts were again 5,000 / 10 / 60 measurement requests and
+native exits 0 / 99 / 99 for the respective controls.
+
+PR smoke, segmented execution and performance-regression runs also passed at
+this head. Security run 37181546549 failed `npm audit --audit-level=moderate` and
+remains R02 work. Current main publication remains separate and unverified.
+No latency baseline was renewed
 or loosened to make this repair pass. Historical evidence keeps its original
 numbers and now explains that `targetRps` referred to iteration arrival.
