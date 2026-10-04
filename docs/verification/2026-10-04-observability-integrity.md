@@ -77,3 +77,24 @@ The provisioned error panels now explicitly use fraction-to-percent display with
 min0/max1, matching the exporter mean's0..1 domain. This final display correction
 needs native rendering at the subsequent revision; it does not change metric data
 or thresholds. Native860feb2 records/images remain labeled with that tested head.
+
+## Final native rendering and separate comparison failure
+
+Exact04bcc3652cb08ebcf16075504f35624d9ba61112
+[Docker37203646997](https://github.com/qa-test-automation-frameworks/k6-performance-framework/actions/runs/37203646997)
+passed all required finite-value queries and the intended nonexistent-run failure.
+The final overview and endpoint renders were inspected: no blocking overlay or
+navigation, actual read samples, error axis0%–100%. Optional write/business and
+OTEL-rate data remain unavailable. The final soak render says data outside its
+time range; it is retained as that limitation, not proof of soak stability or a
+successful long-run visualization. Query execution alone does not certify every
+panel's screenshot time window.
+
+Quality37203646994 and Security37203646984 passed at that head. Separate
+[Performance37203646967](https://github.com/qa-test-automation-frameworks/k6-performance-framework/actions/runs/37203646967)
+failed comparison: comments p99 increased1.0403ms→1.4947ms
+(+0.4544ms/+43.7%), producing two rejected metric decisions for the same endpoint.
+Aggregate and articles improvements do not erase this rejection. This establishes
+a rule breach, not application causality or harmless noise. Native failed log and
+run identity are retained. D04 repeated measurements remain required; no baseline
+value or tolerance was changed to obtain a pass.

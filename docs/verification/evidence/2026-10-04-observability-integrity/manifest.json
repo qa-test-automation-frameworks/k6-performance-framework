@@ -5,6 +5,26 @@
   "note": "Original integration passed presence checks but did not establish usable dashboard images or successful panel queries.",
   "files": [
     {
+      "path": "final-endpoints.png",
+      "sha256": "2c4a6ffaaa1820321309921b6ae2ef63c424c607ab6e12cb3dd4502455785797"
+    },
+    {
+      "path": "final-overview.png",
+      "sha256": "4cacccda83d9cdadbbe2bf2a96ff69bf22594642dc90746f2f70af3441e85dcd"
+    },
+    {
+      "path": "final-performance-run.json",
+      "sha256": "c78384b6c51b81916100cebfb5d2b73c93806ff89bdb1d45b319227a66431f7b"
+    },
+    {
+      "path": "final-run.json",
+      "sha256": "264b58e346cfaf91a788ec3733195d54de69e693f27a65f739beb5c2bc0048d4"
+    },
+    {
+      "path": "final-soak.png",
+      "sha256": "6781f2c438c0ba37082998eb6e6b0d4f592606ba5094b622cc32d65765ca348a"
+    },
+    {
       "path": "jobs.json",
       "sha256": "5510822f4126f1cf79c5aa4c2f3b16b40f5554d22f2e01c3bb8a443e6f17ca30"
     },
@@ -41,12 +61,20 @@
       "sha256": "baa27e2fa4a026a43c9c2a9c578283bf0abbd990d08cd42cbba2ef36c3bf2a45"
     },
     {
+      "path": "observability-ci-37203646997.json",
+      "sha256": "c7fc3a1e52069d4c17d82f5a8bc7f1683ca156d2c6514c10cd83fab441a8642a"
+    },
+    {
       "path": "observability-missing-37201994516.json",
       "sha256": "c554503ee2f1b67bec6a764650079dc2d615d6d0cd23b274072dce302981691a"
     },
     {
       "path": "observability-missing-37202532056.json",
       "sha256": "03c196adfe6e0c18075f40c337a769929025c3805d0adbff3cdcfc4ae9a06a69"
+    },
+    {
+      "path": "observability-missing-37203646997.json",
+      "sha256": "cf2f7e2eecb3d71a0ec473d08d5b21e8d6a98a678270486d07bc336afdd50d49"
     },
     {
       "path": "observability-negative.log",
@@ -77,6 +105,10 @@
       "sha256": "aa7a223e2895058d5fc8437eb7ac53a80120e7c3df4d28182a7f62b7b9c3b768"
     },
     {
+      "path": "performance-37203646967.log.gz",
+      "sha256": "0bed5667372a260beffd474ed29828cee49670d1b7db4d1a3c466ac477439252"
+    },
+    {
       "path": "repaired-overview-before-kiosk-fix.png",
       "sha256": "e94c95babadf8709c8097c4d51fcdf2f6461239953e9f323d1f01464d4ec647e"
     },
@@ -89,5 +121,8 @@
   "panelQueryRunId": 37201994516,
   "panelQueryArtifactId": 11303475963,
   "numericTestedHead": "860feb219944b29c6fc4ffc87d294ea6f9005513",
-  "numericRunId": 37202532056
+  "numericRunId": 37202532056,
+  "finalTestedSourceHead": "04bcc3652cb08ebcf16075504f35624d9ba61112",
+  "finalRunId": 37203646997,
+  "serializationNote": "Final run metadata normalized by repository formatter; earlier native JSON, PNG and compressed log bytes preserved. Hashes cover retained bytes."
 }
