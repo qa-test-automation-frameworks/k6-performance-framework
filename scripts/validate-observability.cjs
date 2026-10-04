@@ -1,5 +1,6 @@
 const fs = require('node:fs');
 const path = require('node:path');
+const { countNumericRows } = require('./observability-csv.cjs');
 
 async function json(url, options) {
   const response = await fetch(url, { ...options, signal: AbortSignal.timeout(30_000) });
@@ -68,7 +69,7 @@ async function main() {
           },
           body: query,
         });
-        const rows = csv.split('\n').filter((line) => /^,[^,]*,\d+,/.test(line)).length;
+        const rows = countNumericRows(csv);
         const optional = ['Article Write p95', 'Business Errors'].includes(panel.title);
         const disposition = rows > 0 ? 'passed' : 'unavailable';
         queryEvidence.push({

@@ -9,6 +9,18 @@
       "sha256": "5510822f4126f1cf79c5aa4c2f3b16b40f5554d22f2e01c3bb8a443e6f17ca30"
     },
     {
+      "path": "observability-ci-37201994516.json",
+      "sha256": "d89d6953f5e8fc3a79731247e49b8fe4a4c922e8890ec3c22056c5c562602257"
+    },
+    {
+      "path": "observability-missing-37201994516.json",
+      "sha256": "c554503ee2f1b67bec6a764650079dc2d615d6d0cd23b274072dce302981691a"
+    },
+    {
+      "path": "observability-negative.log",
+      "sha256": "42a1164aa469c15d880d041714d80564dcf54fb2ad3e5cd4828e73d3a1baf802"
+    },
+    {
       "path": "observed-summary.json",
       "sha256": "b5735f6365879ee98bf5a188fb6100e2289769a62a287760b2c329c0ce6f6087"
     },
@@ -21,8 +33,27 @@
       "sha256": "fe21d8ea8fe9d692abd6adda19916e69b6eebb045ef50c0bb8e8a4b783694113"
     },
     {
+      "path": "panel-query-artifacts.json",
+      "sha256": "463a2e0f9b115935e4bf1932225e9e09075504ec74df6be02159cebd7074fa66"
+    },
+    {
+      "path": "panel-query-jobs.json",
+      "sha256": "e6103a96ceefd8fd1de19e3102a43c23f242405b660f8f14f97d076943077a88"
+    },
+    {
+      "path": "panel-query-run.json",
+      "sha256": "aa7a223e2895058d5fc8437eb7ac53a80120e7c3df4d28182a7f62b7b9c3b768"
+    },
+    {
+      "path": "repaired-overview-before-kiosk-fix.png",
+      "sha256": "e94c95babadf8709c8097c4d51fcdf2f6461239953e9f323d1f01464d4ec647e"
+    },
+    {
       "path": "run.json",
       "sha256": "2ac3334d09a2c10cf9483811f7f5818593f257127a5ef4b46d1d566556a2dfe4"
     }
-  ]
+  ],
+  "panelQueryTestedHead": "d7e8c737aefe56e867a0de6bc5e39c5e9af879ea",
+  "panelQueryRunId": 37201994516,
+  "panelQueryArtifactId": 11303475963
 }

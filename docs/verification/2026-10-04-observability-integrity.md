@@ -39,3 +39,23 @@ remain pending until the new exact-revision integration runs. The general
 Prometheus presence check does not establish a valid OTEL request-rate chart
 for a short probe with insufficient counter scrapes. Full soak/write and D04
 measurement evidence remain separate.
+
+## Native provisioned-query result and follow-up
+
+At exactd7e8c73, [Docker37201994516](https://github.com/qa-test-automation-frameworks/k6-performance-framework/actions/runs/37201994516)
+passed actual provisioned Flux, run annotations, nonexistent-run rejection and
+rendering. Artifact11303475963 records12 required query results and two optional
+unavailable read-probe metrics. The missing-run control records no required rows
+and native exit1 with the intended reason. The inspected overview now has no
+splash overlay and displays read/error/duration data; write/business metrics and
+the OTEL rate remain unavailable for this bounded probe.
+
+Two details were tightened after inspecting that result. Flux aggregateWindow
+emits empty windows; the CSV gate now counts finite numeric values, including
+zero, rather than counting every table row. Five parser controls reject header/
+empty-window-only evidence and non-numeric values and preserve quoted tag values.
+The installed v13.0.2
+[AppChromeService](https://github.com/grafana/grafana/blob/v13.0.2/public/app/core/components/AppChrome/AppChromeService.tsx)
+accepts kiosk1, so capture now uses that value instead of the ineffective legacy tv
+value. The existing d7e8 PNG still includes navigation and is labeled accordingly.
+The new numeric-row and kiosk changes require their own exact-revision run.

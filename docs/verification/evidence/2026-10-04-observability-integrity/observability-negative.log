@@ -1,0 +1,3 @@
+Error: No rows for required run-scoped dashboard queries: k6-performance/Virtual Users, k6-performance/Requests per Second, k6-performance/HTTP Duration p95, k6-performance/Error Rate, k6-performance/Article Read p95, k6-endpoints/Endpoint p95 Latency, k6-endpoints/Endpoint Error Rate, k6-soak-stability/Latency Distribution, k6-soak-stability/Latency Distribution, k6-soak-stability/Latency Distribution, k6-soak-stability/Error Rate Stability, k6-soak-stability/Active Virtual Users
+    at main (/home/runner/work/k6-performance-framework/k6-performance-framework/scripts/validate-observability.cjs:92:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
