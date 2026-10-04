@@ -1,0 +1,52 @@
+v24.21.0
+10.9.4
+
+> k6-performance-framework@0.4.0 typecheck
+> tsc --noEmit
+
+
+> k6-performance-framework@0.4.0 lint
+> eslint src tests config --ext .ts
+
+
+> k6-performance-framework@0.4.0 test:unit
+> vitest run
+
+
+[1m[30m[46m RUN [49m[39m[22m [36mv4.1.11 [39m[90m/tmp/portfolio-tools/k6-runtime-clean-clone[39m
+
+ [32m✓[39m tests/unit/auth-helper.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 43[2mms[22m[39m
+ [32m✓[39m tests/unit/achieved-load.test.ts [2m([22m[2m17 tests[22m[2m)[22m[32m 22[2mms[22m[39m
+ [32m✓[39m tests/unit/lifecycle.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 167[2mms[22m[39m
+ [32m✓[39m tests/unit/config.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 20[2mms[22m[39m
+ [32m✓[39m tests/unit/api-services.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 17[2mms[22m[39m
+ [32m✓[39m tests/unit/workloads.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+ [32m✓[39m tests/unit/scenarios.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+ [32m✓[39m tests/unit/http-client.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+ [32m✓[39m tests/unit/logger.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+ [32m✓[39m tests/unit/performance-analysis.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+ [2m[90m↓[39m[22m tests/unit/platform-runner.test.mjs [2m([22m[2m1 test[22m[2m | [22m[33m1 skipped[39m[2m)[22m
+ [32m✓[39m tests/unit/fixtures.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m tests/unit/runtime-policy.test.mjs [2m([22m[2m12 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+ [32m✓[39m tests/unit/regression-tools.test.mjs [2m([22m[2m19 tests[22m[2m)[22m[33m 1209[2mms[22m[39m
+ [32m✓[39m tests/unit/history-selection.test.mjs [2m([22m[2m6 tests[22m[2m)[22m[33m 1330[2mms[22m[39m
+     [33m[2m✓[22m[39m skips this run, rejects an incompatible primary, and selects a compatible primary [33m 462[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m14 passed[39m[22m[2m | [22m[33m1 skipped[39m[90m (15)[39m
+[2m      Tests [22m [1m[32m106 passed[39m[22m[2m | [22m[33m1 skipped[39m[90m (107)[39m
+[2m   Start at [22m 17:34:15
+[2m   Duration [22m 1.69s[2m (transform 1.18s, setup 213ms, import 1.49s, tests 2.89s, environment 3ms)[22m
+
+
+> k6-performance-framework@0.4.0 build
+> npm run typecheck && node esbuild.config.js
+
+
+> k6-performance-framework@0.4.0 typecheck
+> tsc --noEmit
+
+
+> k6-performance-framework@0.4.0 hooks:install
+> git config core.hooksPath .githooks
+
+.githooks
