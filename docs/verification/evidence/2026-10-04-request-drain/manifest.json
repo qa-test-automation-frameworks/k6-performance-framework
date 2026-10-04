@@ -171,6 +171,33 @@
       "file": "positive-request-timeout-stderr.log.gz",
       "sha256": "ce36516b2616e3bce066f065f55896f1165b9c06a70951023270e8cadd87e72e",
       "native_sha256": "c31e215c8bffe85db41c5ce53ae36797e00bffe7307f0560305d01ac2cbf636b"
+    },
+    {
+      "file": "k6-drain-quality-native.log.gz",
+      "sha256": "aeee03793c03e02a370fc60e0bdf5c50a135eb52d41c0ce722515cdd45143583",
+      "native_sha256": "b2e4900dfc095a4e2ad7f163cdf0ad44f1de13b7a8850c3095ad2c0d46d41ae0"
+    },
+    {
+      "file": "k6-drain-security-native.log.gz",
+      "sha256": "99958792329f1e5ed87405ebc2c116c981caa4d5bb4a71b1a3711e8b0677647e",
+      "native_sha256": "dc20ebedb6a932529d96988baa50b84113b02ba4580885df8f976d393f07189b"
+    },
+    {
+      "file": "k6-drain-quality-state.json",
+      "sha256": "9bb78bcf5a6470c7d83af51ba3359dd28c1433a7f80aa7b3ef7dc40bde396240",
+      "native_sha256": "9bb78bcf5a6470c7d83af51ba3359dd28c1433a7f80aa7b3ef7dc40bde396240"
+    },
+    {
+      "file": "k6-drain-security-state.json",
+      "sha256": "56d02eff612b9d7ea9ffd0399bd90ebe5eec531a825b466dbf299566e1c7146d",
+      "native_sha256": "56d02eff612b9d7ea9ffd0399bd90ebe5eec531a825b466dbf299566e1c7146d"
+    },
+    {
+      "file": "k6-drain-remote-runs.json",
+      "sha256": "9b92a2c4b5df8aefcc71ef31639fc8d6816c7bc072807c54cf4bec19222b36a9",
+      "native_sha256": "9b92a2c4b5df8aefcc71ef31639fc8d6816c7bc072807c54cf4bec19222b36a9"
     }
-  ]
+  ],
+  "remote_tested_head_sha": "96f2fcf22e0bf55f26e3289e7123c9c9519231c0",
+  "remote_tested_merge_sha": "0912c485772517d30dd6fc5952e3dbd794e80cd4"
 }

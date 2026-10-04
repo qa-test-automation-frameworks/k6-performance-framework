@@ -29,4 +29,10 @@ Evidence is under `evidence/2026-10-04-request-drain/`, including original and a
 
 For reproduction, build the bundle, then run `npm run verify:request-rate`. To run only the delayed probe, set `REQUEST_RATE_VERIFICATION_MODE=boundary`. For a negative control, copy the generated bundle to a temporary file, replace both graceful-stop expressions with `gracefulStop: "0s"`, and set `REQUEST_RATE_ENTRYPOINT` to that copy. Inspect the expected mismatch and invalid summary; do not classify arbitrary nonzero exits as proof.
 
-Remote checks at the delivery revision remain separate until their actual results are inspected. This does not complete F08's historical performance-comparison diagnosis, supported runtime migration, the real application study or sustained operation.
+## Remote verification
+
+Delivered head `96f2fcf22e0bf55f26e3289e7123c9c9519231c0` is authored by `prayagv` without a co-author trailer. [Quality37198238760](https://github.com/qa-test-automation-frameworks/k6-performance-framework/actions/runs/37198238760) passed Linux quality, all five native transport controls, comparator controls and Windows installation/formatting. Its actual PR merge checkout and `FRAMEWORK_COMMIT` are `0912c485772517d30dd6fc5952e3dbd794e80cd4`, distinct from the delivered head. Remote native counts:healthy5,001, boundary301, under-driven11, HTTP-error60, timeout16; corresponding native exits0/0/99/99/99. Unit coverage executes78passes/one Windows-only skip.
+
+[Security37198238836](https://github.com/qa-test-automation-frameworks/k6-performance-framework/actions/runs/37198238836) also passed npm audit, SBOM, OSV374packages/no issues, and secrets scanning. Smoke37198238861, segmented37198238776 and docs37198238777 passed. Performance37198238890 remained running when recorded; its state is retained rather than claimed successful. Native Quality/Security job logs and job/step metadata are included in the manifest.
+
+This verifies the F04 repair at the stated implementation revision. It does not complete F08's historical performance-comparison diagnosis, supported runtime migration, the real application study or sustained operation. Later evidence-only commits are not the revision that produced these runs.
