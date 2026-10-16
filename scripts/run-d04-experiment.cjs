@@ -80,15 +80,24 @@ async function waitForProxy() {
 }
 
 async function setDelay(value) {
-  const response = await fetch('http://127.0.0.1:' + proxyPort + '/__d04/control', {
-    method: 'POST',
-    // k6 can leave the Node fetch pool idle for an entire sample; close control sockets so a
-    // subsequent condition change cannot reuse a keep-alive connection the proxy has retired.
-    headers: { 'content-type': 'application/json', connection: 'close' },
-    body: JSON.stringify({ delayMs: value }),
-  });
-  if (!response.ok || (await response.json()).responseDelayMs !== value) {
-    throw new Error('D04 proxy did not accept the requested ' + value + ' ms delay');
+  for (let attempt = 1; attempt <= 2; attempt++) {
+    try {
+      const response = await fetch('http://127.0.0.1:' + proxyPort + '/__d04/control', {
+        method: 'POST',
+        // k6 can leave the Node fetch pool idle for an entire sample; close control sockets so a
+        // subsequent condition change cannot reuse a keep-alive connection the proxy has retired.
+        headers: { 'content-type': 'application/json', connection: 'close' },
+        body: JSON.stringify({ delayMs: value }),
+      });
+      if (!response.ok || (await response.json()).responseDelayMs !== value) {
+        throw new Error('D04 proxy did not accept the requested ' + value + ' ms delay');
+      }
+      return;
+    } catch (error) {
+      if (attempt === 2) throw error;
+      console.warn('D04 control update failed once; confirming proxy health before retrying.');
+      await waitForProxy();
+    }
   }
 }
 
