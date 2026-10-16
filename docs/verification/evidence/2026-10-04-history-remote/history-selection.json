@@ -1,0 +1,7 @@
+{
+  "schema": "k6-history-selection-v1",
+  "disposition": "unavailable",
+  "reason": "no_retained_compatible_primary_input",
+  "currentRunId": "37199685506",
+  "candidateFile": "reports/spike-summary.json"
+}

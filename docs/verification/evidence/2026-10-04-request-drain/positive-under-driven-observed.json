@@ -1,0 +1,53 @@
+{
+  "runtime": "k6 v2.0.0 (commit/8c3be52cc1, go1.26.3, linux/amd64)",
+  "sourceFilesSha256": {
+    "scripts/verify-request-rate.cjs": "671ddf6d0f9d4c2a6ddf6964273f52a2079e60c17ce43744c5cd98660c95faac",
+    "tests/load/request-rate-load.ts": "f036bc4fc7e1a360532fa4dfdf62c97bbd6489edad15d4db3f3b835fd1ac2ffa",
+    "config/workloads.ts": "ed8b828e319e260612041352882b653412a0895ce09278b67e23a5644854a825",
+    "src/helpers/achieved-load.ts": "49270fcdf4c6cbf9f905a98e50573ef0683a15719dccc8326acbf040c3419658",
+    "src/helpers/summary.ts": "ada3177a8c742a51c3836f856e47cef2510e343dcbf073aafa8a9e789116ea42"
+  },
+  "entryPoint": "dist/load/request-rate-load.js",
+  "entryPointSha256": "cd271e9787746663d1ddc7207bb4dae856775f7c30296e77ecc5d8d928b1e169",
+  "mode": "under-driven",
+  "nativeExit": 99,
+  "signal": null,
+  "observed": {
+    "warmup": 4,
+    "measurement": 11,
+    "other": 0,
+    "articles": 9,
+    "tags": 2
+  },
+  "achievedLoad": {
+    "valid": false,
+    "reasons": [
+      "Achieved arrival iterations below predeclared minimum",
+      "Achieved HTTP requests below predeclared minimum",
+      "Generator dropped measurement iterations"
+    ],
+    "configuredRequestsPerSecond": 20,
+    "measurementSeconds": 3,
+    "minimumAchievedFraction": 0.98,
+    "completedIterations": 11,
+    "startedRequests": 11,
+    "requests": 11,
+    "droppedIterations": 50,
+    "achievedIterationsPerSecond": 3.6666666666666665,
+    "achievedRequestsPerSecond": 3.6666666666666665
+  },
+  "failures": [
+    "Invalid load experiment: Achieved arrival iterations below predeclared minimum",
+    "Invalid load experiment: Achieved HTTP requests below predeclared minimum",
+    "Invalid load experiment: Generator dropped measurement iterations",
+    "Threshold: http_reqs{scenario:request_measurement}: expected count>=59; actual 11",
+    "Threshold: dropped_iterations{scenario:request_measurement}: expected count==0; actual 50",
+    "Threshold: http_req_duration{scenario:request_measurement}: expected p(95)<80; actual 251.929194",
+    "Threshold: http_req_duration{scenario:request_measurement}: expected p(99)<150; actual 252.11664199999998",
+    "Threshold: request_attempts{scenario:request_measurement}: expected count>=59; actual 11",
+    "Threshold: iterations{scenario:request_measurement}: expected count>=59; actual 11"
+  ],
+  "nominalMeasurementRequests": 60,
+  "maximumMeasurementRequests": 61,
+  "limitation": "Executor/count validation fixture; colocated generator and target; not application capacity evidence."
+}

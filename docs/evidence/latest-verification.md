@@ -1,4 +1,9 @@
-# Current Verification Record
+# Historical Verification Record
+
+This retained July result is historical. The original `targetRps: 20` means
+20 journey arrival iterations/s; the journey issues multiple HTTP requests.
+It does not prove a 20-request/s or 500-request/s workload. See
+[workload-unit correction](../workload-units.md) for current semantics.
 
 | Field | Value |
 |---|---|
@@ -8,7 +13,7 @@
 | Current state | `review-ready`; refresh after the next reviewed baseline or default-branch run |
 | Target/environment | Repository-controlled Conduit-compatible service; public targets remain read-only |
 | Evidence class | Controlled load with governed safety checks |
-| Result counts | 32,250 total requests, 0% `http_req_failed` rate, 481.0s run duration, max 100 VUs, 20 target RPS |
+| Result counts | 32,250 total requests, 0% `http_req_failed` rate, 481.0s run duration, max 100 VUs, 20 target arrival iterations/s |
 | Report | [Performance reports](https://qa-test-automation-frameworks.github.io/k6-performance-framework/) |
 | Known limitations | [Known issues](../known-issues.md) and [SLO interpretation](../performance-slos.md) |
 

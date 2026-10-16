@@ -1,0 +1,128 @@
+{
+  "sourceHead": "cb8cfb82a7312d1d99f54d18eab93c02236560dc",
+  "runId": 37201276341,
+  "artifactId": 11302804058,
+  "note": "Original integration passed presence checks but did not establish usable dashboard images or successful panel queries.",
+  "files": [
+    {
+      "path": "final-endpoints.png",
+      "sha256": "2c4a6ffaaa1820321309921b6ae2ef63c424c607ab6e12cb3dd4502455785797"
+    },
+    {
+      "path": "final-overview.png",
+      "sha256": "4cacccda83d9cdadbbe2bf2a96ff69bf22594642dc90746f2f70af3441e85dcd"
+    },
+    {
+      "path": "final-performance-run.json",
+      "sha256": "c78384b6c51b81916100cebfb5d2b73c93806ff89bdb1d45b319227a66431f7b"
+    },
+    {
+      "path": "final-run.json",
+      "sha256": "264b58e346cfaf91a788ec3733195d54de69e693f27a65f739beb5c2bc0048d4"
+    },
+    {
+      "path": "final-soak.png",
+      "sha256": "6781f2c438c0ba37082998eb6e6b0d4f592606ba5094b622cc32d65765ca348a"
+    },
+    {
+      "path": "jobs.json",
+      "sha256": "5510822f4126f1cf79c5aa4c2f3b16b40f5554d22f2e01c3bb8a443e6f17ca30"
+    },
+    {
+      "path": "numeric-artifacts.json",
+      "sha256": "62eabba52a15882677e77d1c9c4c211bd6c2b58708bb0beb0327da44831ceb19"
+    },
+    {
+      "path": "numeric-endpoints.png",
+      "sha256": "703f87414bf61e62f52e8ac197bab63e3677058c33c11b3aac2602d13120ab0a"
+    },
+    {
+      "path": "numeric-jobs.json",
+      "sha256": "84be1cd58e29277c415ba515099650abdae1586747ca5c07f371aa9b0ae18c45"
+    },
+    {
+      "path": "numeric-overview.png",
+      "sha256": "66ac04c65a90f1228119a97c6316221019a11c7784aebb150aaa1cbcdf8b02d2"
+    },
+    {
+      "path": "numeric-run.json",
+      "sha256": "6213c77272868decb309aff56b7e3f859eac2fc48750d3e68192e118c761def8"
+    },
+    {
+      "path": "numeric-soak.png",
+      "sha256": "1654a030c75aabfeebfdf9236887c1012528fab0718cebac5a7d9983ec571bd0"
+    },
+    {
+      "path": "observability-ci-37201994516.json",
+      "sha256": "d89d6953f5e8fc3a79731247e49b8fe4a4c922e8890ec3c22056c5c562602257"
+    },
+    {
+      "path": "observability-ci-37202532056.json",
+      "sha256": "baa27e2fa4a026a43c9c2a9c578283bf0abbd990d08cd42cbba2ef36c3bf2a45"
+    },
+    {
+      "path": "observability-ci-37203646997.json",
+      "sha256": "c7fc3a1e52069d4c17d82f5a8bc7f1683ca156d2c6514c10cd83fab441a8642a"
+    },
+    {
+      "path": "observability-missing-37201994516.json",
+      "sha256": "c554503ee2f1b67bec6a764650079dc2d615d6d0cd23b274072dce302981691a"
+    },
+    {
+      "path": "observability-missing-37202532056.json",
+      "sha256": "03c196adfe6e0c18075f40c337a769929025c3805d0adbff3cdcfc4ae9a06a69"
+    },
+    {
+      "path": "observability-missing-37203646997.json",
+      "sha256": "cf2f7e2eecb3d71a0ec473d08d5b21e8d6a98a678270486d07bc336afdd50d49"
+    },
+    {
+      "path": "observability-negative.log",
+      "sha256": "42a1164aa469c15d880d041714d80564dcf54fb2ad3e5cd4828e73d3a1baf802"
+    },
+    {
+      "path": "observed-summary.json",
+      "sha256": "b5735f6365879ee98bf5a188fb6100e2289769a62a287760b2c329c0ce6f6087"
+    },
+    {
+      "path": "original-blocked-overview.png",
+      "sha256": "aed0d95c8d908987dd68f39565684e290f3a4fab1ade4213c6544f278768a103"
+    },
+    {
+      "path": "original-query-errors.txt",
+      "sha256": "fe21d8ea8fe9d692abd6adda19916e69b6eebb045ef50c0bb8e8a4b783694113"
+    },
+    {
+      "path": "panel-query-artifacts.json",
+      "sha256": "463a2e0f9b115935e4bf1932225e9e09075504ec74df6be02159cebd7074fa66"
+    },
+    {
+      "path": "panel-query-jobs.json",
+      "sha256": "e6103a96ceefd8fd1de19e3102a43c23f242405b660f8f14f97d076943077a88"
+    },
+    {
+      "path": "panel-query-run.json",
+      "sha256": "aa7a223e2895058d5fc8437eb7ac53a80120e7c3df4d28182a7f62b7b9c3b768"
+    },
+    {
+      "path": "performance-37203646967.log.gz",
+      "sha256": "0bed5667372a260beffd474ed29828cee49670d1b7db4d1a3c466ac477439252"
+    },
+    {
+      "path": "repaired-overview-before-kiosk-fix.png",
+      "sha256": "e94c95babadf8709c8097c4d51fcdf2f6461239953e9f323d1f01464d4ec647e"
+    },
+    {
+      "path": "run.json",
+      "sha256": "2ac3334d09a2c10cf9483811f7f5818593f257127a5ef4b46d1d566556a2dfe4"
+    }
+  ],
+  "panelQueryTestedHead": "d7e8c737aefe56e867a0de6bc5e39c5e9af879ea",
+  "panelQueryRunId": 37201994516,
+  "panelQueryArtifactId": 11303475963,
+  "numericTestedHead": "860feb219944b29c6fc4ffc87d294ea6f9005513",
+  "numericRunId": 37202532056,
+  "finalTestedSourceHead": "04bcc3652cb08ebcf16075504f35624d9ba61112",
+  "finalRunId": 37203646997,
+  "serializationNote": "Final run metadata normalized by repository formatter; earlier native JSON, PNG and compressed log bytes preserved. Hashes cover retained bytes."
+}

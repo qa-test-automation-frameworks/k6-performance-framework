@@ -1,0 +1,4 @@
+# Existing optional distributed runner label; this does not provision a runner.
+self-hosted-runner:
+  labels:
+    - performance

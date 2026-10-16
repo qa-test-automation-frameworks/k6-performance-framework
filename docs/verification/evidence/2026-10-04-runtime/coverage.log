@@ -1,0 +1,50 @@
+
+> k6-performance-framework@0.4.0 test:coverage
+> vitest run --coverage
+
+
+ RUN  v4.1.11 /home/vyaspc/Documents/Repo/k6-performance-framework
+      Coverage enabled with v8
+
+
+ Test Files  14 passed | 1 skipped (15)
+      Tests  106 passed | 1 skipped (107)
+   Start at  17:23:12
+   Duration  1.93s (transform 1.10s, setup 272ms, import 1.70s, tests 3.12s, environment 4ms)
+
+ % Coverage report from v8
+-------------------|---------|----------|---------|---------|-------------------
+File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-------------------|---------|----------|---------|---------|-------------------
+All files          |   95.71 |    94.16 |    95.9 |   96.58 |                   
+ config            |   98.14 |      100 |   91.66 |     100 |                   
+  workloads.ts     |   97.91 |      100 |    90.9 |     100 |                   
+ ...g/environments |      80 |       50 |     100 |      80 |                   
+  production.ts    |   66.66 |       50 |     100 |   66.66 | 14                
+ config/thresholds |   88.88 |      100 |     100 |   88.88 |                   
+  smoke.ts         |       0 |      100 |     100 |       0 | 3                 
+ src/api           |     100 |    81.81 |     100 |     100 |                   
+  profiles.ts      |     100 |    66.66 |     100 |     100 | 12                
+  query.ts         |     100 |       50 |     100 |     100 | 10                
+ src/fixtures      |   77.77 |       60 |     100 |   78.57 |                   
+  ...-behaviors.ts |   71.42 |       60 |     100 |      70 | 22-24             
+ src/helpers       |    99.2 |    96.33 |   97.56 |   99.15 |                   
+  checks.ts        |      80 |      100 |   66.66 |      75 | 17                
+  data-factory.ts  |     100 |       50 |     100 |     100 | 6-7               
+  summary.ts       |     100 |    95.68 |     100 |     100 | ...26-127,185-193 
+ src/scenarios     |     100 |       80 |     100 |     100 |                   
+  ...e-articles.ts |     100 |    83.33 |     100 |     100 | 19                
+  ...nt-readers.ts |     100 |       50 |     100 |     100 | 22                
+ src/types         |       0 |      100 |     100 |       0 |                   
+  config.types.ts  |       0 |      100 |     100 |       0 | 22                
+ src/utils         |   91.13 |    90.38 |   84.21 |   93.15 |                   
+  http-client.ts   |   89.74 |     93.1 |      80 |   91.89 | 36,139-148        
+  logger.ts        |   88.88 |    86.95 |   88.88 |    91.3 | 20,30             
+-------------------|---------|----------|---------|---------|-------------------
+
+=============================== Coverage summary ===============================
+Statements   : 95.71% ( 357/373 )
+Branches     : 94.16% ( 323/343 )
+Functions    : 95.9% ( 117/122 )
+Lines        : 96.58% ( 339/351 )
+================================================================================

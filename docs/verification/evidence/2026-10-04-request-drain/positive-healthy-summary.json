@@ -1,0 +1,262 @@
+{
+  "achievedLoad": {
+    "valid": true,
+    "reasons": [],
+    "configuredRequestsPerSecond": 500,
+    "measurementSeconds": 10,
+    "minimumAchievedFraction": 0.98,
+    "completedIterations": 5001,
+    "startedRequests": 5001,
+    "requests": 5001,
+    "droppedIterations": 0,
+    "achievedIterationsPerSecond": 500.1,
+    "achievedRequestsPerSecond": 500.1
+  },
+  "failures": [],
+  "generatedAt": "2026-10-04T11:13:30.286Z",
+  "metrics": {
+      "http_req_duration{expected_response:true}": {
+        "p(99)": 2.0689212799999983,
+        "avg": 0.6434806266812079,
+        "min": 0.114998,
+        "med": 0.6389895,
+        "max": 7.883618,
+        "p(90)": 0.8116662000000001,
+        "p(95)": 0.9543228999999996
+      },
+      "http_req_receiving": {
+        "med": 0.11737700000000001,
+        "max": 1.762831,
+        "p(90)": 0.1735702,
+        "p(95)": 0.19362259999999998,
+        "p(99)": 0.29261908999999975,
+        "avg": 0.12270335659760107,
+        "min": 0.019
+      },
+      "iteration_duration": {
+        "med": 1.1569669999999999,
+        "max": 8.768886,
+        "p(90)": 1.5086685000000002,
+        "p(95)": 1.7396833999999999,
+        "p(99)": 3.3011013599999997,
+        "avg": 1.154085613595058,
+        "min": 0.224219
+      },
+      "dropped_iterations{scenario:request_measurement}": {
+        "rate": 0,
+        "count": 0
+      },
+      "vus": {
+        "min": 0,
+        "max": 2,
+        "value": 1
+      },
+      "http_req_connecting": {
+        "p(99)": 0,
+        "avg": 0.0006291014176663032,
+        "min": 0,
+        "med": 0,
+        "max": 0.328026,
+        "p(90)": 0,
+        "p(95)": 0
+      },
+      "vus_max": {
+        "max": 20,
+        "value": 20,
+        "min": 20
+      },
+      "http_req_sending": {
+        "min": 0.006621,
+        "med": 0.0417735,
+        "max": 1.056956,
+        "p(90)": 0.0637684,
+        "p(95)": 0.07925679999999999,
+        "p(99)": 0.10675323999999976,
+        "avg": 0.043273058160668815
+      },
+      "http_req_blocked": {
+        "max": 2.494833,
+        "p(90)": 0.017536100000000006,
+        "p(95)": 0.019979199999999992,
+        "p(99)": 0.04627359999999992,
+        "avg": 0.01400885914213013,
+        "min": 0.002372,
+        "med": 0.012033499999999999
+      },
+      "http_req_waiting": {
+        "max": 7.792466,
+        "p(90)": 0.5936453,
+        "p(95)": 0.6990041999999997,
+        "p(99)": 1.6336969999999982,
+        "avg": 0.4775042119229379,
+        "min": 0.081876,
+        "med": 0.4645505
+      },
+      "request_attempts": {
+        "count": 5502,
+        "rate": 423.1611802770201
+      },
+      "data_received": {
+        "count": 1243452,
+        "rate": 95634.42674260653
+      },
+      "dropped_iterations": {
+        "count": 0,
+        "rate": 0
+      },
+      "http_req_tls_handshaking": {
+        "avg": 0,
+        "min": 0,
+        "med": 0,
+        "max": 0,
+        "p(90)": 0,
+        "p(95)": 0,
+        "p(99)": 0
+      },
+      "http_req_failed": {
+        "rate": 0,
+        "passes": 0,
+        "fails": 5502
+      },
+      "http_req_failed{scenario:request_measurement}": {
+        "passes": 0,
+        "fails": 5001,
+        "rate": 0
+      },
+      "iterations{scenario:request_measurement}": {
+        "count": 5001,
+        "rate": 384.6290553553939
+      },
+      "request_attempts{scenario:request_measurement}": {
+        "count": 5001,
+        "rate": 384.6290553553939
+      },
+      "checks{scenario:request_measurement}": {
+        "rate": 1,
+        "passes": 5001,
+        "fails": 0
+      },
+      "http_req_duration{scenario:request_measurement}": {
+        "min": 0.114998,
+        "med": 0.6433,
+        "max": 7.37482,
+        "p(90)": 0.800615,
+        "p(95)": 0.9324,
+        "p(99)": 1.855806,
+        "avg": 0.6405474315136985
+      },
+      "http_reqs{scenario:request_measurement}": {
+        "count": 5001,
+        "rate": 384.6290553553939
+      },
+      "data_sent": {
+        "count": 721567,
+        "rate": 55496.02751162278
+      },
+      "http_req_duration": {
+        "p(90)": 0.8116662000000001,
+        "p(95)": 0.9543228999999996,
+        "p(99)": 2.0689212799999983,
+        "avg": 0.6434806266812079,
+        "min": 0.114998,
+        "med": 0.6389895,
+        "max": 7.883618
+      },
+      "http_reqs": {
+        "rate": 423.1611802770201,
+        "count": 5502
+      },
+      "iterations": {
+        "count": 5502,
+        "rate": 423.1611802770201
+      },
+      "checks": {
+        "rate": 1,
+        "passes": 5502,
+        "fails": 0
+      }
+    },
+  "metadata": {
+      "environment": "local",
+      "frameworkCommit": "unknown",
+      "k6Version": "2.0.0",
+      "maxVus": 20,
+      "profile": "full",
+      "runnerClass": "colocated-loopback-validation",
+      "targetCommit": "fixture-defined-in-verify-request-rate-script",
+      "targetId": "disposable-count-validation-fixture",
+      "workloadSchema": "single-request-arrival-v2",
+      "targetIterationsPerSecond": 500,
+      "targetRequestsPerSecond": 500,
+      "measurementSeconds": 10,
+      "warmupSeconds": 1,
+      "minimumAchievedFraction": 0.98,
+      "requestDrainSeconds": 2
+    },
+  "rootGroup": {
+      "path": "",
+      "id": "d41d8cd98f00b204e9800998ecf8427e",
+      "groups": [],
+      "checks": [
+          {
+            "fails": 0,
+            "name": "single request status is 200",
+            "path": "::single request status is 200",
+            "id": "0593baae2de3b7ea5d0e3e1bc78cbc14",
+            "passes": 5502
+          }
+        ],
+      "name": ""
+    },
+  "state": {
+      "isStdOutTTY": false,
+      "isStdErrTTY": false,
+      "testRunDurationMs": 13002.137853
+    },
+  "thresholds": {
+      "http_req_failed{scenario:request_measurement}": {
+        "rate<0.01": {
+          "ok": true
+        }
+      },
+      "iterations{scenario:request_measurement}": {
+        "count>=4900": {
+          "ok": true
+        }
+      },
+      "request_attempts{scenario:request_measurement}": {
+        "count>=4900": {
+          "ok": true
+        },
+        "count<=5001": {
+          "ok": true
+        }
+      },
+      "checks{scenario:request_measurement}": {
+        "rate==1": {
+          "ok": true
+        }
+      },
+      "http_req_duration{scenario:request_measurement}": {
+        "p(95)<80": {
+          "ok": true
+        },
+        "p(99)<150": {
+          "ok": true
+        }
+      },
+      "http_reqs{scenario:request_measurement}": {
+        "count>=4900": {
+          "ok": true
+        },
+        "count<=5001": {
+          "ok": true
+        }
+      },
+      "dropped_iterations{scenario:request_measurement}": {
+        "count==0": {
+          "ok": true
+        }
+      }
+    }
+}

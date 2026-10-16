@@ -15,11 +15,16 @@ jobs:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
       - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
         with:
-          node-version: 20
+          node-version-file: .nvmrc
           cache: npm
       - uses: grafana/setup-k6-action@db07bd9765aac508ef18982e52ab937fe633a065
         with:
           k6-version: 2.0.0
+      - name: Capture actual k6 version
+        run: |
+          k6_version=$(k6 version | sed -n '1s/^k6 v\([^ ]*\).*/\1/p')
+          test "$k6_version" = 2.0.0
+          echo "K6_VERSION=$k6_version" >> "$GITHUB_ENV"
       - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6
         with:
           bun-version: 1.2.15
@@ -29,6 +34,7 @@ jobs:
       - name: Run read-only smoke test
         shell: bash
         run: |
+          echo "EVIDENCE_STARTED_AT_SMOKE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> "$GITHUB_ENV"
           source .github/scripts/start-realworld.sh
           k6 run dist/smoke/smoke-test.js
         env:
@@ -39,8 +45,41 @@ jobs:
           TARGET_ID: realworld-local
           TARGET_COMMIT: c8c66858a436a6e07f445fffe2253a65ff6dcb58
           FRAMEWORK_COMMIT: ${{ github.sha }}
-          K6_VERSION: 2.0.0
           RUNNER_CLASS: github-hosted
+      - name: Emit smoke execution evidence
+        if: always()
+        run: |
+          if [ -f reports/smoke-summary.json ]; then
+            EVIDENCE_STARTED_AT="$EVIDENCE_STARTED_AT_SMOKE" node scripts/emit-portfolio-evidence.cjs --summary reports/smoke-summary.json --scope k6.pr-smoke --class controlled
+          else
+            EVIDENCE_STARTED_AT="$EVIDENCE_STARTED_AT_SMOKE" node scripts/emit-portfolio-evidence.cjs --unavailable-reason "k6 smoke summary was not produced" --scope k6.pr-smoke --class controlled
+          fi
+      - name: Validate smoke execution evidence
+        if: always()
+        run: node scripts/validate-portfolio-evidence.cjs reports/evidence/k6.pr-smoke.json
+      - name: Record and verify an intentional k6 failure
+        if: always()
+        run: |
+          echo "EVIDENCE_STARTED_AT_CONTROL=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> "$GITHUB_ENV"
+          SUMMARY_NAME=evidence-failure-control \
+            TARGET_ID=k6-evidence-failure-fixture \
+            TARGET_COMMIT="$GITHUB_SHA" \
+            FRAMEWORK_COMMIT="$GITHUB_SHA" \
+            TEST_PROFILE=controlled-negative \
+            TARGET_ENV=local \
+            RUNNER_CLASS=github-hosted \
+            node scripts/run-evidence-failure-control.cjs
+      - name: Emit intentional-failure evidence
+        if: always()
+        run: |
+          if [ -f reports/evidence-failure-control-summary.json ]; then
+            EVIDENCE_STARTED_AT="$EVIDENCE_STARTED_AT_CONTROL" node scripts/emit-portfolio-evidence.cjs --summary reports/evidence-failure-control-summary.json --scope k6.evidence-failure-control --class hermetic
+          else
+            EVIDENCE_STARTED_AT="$EVIDENCE_STARTED_AT_CONTROL" node scripts/emit-portfolio-evidence.cjs --unavailable-reason "k6 failure-control summary was not produced" --scope k6.evidence-failure-control --class hermetic
+          fi
+      - name: Validate intentional-failure evidence
+        if: always()
+        run: node scripts/validate-portfolio-evidence.cjs reports/evidence/k6.evidence-failure-control.json
       - name: Publish smoke summary
         run: |
           if [ -f reports/smoke-summary.md ]; then

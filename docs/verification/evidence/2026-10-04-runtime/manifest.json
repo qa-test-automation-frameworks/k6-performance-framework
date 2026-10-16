@@ -1,0 +1,156 @@
+{
+  "node": "24.21.0",
+  "npm": "10.9.4",
+  "k6": "2.0.0",
+  "nodeArchiveSha256": "fd8e59d5a511510f6a298afb548f18c7d2b1be404d8b4a27d94fbe49f56cb2d6",
+  "unchangedNonRootLockEntries": 399,
+  "sourceFiles": [
+    {
+      "path": ".nvmrc",
+      "sha256": "73fb1b615e2043a933be1c0895cde4358036acc28d785692509b822aa53c761f"
+    },
+    {
+      "path": ".npmrc",
+      "sha256": "34024b1f83f631b9065eb3afb73b4933f937f96650271487d18b9c0d101b9b97"
+    },
+    {
+      "path": "package.json",
+      "sha256": "3ee2771207408be4441e394bd7966d33c37b924eb5b5cb3d3e923cd49a91aa2e"
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "983fbc53df2078bc2b0d82427351a994bc5ca6774dacc2022e3ad5042af4d2f9"
+    },
+    {
+      "path": "scripts/check-npm-version.cjs",
+      "sha256": "8b339895949940fb0973867c9c881ac2c86076436bcc3fd15ec965ac8a2d067e"
+    },
+    {
+      "path": "tests/unit/runtime-policy.test.mjs",
+      "sha256": "898e7e7b25471bd8b97bc180871a41bed7867558a5770ea71984d70e1fbad575"
+    },
+    {
+      "path": ".github/actionlint.yaml",
+      "sha256": "ff90f09497e446e33fe4bc89c806399f396b3b1248093630519b871b339c9a6b"
+    },
+    {
+      "path": ".github/workflows/capture-baseline.yml",
+      "sha256": "633913c9ebb6307b9e195f376eb7e76ece2cd183251c8b31d54ab8e39b7eee06"
+    },
+    {
+      "path": ".github/workflows/distributed-load.yml",
+      "sha256": "9d56ec97cec11f73cc7ba80dc3319b0c3d850a9353fc07f03baabcde5f090ef3"
+    },
+    {
+      "path": ".github/workflows/docs.yml",
+      "sha256": "856d1cd0fbe97573e1f4e2444fc9d6b44bb284fb035914e5ff2381383debb02d"
+    },
+    {
+      "path": ".github/workflows/main-load.yml",
+      "sha256": "ce03d1bd43ad15e67ab4e30e1855962400715ee7726b5495957c3e568c08d433"
+    },
+    {
+      "path": ".github/workflows/observability.yml",
+      "sha256": "12fbf40fa36caa9aa3600da8d202f02f99eb6899f65ba33d74a2308934bcee30"
+    },
+    {
+      "path": ".github/workflows/pages.yml",
+      "sha256": "40d3e42772a41dce78a99dc6bb6a3cb8c0f03ca2b07ac67308c3715101e07b64"
+    },
+    {
+      "path": ".github/workflows/performance-regression.yml",
+      "sha256": "28322c1e5ea55554547d004d2a922fc2242b8bc7a12d088b4d9fa6dabc063817"
+    },
+    {
+      "path": ".github/workflows/pr-smoke.yml",
+      "sha256": "0483bf7d8297ec4f6f196a021f227988bbe90ce19af95953fd40538a61a9e8f5"
+    },
+    {
+      "path": ".github/workflows/quality.yml",
+      "sha256": "4930bd03fceb7286cd52a945f57c5ad1307c22e0d243da901b974e5a8ca5e01e"
+    },
+    {
+      "path": ".github/workflows/release.yml",
+      "sha256": "48082c7c3cdf7c2c2c1a995c920ed597579e0b1d659475d0eb807beb7a791eae"
+    },
+    {
+      "path": ".github/workflows/scheduled-soak.yml",
+      "sha256": "1c3908e0414ca287f20330557058abadf772da9aa3062293982e18ddffc9e03e"
+    },
+    {
+      "path": ".github/workflows/security.yml",
+      "sha256": "272052ad786b7a0adeba89baa4bb329d7ca0a2e53ecbc097acdb86c6bb27386e"
+    },
+    {
+      "path": ".github/workflows/segmented-validation.yml",
+      "sha256": "09252319a8ef5ac6729b9608264b6ab0638339a61c202c3b805e13925bcfb5f7"
+    }
+  ],
+  "logs": [
+    {
+      "path": "actionlint.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "build.log",
+      "sha256": "778f97743ceaa9c4cd173568bd789b6b93ee2c73bc54e29407deea1914b8f728"
+    },
+    {
+      "path": "clean-checks.log",
+      "sha256": "4c569ef8bb6360483ff554df1d4f7bd8601aab57fd01ed0f9e62a1991b5cf9dc"
+    },
+    {
+      "path": "clean-install.log",
+      "sha256": "062135282ea9dfe31a5c04bf21a972a8d6b2e856ce1105aa707d77a9ed0a5f15"
+    },
+    {
+      "path": "clean-repeat.log",
+      "sha256": "5de97f7c37d9da342a4136c3273cd2d43dae0ba734d25c4cd61a9a34f90e47e0"
+    },
+    {
+      "path": "coverage.log",
+      "sha256": "cb4af59320422dd3a8b0af9d5719de6be5db2e6a5bcee6b5e2e388c13a5e0211"
+    },
+    {
+      "path": "format.log",
+      "sha256": "67429f5eeca4e93de7dce72960eed34d05594ec89fe66612c6f217fb42e33c6d"
+    },
+    {
+      "path": "lint.log",
+      "sha256": "4a8f08f9a35b8ad7d47f3c8a404d4db2023dc0612c7d988ebe379230bd657fe2"
+    },
+    {
+      "path": "old-major-negative.log",
+      "sha256": "9f5a694eb23eec001816c96c064993c2a0e5a452f92086d05fc7411d3732ba43"
+    },
+    {
+      "path": "old-patch-negative.log",
+      "sha256": "bcf9c0e1d32496ac033ff167ebd68e317d570f4f2db6869a594618a26c61c45a"
+    },
+    {
+      "path": "remote-quality-excerpt.log",
+      "sha256": "ddbdfcc4a3ca981e9524a2cb82b7a434bb5ecbeabdd447291e70b1c37977df40"
+    },
+    {
+      "path": "remote-quality-jobs.json",
+      "sha256": "923ac1c7c494a3f2eb87e19919a1013429caa2cca9d2b79bed801d7cf1dffa5b"
+    },
+    {
+      "path": "remote-quality-run.json",
+      "sha256": "1fc5d3b0ba78ea7c89bef9f67df6ded5370f40617b122d9b30da57508c5dbfef"
+    },
+    {
+      "path": "remote-security-run.json",
+      "sha256": "f2d8a0cc8726339b77a48af1ed88047624c93030dfad3e30eb84ac8628dcaa27"
+    },
+    {
+      "path": "remote-windows-excerpt.log",
+      "sha256": "2913b102436265b042494326331e3bb7560d2e016a407a6fc6df7e198aa1e251"
+    },
+    {
+      "path": "transport.log",
+      "sha256": "34a1d0389aa1e1d6ad5bac9dbd5b6e2ea05732fe983aa5b2d76573647596c84c"
+    }
+  ],
+  "remoteRuntimeTestedHead": "8844f1b9bf5fe0f547f83212ff7aa455d9f48e91"
+}

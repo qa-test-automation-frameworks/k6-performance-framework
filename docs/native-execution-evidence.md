@@ -1,0 +1,12 @@
+# Native execution evidence
+
+`pr-smoke.yml` emits one schema-v3 execution record for the real read-only k6 smoke run and a second record for a deliberate negative control. `main-load.yml` emits separate records for its article-load and authenticated-journey runs. Records are under `reports/evidence/` and are uploaded with the existing short-lived GitHub Actions artifact. Each native run keeps its original exit; the failure control is considered healthy only when k6 exits nonzero and the native summary identifies exactly one deliberate failed check and its matching threshold breach. Collection and validation execute with `always()` so missing summaries become `unavailable` records and fail the workflow rather than disappearing.
+
+The adapter reads the framework's structured `*-summary.json`, which is generated from k6's `handleSummary` data. CI records k6's actual CLI version, checks it against the pinned 2.0.0 runtime, and the emitter rejects any mismatch between that runtime value and the summary. Node's actual `process.version` is recorded too. It reports measurements such as request latency, request rate, and check ratio. It records test counts as `not_applicable` with null counts because workload requests, checks, and iterations are not test cases. A failed threshold or check keeps its measurements and receives `failed` disposition. A missing or empty measurement set cannot pass.
+
+The schema and freshness-policy snapshots are copied from the portfolio evidence contract and must remain synchronized. Current snapshot SHA-256 values:
+
+- `portfolio/evidence/evidence-v3.schema.json`: `40502a47e825755d216e35ea19716ad7de69e47accd6aed1cfb3607160e4d1b9`
+- `portfolio/evidence/freshness-policies.json`: `1313329c1c06bd3a056dd1ed7d25c631036cae58480fdc4e767f22a0a01a568e`
+
+Run `npm run test:evidence` for adapter regressions and `npm run validate:evidence -- reports/evidence/<record>.json` for schema and semantic checks. These CI artifacts are ephemeral; durable publication and portfolio dashboard ingestion remain separate roadmap work (E03/E04). The negative-control record demonstrates the evidence path, not a product performance regression. Neither record alone establishes application capacity or production performance.
