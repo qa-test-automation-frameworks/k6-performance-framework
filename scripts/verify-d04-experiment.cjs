@@ -195,7 +195,9 @@ function verifyExperiment(manifest, runs) {
     }
 
     const currentMetricNames = Object.keys(summary.metrics ?? {})
-      .filter((name) => name === 'http_req_duration' || name.startsWith('http_req_duration{name:'))
+      .filter((name) =>
+        ['http_req_duration', 'article_request_duration', 'tag_request_duration'].includes(name),
+      )
       .sort();
     if (
       currentMetricNames.length < 3 ||

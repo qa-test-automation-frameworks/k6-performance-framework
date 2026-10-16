@@ -1,7 +1,7 @@
 import { check } from 'k6';
 import execution from 'k6/execution';
 import http from 'k6/http';
-import { Counter } from 'k6/metrics';
+import { Counter, Trend } from 'k6/metrics';
 import type { Options } from 'k6/options';
 import { getConfig } from '../../config';
 import { getRequestRateProfile, REQUEST_DRAIN_SECONDS } from '../../config/workloads';
@@ -19,6 +19,8 @@ const minimumCount = Math.ceil(
 );
 const expectedCount = profile.requestsPerSecond * profile.measurementSeconds;
 const requestAttempts = new Counter('request_attempts');
+const articleRequestDuration = new Trend('article_request_duration');
+const tagRequestDuration = new Trend('tag_request_duration');
 
 export const options: Options = {
   scenarios: {
@@ -44,7 +46,8 @@ export const options: Options = {
       gracefulStop: `${REQUEST_DRAIN_SECONDS}s`,
     },
   },
-  // Creating submetrics through thresholds makes their count available in the native summary.
+  // Thresholds enforce workload validity and the aggregate latency control. Endpoint timings
+  // use separate Trends below so an intentional degraded run does not fail extra thresholds.
   thresholds: {
     'request_attempts{scenario:request_measurement}': [
       `count>=${minimumCount}`,
@@ -59,9 +62,6 @@ export const options: Options = {
     'checks{scenario:request_measurement}': ['rate==1'],
     'http_req_failed{scenario:request_measurement}': ['rate<0.01'],
     'http_req_duration{scenario:request_measurement}': ['p(95)<80', 'p(99)<150'],
-    // Declare route submetrics so native summaries include both endpoint distributions.
-    'http_req_duration{name:GET /articles}': ['p(95)<1000', 'p(99)<1000'],
-    'http_req_duration{name:GET /tags}': ['p(95)<1000', 'p(99)<1000'],
   },
   maxRedirects: 0,
   summaryTrendStats,
@@ -78,6 +78,9 @@ export function singleRequest(): void {
     headers: { 'X-Load-Phase': execution.scenario.name },
     tags: { ...config.tags, name: path.startsWith('/tags') ? 'GET /tags' : 'GET /articles' },
   });
+  const duration = response.timings.duration;
+  if (path.startsWith('/tags')) tagRequestDuration.add(duration);
+  else articleRequestDuration.add(duration);
   check(response, { 'single request status is 200': (result) => result.status === 200 });
 }
 
