@@ -86,7 +86,10 @@ function createStudy() {
       failures:
         condition === 'healthy'
           ? []
-          : ['Threshold: http_req_duration: expected p(95)<80; actual ' + baseLatency],
+          : [
+              'Threshold: http_req_duration{scenario:request_measurement}: expected p(95)<80; actual ' +
+                baseLatency,
+            ],
     };
     runs.push({ result, summary });
   }
@@ -112,7 +115,9 @@ describe('D04 controlled performance experiment verifier', () => {
     const { manifest, runs } = createStudy();
     runs[1].summary.metrics.article_request_duration['p(95)'] = 1200;
     runs[1].summary.metrics.article_request_duration['p(99)'] = 1400;
-    runs[1].summary.failures = ['Threshold: http_req_duration: expected p(95)<80; actual 151'];
+    runs[1].summary.failures = [
+      'Threshold: http_req_duration{scenario:request_measurement}: expected p(95)<80; actual 151',
+    ];
     expect(verifyExperiment(manifest, runs).verified).toBe(true);
   });
 

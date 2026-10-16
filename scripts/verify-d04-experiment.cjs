@@ -217,7 +217,7 @@ function verifyExperiment(manifest, runs) {
       }
     } else {
       const thresholdFailures = summary.failures.filter((failure) =>
-        failure.startsWith('Threshold: http_req_duration:'),
+        failure.startsWith('Threshold: http_req_duration{scenario:request_measurement}:'),
       );
       if (
         result.exitCode === 0 ||
