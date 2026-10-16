@@ -51,6 +51,7 @@ if (!versionPattern.test(k6VersionOutput)) {
 
 const proxyLogPath = path.join(reportDirectory, 'd04-proxy.log');
 const proxyLog = fs.createWriteStream(proxyLogPath, { flags: 'w' });
+let currentStage = 'starting controlled-latency proxy';
 const proxy = spawn(process.execPath, [path.join(__dirname, 'd04-latency-proxy.cjs')], {
   cwd: root,
   env: {
@@ -90,6 +91,7 @@ async function setDelay(value) {
 }
 
 async function run() {
+  currentStage = 'waiting for controlled-latency proxy readiness';
   await waitForProxy();
   const order = ['healthy', 'degraded', 'degraded', 'healthy', 'healthy', 'degraded'];
   const results = [];
@@ -100,6 +102,7 @@ async function run() {
   for (const [index, condition] of order.entries()) {
     const repetition = results.filter((result) => result.condition === condition).length + 1;
     const delay = condition === 'healthy' ? 0 : delayMs;
+    currentStage = 'setting ' + condition + ' condition for sample ' + repetition;
     await setDelay(delay);
     const summaryName = 'd04-' + condition + '-' + repetition;
     const summaryPath = path.join(reportDirectory, summaryName + '-summary.json');
@@ -124,6 +127,7 @@ async function run() {
       MEASUREMENT_SECONDS: '15',
       MINIMUM_ACHIEVED_FRACTION: '0.98',
     };
+    currentStage = 'running k6 ' + condition + ' sample ' + repetition;
     const result = spawnCaptured(k6Binary, ['run', '--quiet', 'dist/load/request-rate-load.js'], {
       env: environment,
     });
@@ -222,6 +226,7 @@ async function run() {
 
 run()
   .catch((error) => {
+    console.error('D04 failed during ' + currentStage);
     console.error(error);
     process.exitCode = 1;
   })

@@ -85,11 +85,20 @@ jobs:
             set -e
           fi
           if [ "$status" -ne 0 ]; then
-            tail -n 35 reports/d04-execution.log >> "$GITHUB_STEP_SUMMARY"
-            failure="$(tail -n 15 reports/d04-execution.log | tr '\n' ' ' | cut -c 1-1800)"
-            FAILURE_MESSAGE="$failure" python3 - <<'PY'
-          import os
-          message = os.environ.get("FAILURE_MESSAGE", "D04 failed without a captured error message.")
+            tail -n 80 reports/d04-execution.log >> "$GITHUB_STEP_SUMMARY"
+            python3 - <<'PY'
+          from pathlib import Path
+          lines = Path("reports/d04-execution.log").read_text(encoding="utf-8", errors="replace").splitlines()
+          markers = ("UND_ERR_", "TypeError:", "Error:", "failed", "exited with")
+          indices = [index for index, line in enumerate(lines) if any(marker in line for marker in markers)]
+          if indices:
+              index = indices[-1]
+              excerpt = lines[max(0, index - 12):min(len(lines), index + 32)]
+          else:
+              excerpt = lines[-40:]
+          message = " | ".join(line.strip() for line in excerpt if line.strip())[:6000]
+          if not message:
+              message = "D04 failed without a captured error message."
           message = message.replace("%", "%25").replace("\r", "%0D").replace("\n", "%0A")
           print(f"::error title=D04 execution failure::{message}")
           PY
