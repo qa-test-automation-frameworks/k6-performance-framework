@@ -1,0 +1,86 @@
+name: D04 Performance Study
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/d04-performance-study.yml'
+      - '.github/scripts/start-realworld.sh'
+      - 'config/**'
+      - 'scripts/aggregate-baseline.cjs'
+      - 'scripts/d04-latency-proxy.cjs'
+      - 'scripts/run-d04-experiment.cjs'
+      - 'scripts/verify-d04-experiment.cjs'
+      - 'scripts/workload-identity.cjs'
+      - 'src/**'
+      - 'tests/load/request-rate-load.ts'
+      - 'tests/unit/d04-experiment.test.cjs'
+      - 'esbuild.config.js'
+      - 'tsconfig.json'
+      - '.nvmrc'
+      - 'package.json'
+      - 'package-lock.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  study:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
+        with:
+          bun-version: 1.2.15
+
+      - uses: grafana/setup-k6-action@db07bd9765aac508ef18982e52ab937fe633a065 # v1
+        with:
+          k6-version: 2.0.0
+
+      - name: Install pinned npm and project dependencies
+        run: |
+          npm install --global npm@10.9.4
+          npm ci
+
+      - name: Build framework and test verifier controls
+        run: |
+          npm run build
+          npm run test:unit -- tests/unit/d04-experiment.test.cjs tests/unit/regression-tools.test.mjs
+
+      - name: Start target and run three healthy plus three controlled regression samples
+        run: |
+          source .github/scripts/start-realworld.sh
+          test "$(git -C "$RUNNER_TEMP/realworld-api" rev-parse HEAD)" = "$TARGET_COMMIT"
+          npm run run:d04
+          npm run verify:d04
+        env:
+          RUNNER_TEMP: ${{ runner.temp }}
+          TARGET_COMMIT: c8c66858a436a6e07f445fffe2253a65ff6dcb58
+          FRAMEWORK_COMMIT: ${{ github.sha }}
+          RUNNER_OS: ${{ runner.os }}
+          RUNNER_ARCH: ${{ runner.arch }}
+          D04_K6_VERSION: 2.0.0
+          D04_CONTROLLED_DELAY_MS: 125
+
+      - name: Publish study summary
+        if: always()
+        run: |
+          if [ -f reports/d04-report.md ]; then
+            cat reports/d04-report.md >> "$GITHUB_STEP_SUMMARY"
+          elif [ -f reports/d04-experiment.json ]; then
+            echo "Raw D04 runs were recorded, but verification did not complete." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        if: always()
+        with:
+          name: d04-performance-evidence
+          path: reports/d04-*
+          if-no-files-found: error
