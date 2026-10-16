@@ -56,11 +56,14 @@ jobs:
 
       - name: Start target and run three healthy plus three controlled regression samples
         run: |
-          set +e
+          set -uo pipefail
           mkdir -p reports
           : > reports/d04-execution.log
-          source .github/scripts/start-realworld.sh 2>&1 | tee -a reports/d04-execution.log
-          status=${PIPESTATUS[0]}
+          if source .github/scripts/start-realworld.sh >> reports/d04-execution.log 2>&1; then
+            status=0
+          else
+            status=$?
+          fi
           if [ "$status" -eq 0 ]; then
             actual_target="$(git -C "$RUNNER_TEMP/realworld-api" rev-parse HEAD 2>&1)"
             status=$?
@@ -70,12 +73,16 @@ jobs:
             fi
           fi
           if [ "$status" -eq 0 ]; then
+            set +e
             npm run run:d04 2>&1 | tee -a reports/d04-execution.log
             status=${PIPESTATUS[0]}
+            set -e
           fi
           if [ "$status" -eq 0 ]; then
+            set +e
             npm run verify:d04 2>&1 | tee -a reports/d04-execution.log
             status=${PIPESTATUS[0]}
+            set -e
           fi
           if [ "$status" -ne 0 ]; then
             tail -n 35 reports/d04-execution.log >> "$GITHUB_STEP_SUMMARY"
