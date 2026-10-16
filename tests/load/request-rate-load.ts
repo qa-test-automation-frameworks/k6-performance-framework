@@ -59,6 +59,9 @@ export const options: Options = {
     'checks{scenario:request_measurement}': ['rate==1'],
     'http_req_failed{scenario:request_measurement}': ['rate<0.01'],
     'http_req_duration{scenario:request_measurement}': ['p(95)<80', 'p(99)<150'],
+    // Declare route submetrics so native summaries include both endpoint distributions.
+    'http_req_duration{name:GET /articles}': ['p(95)<1000', 'p(99)<1000'],
+    'http_req_duration{name:GET /tags}': ['p(95)<1000', 'p(99)<1000'],
   },
   maxRedirects: 0,
   summaryTrendStats,
