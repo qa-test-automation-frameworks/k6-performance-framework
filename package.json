@@ -53,7 +53,9 @@
     "release:validate": "node scripts/validate-release-version.cjs",
     "hooks:install": "git config core.hooksPath .githooks",
     "load:request-rate": "npm run build && WORKLOAD_MODE=request-rate SUMMARY_NAME=request-rate k6 run dist/load/request-rate-load.js && node scripts/check-achieved-load.cjs reports/request-rate-summary.json",
-    "verify:request-rate": "node scripts/verify-request-rate.cjs"
+    "verify:request-rate": "node scripts/verify-request-rate.cjs",
+    "test:evidence": "node scripts/tests/emit-portfolio-evidence-checks.cjs",
+    "validate:evidence": "node scripts/validate-portfolio-evidence.cjs"
   },
   "devDependencies": {
     "@cyclonedx/cyclonedx-npm": "6.0.1",
@@ -66,7 +68,9 @@
     "glob": "10.5.0",
     "prettier": "3.8.3",
     "typescript": "5.9.3",
-    "vitest": "4.1.11"
+    "vitest": "4.1.11",
+    "ajv": "8.20.0",
+    "ajv-formats": "3.0.1"
   },
   "engines": {
     "node": ">=24.21.0 <25",
