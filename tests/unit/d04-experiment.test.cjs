@@ -139,6 +139,15 @@ describe('D04 controlled performance experiment verifier', () => {
     );
   });
 
+  it('reports the actual failure reasons when a degraded run fails for another reason', () => {
+    const { manifest, runs } = createStudy();
+    runs[1].summary.failures.push('Checks: 1 failed');
+    expect(() => verifyExperiment(manifest, runs)).toThrow(
+      '"failures":["Threshold: http_req_duration',
+    );
+    expect(() => verifyExperiment(manifest, runs)).toThrow('Checks: 1 failed');
+  });
+
   it('rejects a control delay outside the declared experiment setting', () => {
     const { manifest, runs } = createStudy();
     manifest.intervention.delayMs = 300;

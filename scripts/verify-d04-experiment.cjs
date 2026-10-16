@@ -226,7 +226,13 @@ function verifyExperiment(manifest, runs) {
         thresholdFailures.length !== summary.failures.length
       ) {
         throw new Error(
-          result.summary + ' must fail only on the predeclared latency threshold control',
+          result.summary +
+            ' must fail only on the predeclared latency threshold control; observed ' +
+            JSON.stringify({
+              exitCode: result.exitCode,
+              signal: result.signal,
+              failures: summary.failures,
+            }),
         );
       }
     }
