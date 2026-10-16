@@ -21,7 +21,7 @@ if (
   summary.failures.length !== 2 ||
   !summary.failures.includes('Checks: 1 failed') ||
   !summary.failures.some((failure) => failure.startsWith('Threshold: checks:')) ||
-  checks?.count !== 1 ||
+  (checks?.count !== undefined && checks.count !== 1) ||
   checks?.fails !== 1 ||
   checks?.passes !== 0
 ) {

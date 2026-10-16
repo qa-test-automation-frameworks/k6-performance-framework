@@ -19,9 +19,9 @@ const summary = {
   generatedAt: '2026-10-16T10:01:00Z',
   failures: [],
   metrics: {
-    http_req_duration: { avg: 20, count: 8, med: 19, 'p(95)': 31, rate: 0.2 },
+    http_req_duration: { avg: 20, med: 19, 'p(95)': 31, rate: 0.2 },
     http_reqs: { count: 8, rate: 4 },
-    checks: { count: 8, fails: 0, passes: 8, rate: 1 },
+    checks: { fails: 0, passes: 8, rate: 1 },
   },
   metadata: {
     environment: 'local',
@@ -45,6 +45,10 @@ test('maps passing performance measurements without inventing test case counts',
     31,
   );
   assert.equal(
+    record.execution.measurements.find((item) => item.name === 'http_req_duration.p95').sampleCount,
+    8,
+  );
+  assert.equal(
     record.execution.measurements.find((item) => item.name === 'http_reqs.rate').unit,
     'per_second',
   );
@@ -53,8 +57,8 @@ test('maps passing performance measurements without inventing test case counts',
     'ratio',
   );
   assert.equal(
-    record.execution.measurements.find((item) => item.name === 'checks.count').unit,
-    'count',
+    record.execution.measurements.find((item) => item.name === 'checks.rate').sampleCount,
+    8,
   );
   assert.deepEqual(record.execution.shards.received, ['k6.main-load']);
 });

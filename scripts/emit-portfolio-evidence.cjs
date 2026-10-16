@@ -45,23 +45,44 @@ function sanitizeMetric(metric, field) {
   return name.slice(0, 200);
 }
 
+function sampleCount(summary, metric, values) {
+  if (Number.isSafeInteger(values.count) && values.count > 0) return values.count;
+  if (
+    Number.isSafeInteger(values.passes) &&
+    values.passes >= 0 &&
+    Number.isSafeInteger(values.fails) &&
+    values.fails >= 0 &&
+    values.passes + values.fails > 0
+  )
+    return values.passes + values.fails;
+  if (/^http_req_duration(?:\{.*\})?$/.test(metric)) {
+    const requestMetric = metric.replace(/^http_req_duration/, 'http_reqs');
+    const count = summary.metrics[requestMetric]?.count;
+    if (Number.isSafeInteger(count) && count > 0) return count;
+  }
+  if (metric === 'iteration_duration') {
+    const count = summary.metrics.iterations?.count;
+    if (Number.isSafeInteger(count) && count > 0) return count;
+  }
+  return null;
+}
+
 function measurementsFrom(summary) {
   const measurements = [];
   if (!summary.metrics || typeof summary.metrics !== 'object')
     fail('summary has no metrics object');
   for (const [metric, values] of Object.entries(summary.metrics)) {
     if (!values || typeof values !== 'object') continue;
-    const sampleCount =
-      Number.isSafeInteger(values.count) && values.count > 0 ? values.count : null;
+    const count = sampleCount(summary, metric, values);
     for (const [key, field] of metricFields) {
       const value = values[key];
-      if (typeof value !== 'number' || !Number.isFinite(value) || value < 0 || sampleCount === null)
+      if (typeof value !== 'number' || !Number.isFinite(value) || value < 0 || count === null)
         continue;
       measurements.push({
         name: sanitizeMetric(metric, field),
         value,
         unit: measurementUnit(metric, key),
-        sampleCount,
+        sampleCount: count,
         semantics: `Native k6 summary metric ${metric} ${field}; sampleCount is the metric's native count.`,
       });
     }
