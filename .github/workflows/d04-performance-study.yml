@@ -56,10 +56,38 @@ jobs:
 
       - name: Start target and run three healthy plus three controlled regression samples
         run: |
-          source .github/scripts/start-realworld.sh
-          test "$(git -C "$RUNNER_TEMP/realworld-api" rev-parse HEAD)" = "$TARGET_COMMIT"
-          npm run run:d04
-          npm run verify:d04
+          set +e
+          mkdir -p reports
+          : > reports/d04-execution.log
+          source .github/scripts/start-realworld.sh 2>&1 | tee -a reports/d04-execution.log
+          status=${PIPESTATUS[0]}
+          if [ "$status" -eq 0 ]; then
+            actual_target="$(git -C "$RUNNER_TEMP/realworld-api" rev-parse HEAD 2>&1)"
+            status=$?
+            if [ "$status" -eq 0 ] && [ "$actual_target" != "$TARGET_COMMIT" ]; then
+              echo "Target checkout $actual_target differs from pinned $TARGET_COMMIT" >> reports/d04-execution.log
+              status=1
+            fi
+          fi
+          if [ "$status" -eq 0 ]; then
+            npm run run:d04 2>&1 | tee -a reports/d04-execution.log
+            status=${PIPESTATUS[0]}
+          fi
+          if [ "$status" -eq 0 ]; then
+            npm run verify:d04 2>&1 | tee -a reports/d04-execution.log
+            status=${PIPESTATUS[0]}
+          fi
+          if [ "$status" -ne 0 ]; then
+            tail -n 35 reports/d04-execution.log >> "$GITHUB_STEP_SUMMARY"
+            failure="$(tail -n 15 reports/d04-execution.log | tr '\n' ' ' | cut -c 1-1800)"
+            FAILURE_MESSAGE="$failure" python3 - <<'PY'
+          import os
+          message = os.environ.get("FAILURE_MESSAGE", "D04 failed without a captured error message.")
+          message = message.replace("%", "%25").replace("\r", "%0D").replace("\n", "%0A")
+          print(f"::error title=D04 execution failure::{message}")
+          PY
+            exit "$status"
+          fi
         env:
           RUNNER_TEMP: ${{ runner.temp }}
           TARGET_COMMIT: c8c66858a436a6e07f445fffe2253a65ff6dcb58
