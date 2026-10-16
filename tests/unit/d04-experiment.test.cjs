@@ -8,11 +8,7 @@ const {
 } = require('../../scripts/verify-d04-experiment.cjs');
 
 const TARGET_COMMIT = 'c8c66858a436a6e07f445fffe2253a65ff6dcb58';
-const METRIC_NAMES = [
-  'article_request_duration',
-  'http_req_duration',
-  'tag_request_duration',
-];
+const METRIC_NAMES = ['article_request_duration', 'http_req_duration', 'tag_request_duration'];
 
 function createStudy() {
   const manifest = {
@@ -116,9 +112,7 @@ describe('D04 controlled performance experiment verifier', () => {
     const { manifest, runs } = createStudy();
     runs[1].summary.metrics.article_request_duration['p(95)'] = 1200;
     runs[1].summary.metrics.article_request_duration['p(99)'] = 1400;
-    runs[1].summary.failures = [
-      'Threshold: http_req_duration: expected p(95)<80; actual 151',
-    ];
+    runs[1].summary.failures = ['Threshold: http_req_duration: expected p(95)<80; actual 151'];
     expect(verifyExperiment(manifest, runs).verified).toBe(true);
   });
 
