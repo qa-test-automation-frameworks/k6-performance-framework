@@ -82,7 +82,9 @@ async function waitForProxy() {
 async function setDelay(value) {
   const response = await fetch('http://127.0.0.1:' + proxyPort + '/__d04/control', {
     method: 'POST',
-    headers: { 'content-type': 'application/json' },
+    // k6 can leave the Node fetch pool idle for an entire sample; close control sockets so a
+    // subsequent condition change cannot reuse a keep-alive connection the proxy has retired.
+    headers: { 'content-type': 'application/json', connection: 'close' },
     body: JSON.stringify({ delayMs: value }),
   });
   if (!response.ok || (await response.json()).responseDelayMs !== value) {
