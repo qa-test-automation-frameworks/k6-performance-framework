@@ -2,11 +2,6 @@ name: Segmented execution validation
 
 on:
   pull_request:
-    paths:
-      - '.github/workflows/segmented-validation.yml'
-      - 'config/**'
-      - 'src/**'
-      - 'tests/load/**'
   workflow_dispatch:
 
 permissions:

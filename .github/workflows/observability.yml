@@ -2,11 +2,6 @@ name: Observability integration
 
 on:
   pull_request:
-    paths:
-      - '.github/workflows/observability.yml'
-      - 'docker/**'
-      - 'scripts/run-observed.*'
-      - 'scripts/validate-observability.cjs'
   workflow_dispatch:
 
 permissions:

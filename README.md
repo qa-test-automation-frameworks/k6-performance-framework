@@ -196,7 +196,7 @@ for what each workflow is for and why it exists as a separate gate.
 - [Cross-commit regression demonstration](docs/cross-commit-regression.md)
 - [Visual performance evidence](docs/evidence.md)
 - [Baseline provenance and review decision](docs/baseline-provenance.md)
-- [Current verification record](docs/evidence/latest-verification.md)
+- [Latest run link and retained historical verification](docs/evidence/latest-verification.md)
 - [Real-service experiment guide](docs/enterprise-experiment-guide.md)
 - [Architecture decisions](docs/adr/README.md)
 - [Capability status](docs/capability-status.md)
