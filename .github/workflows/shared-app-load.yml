@@ -1,0 +1,118 @@
+name: Shared reference app load
+
+on:
+  pull_request:
+    paths:
+      - .github/workflows/shared-app-load.yml
+      - .github/workflows/publish-portfolio-evidence.yml
+      - docker/shared-app.compose.yaml
+      - tests/shared-app/**
+      - scripts/emit-portfolio-evidence.cjs
+      - scripts/tests/emit-portfolio-evidence-checks.cjs
+      - package.json
+      - package-lock.json
+      - docs/shared-reference-app.md
+      - README.md
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  shared-app-load:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      APP_IMAGE: quality-reference-application:portfolio-a04
+      TARGET_ID: quality-reference-application
+      TARGET_COMMIT: 21af1f41561a6d83ae44933dd36d9daa5e6a6e4c
+      FIXTURE_VERSION: v0.1.0
+      APP_PORT: 4300
+      APP_NAMESPACE: k6-${{ github.run_id }}-${{ github.run_attempt }}
+      COMPOSE_PROJECT_NAME: k6-shared-${{ github.run_id }}-${{ github.run_attempt }}
+      BASE_URL: http://127.0.0.1:4300
+      REQUESTS_PER_SECOND: 20
+      MEASUREMENT_DURATION: 60s
+      MAX_VUS: 10
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
+      - name: Check out the immutable reference app source
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        with:
+          repository: qa-test-automation-frameworks/quality-reference-application
+          ref: ${{ env.TARGET_COMMIT }}
+          path: .reference-app
+          persist-credentials: false
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - uses: grafana/setup-k6-action@db07bd9765aac508ef18982e52ab937fe633a065
+        with:
+          k6-version: 2.0.0
+      - name: Capture k6 and experiment identity
+        run: |
+          k6_version=$(k6 version | sed -n '1s/^k6 v\([^ ]*\).*/\1/p')
+          test "$k6_version" = 2.0.0
+          {
+            echo "K6_VERSION=$k6_version"
+            echo "FRAMEWORK_COMMIT=${GITHUB_SHA}"
+            echo 'RUNNER_CLASS=github-hosted-ubuntu'
+            echo "EVIDENCE_STARTED_AT=$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+          } >> "$GITHUB_ENV"
+      - run: npm install --global npm@10.9.4
+      - run: npm ci
+      - name: Generate isolated test credentials
+        run: |
+          {
+            echo "POSTGRES_PASSWORD=$(openssl rand -hex 24)"
+            echo "TEST_CONTROL_TOKEN=$(openssl rand -hex 24)"
+          } >> "$GITHUB_ENV"
+      - name: Build pinned app source and start isolated instance
+        run: |
+          test "$(git -C .reference-app rev-parse HEAD)" = "$TARGET_COMMIT"
+          docker build --build-arg "APP_SOURCE_SHA=$TARGET_COMMIT" --tag "$APP_IMAGE" .reference-app
+          docker compose -f docker/shared-app.compose.yaml up -d db app
+          for attempt in $(seq 1 45); do
+            if curl --fail --silent "$BASE_URL/health/ready" > reports-ready.json; then break; fi
+            sleep 2
+          done
+          node -e 'const fs=require("node:fs"); const r=JSON.parse(fs.readFileSync("reports-ready.json")); if(r.status!=="ready"||r.sourceRevision!==process.env.TARGET_COMMIT||r.seedVersion!==process.env.FIXTURE_VERSION||r.datastore!==true) process.exit(1)'
+      - name: Run bounded mixed read/write workload
+        run: |
+          mkdir -p reports
+          npm run build
+          k6 run --summary-export reports/shared-app-k6-summary.json dist/shared-app/claims-load.js
+      - name: Emit shared-app evidence
+        if: always()
+        run: |
+          if [ -f reports/shared-app-summary.json ]; then
+            node scripts/emit-portfolio-evidence.cjs --summary reports/shared-app-summary.json --scope k6.shared-app-load
+          else
+            node scripts/emit-portfolio-evidence.cjs --unavailable-reason "shared-app k6 summary was not produced" --scope k6.shared-app-load
+          fi
+      - name: Validate shared-app evidence
+        if: always()
+        run: node scripts/validate-portfolio-evidence.cjs reports/evidence/k6.shared-app-load.json
+      - name: Add run details to summary
+        if: always()
+        run: |
+          {
+            echo '## Shared reference application load';
+            echo "Target: \`$TARGET_ID@$TARGET_COMMIT\` with fixture \`$FIXTURE_VERSION\`";
+            echo "Intended profile: \`$REQUESTS_PER_SECOND requests/s for $MEASUREMENT_DURATION\`, maximum $MAX_VUS VUs.";
+            echo 'The 70/25/5 profile performs policy reads, claim reads, and synthetic claim writes. Data is isolated in a run-specific namespace and removed with its disposable PostgreSQL volume.';
+          } >> "$GITHUB_STEP_SUMMARY"
+      - name: Stop and remove isolated target and data
+        if: always()
+        run: docker compose -f docker/shared-app.compose.yaml down --volumes --remove-orphans
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        if: always()
+        with:
+          name: k6-shared-app-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            reports/shared-app-summary.json
+            reports/shared-app-k6-summary.json
+            reports/evidence/k6.shared-app-load.json
+            reports-ready.json
+          if-no-files-found: warn

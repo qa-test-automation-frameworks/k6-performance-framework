@@ -5,6 +5,7 @@ on:
     workflows:
       - Main load
       - PR smoke
+      - Shared reference app load
     types: [completed]
     branches: [main]
 
@@ -21,4 +22,4 @@ jobs:
     uses: qa-test-automation-frameworks/.github/.github/workflows/publish-evidence.yml@20e3f020cd53a1a3cc417a379e4c65e21ce0f812
     with:
       source-run-id: ${{ github.event.workflow_run.id }}
-      workflow-file: ${{ github.event.workflow_run.name == 'Main load' && '.github/workflows/main-load.yml' || '.github/workflows/pr-smoke.yml' }}
+      workflow-file: ${{ github.event.workflow_run.name == 'Main load' && '.github/workflows/main-load.yml' || github.event.workflow_run.name == 'Shared reference app load' && '.github/workflows/shared-app-load.yml' || '.github/workflows/pr-smoke.yml' }}
