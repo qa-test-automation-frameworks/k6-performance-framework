@@ -20,6 +20,7 @@ OpenTelemetry, and six distinct workload models for the RealWorld API.
 | Live reports | [Published performance evidence](https://qa-test-automation-frameworks.github.io/k6-performance-framework/) |
 | Current release | [v0.4.0](https://github.com/qa-test-automation-frameworks/k6-performance-framework/releases/tag/v0.4.0) |
 | Primary CI | [Main load workflow](https://github.com/qa-test-automation-frameworks/k6-performance-framework/actions/workflows/main-load.yml) |
+| Shared product target | [Bounded isolated load profile](docs/shared-reference-app.md) · [Workflow](.github/workflows/shared-app-load.yml) |
 | Safety and quality | [Quality](https://github.com/qa-test-automation-frameworks/k6-performance-framework/actions/workflows/quality.yml) · [Security](https://github.com/qa-test-automation-frameworks/k6-performance-framework/actions/workflows/security.yml) |
 | Repository activity | [Default-branch commits](https://github.com/qa-test-automation-frameworks/k6-performance-framework/commits/main/) · [Pull requests](https://github.com/qa-test-automation-frameworks/k6-performance-framework/pulls?q=is%3Apr) |
 | Architecture and decisions | [Architecture](docs/architecture.md) · [ADR index](docs/adr/README.md) |

@@ -137,7 +137,7 @@ function makeRecord({
   let target = {
     identity: summary?.metadata?.targetId ?? env.TARGET_ID ?? 'unknown-target',
     revision: summary?.metadata?.targetCommit ?? env.TARGET_COMMIT ?? null,
-    fixtureVersion: null,
+    fixtureVersion: summary?.metadata?.fixtureVersion ?? env.FIXTURE_VERSION ?? null,
     environment: summary?.metadata?.environment ?? env.TARGET_ENV ?? 'unknown',
     profile: summary?.metadata?.profile ?? env.TEST_PROFILE ?? null,
     tools: {

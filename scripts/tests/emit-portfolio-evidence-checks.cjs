@@ -63,6 +63,25 @@ test('maps passing performance measurements without inventing test case counts',
   assert.deepEqual(record.execution.shards.received, ['k6.main-load']);
 });
 
+test('binds a shared-app fixture version to its target evidence', () => {
+  const record = makeRecord({
+    summary: {
+      ...summary,
+      metadata: {
+        ...summary.metadata,
+        fixtureVersion: 'v0.1.0',
+        targetId: 'quality-reference-application',
+      },
+    },
+    env: { ...env, TARGET_COMMIT: 'b'.repeat(40) },
+    scope: 'k6.shared-app-load',
+  });
+  assert.equal(record.target.identity, 'quality-reference-application');
+  assert.equal(record.target.fixtureVersion, 'v0.1.0');
+  assert.equal(record.target.revision, 'b'.repeat(40));
+  assert.deepEqual(validateRecord(record), []);
+});
+
 test('preserves failed threshold and check outcomes as failed evidence', () => {
   const record = makeRecord({
     summary: { ...summary, failures: ['Threshold: http_req_duration p(95)'] },

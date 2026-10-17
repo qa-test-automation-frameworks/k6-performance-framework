@@ -53,6 +53,7 @@
     "release:validate": "node scripts/validate-release-version.cjs",
     "hooks:install": "git config core.hooksPath .githooks",
     "load:request-rate": "npm run build && WORKLOAD_MODE=request-rate SUMMARY_NAME=request-rate k6 run dist/load/request-rate-load.js && node scripts/check-achieved-load.cjs reports/request-rate-summary.json",
+    "load:shared-app": "npm run build && k6 run --summary-export reports/shared-app-k6-summary.json dist/shared-app/claims-load.js",
     "verify:request-rate": "node scripts/verify-request-rate.cjs",
     "run:d04": "node scripts/run-d04-experiment.cjs",
     "verify:d04": "node scripts/verify-d04-experiment.cjs",
