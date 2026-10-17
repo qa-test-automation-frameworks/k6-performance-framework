@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "repository": "qa-test-automation-frameworks/k6-performance-framework",
+  "scopes": {
+    "k6.articles-load": {
+      "runId": "39023381931",
+      "attempt": 1,
+      "completedAt": "2026-10-17T10:11:13.000Z",
+      "sourceSha": "0070aee6dc0ad10334fea8c9e2b07094aa526d01",
+      "execution": "passed",
+      "workflowConclusion": "success",
+      "bundle": "repositories/qa-test-automation-frameworks/k6-performance-framework/runs/39023381931/1",
+      "manifestSha256": "0422fd30737083d9568f9252b11bcf625e489dc4b51b6bbe80612f3fd45a0ac7"
+    },
+    "k6.authenticated-journey": {
+      "runId": "39023381931",
+      "attempt": 1,
+      "completedAt": "2026-10-17T10:11:13.000Z",
+      "sourceSha": "0070aee6dc0ad10334fea8c9e2b07094aa526d01",
+      "execution": "passed",
+      "workflowConclusion": "success",
+      "bundle": "repositories/qa-test-automation-frameworks/k6-performance-framework/runs/39023381931/1",
+      "manifestSha256": "0422fd30737083d9568f9252b11bcf625e489dc4b51b6bbe80612f3fd45a0ac7"
+    }
+  }
+}
