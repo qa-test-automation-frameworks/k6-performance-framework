@@ -2,23 +2,6 @@ name: D04 Performance Study
 
 on:
   pull_request:
-    paths:
-      - '.github/workflows/d04-performance-study.yml'
-      - '.github/scripts/start-realworld.sh'
-      - 'config/**'
-      - 'scripts/aggregate-baseline.cjs'
-      - 'scripts/d04-latency-proxy.cjs'
-      - 'scripts/run-d04-experiment.cjs'
-      - 'scripts/verify-d04-experiment.cjs'
-      - 'scripts/workload-identity.cjs'
-      - 'src/**'
-      - 'tests/load/request-rate-load.ts'
-      - 'tests/unit/d04-experiment.test.cjs'
-      - 'esbuild.config.js'
-      - 'tsconfig.json'
-      - '.nvmrc'
-      - 'package.json'
-      - 'package-lock.json'
   workflow_dispatch:
 
 permissions:
