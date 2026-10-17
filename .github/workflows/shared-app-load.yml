@@ -1,6 +1,18 @@
 name: Shared reference app load
 
 on:
+  pull_request:
+    paths:
+      - .github/workflows/shared-app-load.yml
+      - .github/workflows/publish-portfolio-evidence.yml
+      - docker/shared-app.compose.yaml
+      - tests/shared-app/**
+      - scripts/emit-portfolio-evidence.cjs
+      - scripts/tests/emit-portfolio-evidence-checks.cjs
+      - package.json
+      - package-lock.json
+      - docs/shared-reference-app.md
+      - README.md
   workflow_dispatch:
 
 permissions:
