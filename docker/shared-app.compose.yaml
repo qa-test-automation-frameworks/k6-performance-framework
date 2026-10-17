@@ -16,7 +16,7 @@ services:
     mem_limit: 512m
 
   app:
-    image: ${APP_IMAGE:?Set an immutable GHCR image digest}
+    image: ${APP_IMAGE:?Set the image built from the pinned app source}
     environment:
       NODE_ENV: production
       PORT: 4300

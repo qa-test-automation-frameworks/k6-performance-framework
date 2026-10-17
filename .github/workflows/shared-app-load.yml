@@ -23,9 +23,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
-      APP_IMAGE: ghcr.io/qa-test-automation-frameworks/quality-reference-application@sha256:284ae3fa4f2a31a4322b74a6f37e38f0d101879389c656bf1d553df7ec616469
+      APP_IMAGE: quality-reference-application:portfolio-a04
       TARGET_ID: quality-reference-application
-      TARGET_COMMIT: e9f438e06a2b092dccfc6e9ab1820ff2562ddad7
+      TARGET_COMMIT: 21af1f41561a6d83ae44933dd36d9daa5e6a6e4c
       FIXTURE_VERSION: v0.1.0
       APP_PORT: 4300
       APP_NAMESPACE: k6-${{ github.run_id }}-${{ github.run_attempt }}
@@ -36,6 +36,13 @@ jobs:
       MAX_VUS: 10
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
+      - name: Check out the immutable reference app source
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        with:
+          repository: qa-test-automation-frameworks/quality-reference-application
+          ref: ${{ env.TARGET_COMMIT }}
+          path: .reference-app
+          persist-credentials: false
       - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
         with:
           node-version-file: .nvmrc
@@ -61,10 +68,10 @@ jobs:
             echo "POSTGRES_PASSWORD=$(openssl rand -hex 24)"
             echo "TEST_CONTROL_TOKEN=$(openssl rand -hex 24)"
           } >> "$GITHUB_ENV"
-      - name: Verify immutable app target and start isolated instance
+      - name: Build pinned app source and start isolated instance
         run: |
-          docker pull "$APP_IMAGE"
-          docker image inspect "$APP_IMAGE" --format '{{json .RepoDigests}}' | grep -F "sha256:284ae3fa4f2a31a4322b74a6f37e38f0d101879389c656bf1d553df7ec616469"
+          test "$(git -C .reference-app rev-parse HEAD)" = "$TARGET_COMMIT"
+          docker build --build-arg "APP_SOURCE_SHA=$TARGET_COMMIT" --tag "$APP_IMAGE" .reference-app
           docker compose -f docker/shared-app.compose.yaml up -d db app
           for attempt in $(seq 1 45); do
             if curl --fail --silent "$BASE_URL/health/ready" > reports-ready.json; then break; fi
