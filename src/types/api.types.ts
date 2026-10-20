@@ -118,12 +118,7 @@ export type EmptyResponse = Record<string, never>;
 
 export type HttpMethod = 'GET' | 'HEAD' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 export type BusinessMetricGroup =
-  | 'authentication'
-  | 'article-read'
-  | 'article-write'
-  | 'comment'
-  | 'profile'
-  | 'tag';
+  'authentication' | 'article-read' | 'article-write' | 'comment' | 'profile' | 'tag';
 
 export interface HttpRequestOptions {
   metricGroup?: BusinessMetricGroup;
