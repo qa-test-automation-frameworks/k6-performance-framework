@@ -34,11 +34,6 @@ export interface WorkloadStage {
 }
 
 export type StagedWorkload =
-  | 'authenticatedLoad'
-  | 'authenticatedStress'
-  | 'stress'
-  | 'spike'
-  | 'soak'
-  | 'breakpoint';
+  'authenticatedLoad' | 'authenticatedStress' | 'stress' | 'spike' | 'soak' | 'breakpoint';
 
 export type WorkloadScenario = ScenarioOptions;
