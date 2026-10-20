@@ -1,0 +1,9 @@
+
+> k6-performance-framework@0.4.0 verify:request-rate
+> node scripts/verify-request-rate.cjs
+
+healthy: expected outcome verified; native exit 0, independently observed 5001 measurement requests
+boundary-delayed: expected outcome verified; native exit 0, independently observed 301 measurement requests
+under-driven: expected outcome verified; native exit 99, independently observed 11 measurement requests
+http-error: expected outcome verified; native exit 99, independently observed 61 measurement requests
+request-timeout: expected outcome verified; native exit 99, independently observed 16 measurement requests

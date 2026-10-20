@@ -9,9 +9,9 @@ export interface EnvConfig {
   timeouts: {
     http: number;
   };
-  rps: {
-    target: number;
-    max: number;
+  arrival: {
+    iterationsPerSecond: number;
+    maxVus: number;
   };
   tags: Record<string, string>;
   allowsWrites: boolean;
@@ -23,7 +23,7 @@ export const summaryTrendStats = ['avg', 'min', 'med', 'max', 'p(90)', 'p(95)', 
 
 export interface WorkloadProfile {
   validation: boolean;
-  targetRps: number;
+  targetIterationsPerSecond: number;
   maxVus: number;
   thinkTimeSeconds: number;
 }

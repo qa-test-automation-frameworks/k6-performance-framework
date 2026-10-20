@@ -1,0 +1,31 @@
+{
+  "runId": 37199685506,
+  "artifactId": 11302272514,
+  "sourceHead": "b2083bd6cc8864b9bf606d2512f688334d5ccf77",
+  "files": [
+    {
+      "path": "artifacts.json",
+      "sha256": "c426c5d890727404b8a150a5d1408ec3a0ea6e7d83153f19029a3653902a70b9"
+    },
+    {
+      "path": "history-candidates.txt",
+      "sha256": "e58a7cd4cda059621a1eebf2d55915d4ac81797a395508e8ce226ab59bfbc802"
+    },
+    {
+      "path": "history-selection.json",
+      "sha256": "22817a7751b6717cf58f5d17e5622915579f725764d02f864db2e10afdb15b5f"
+    },
+    {
+      "path": "jobs.json",
+      "sha256": "cb886014827e6050d22d22cb46aaf57e61c237a2427727ad9ff67a1920fc2a40"
+    },
+    {
+      "path": "run.json",
+      "sha256": "a82ba67ef841d950be98e5c0fe851dae99b7f2134f2bf08ea8722477144147a5"
+    },
+    {
+      "path": "spike-summary.json",
+      "sha256": "38c7935abf06241bf475d1b66aec032a690ce106c6b8c307e8d7361d0cc57c1e"
+    }
+  ]
+}

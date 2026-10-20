@@ -31,7 +31,7 @@ must become `evidence-unavailable` rather than silently reusing this snapshot.
 | --- | ---: |
 | Profile | `full` |
 | Workload | `load` |
-| Target RPS | `20` |
+| Target arrival iterations/s (historical `targetRps`) | `20` |
 | Max VUs | `100` |
 | Iterations | `9,599` |
 | Iteration rate | `19.96/s` |

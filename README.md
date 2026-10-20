@@ -20,10 +20,12 @@ OpenTelemetry, and six distinct workload models for the RealWorld API.
 | Live reports | [Published performance evidence](https://qa-test-automation-frameworks.github.io/k6-performance-framework/) |
 | Current release | [v0.4.0](https://github.com/qa-test-automation-frameworks/k6-performance-framework/releases/tag/v0.4.0) |
 | Primary CI | [Main load workflow](https://github.com/qa-test-automation-frameworks/k6-performance-framework/actions/workflows/main-load.yml) |
+| Shared product target | [Bounded isolated load profile](docs/shared-reference-app.md) · [Workflow](.github/workflows/shared-app-load.yml) |
 | Safety and quality | [Quality](https://github.com/qa-test-automation-frameworks/k6-performance-framework/actions/workflows/quality.yml) · [Security](https://github.com/qa-test-automation-frameworks/k6-performance-framework/actions/workflows/security.yml) |
 | Repository activity | [Default-branch commits](https://github.com/qa-test-automation-frameworks/k6-performance-framework/commits/main/) · [Pull requests](https://github.com/qa-test-automation-frameworks/k6-performance-framework/pulls?q=is%3Apr) |
 | Architecture and decisions | [Architecture](docs/architecture.md) · [ADR index](docs/adr/README.md) |
 | Failure evidence | [Threshold failure example](docs/images/threshold-failure-example.svg) · [Interpretation guide](docs/results-interpretation.md) |
+| Controlled latency study | [D04 experiment protocol and artifact workflow](docs/verification/2026-10-16-d04-performance-study.md) · [D04 CI runs](https://github.com/qa-test-automation-frameworks/k6-performance-framework/actions/workflows/d04-performance-study.yml) |
 | Reviewed baseline report | [Human-openable load report](docs/reports/reviewed-load-report.md) |
 
 ![Performance framework evidence overview](docs/images/performance-overview-example.svg)
@@ -84,9 +86,18 @@ Use `npm run breakpoint:search` to run a binary-search capacity probe. Its JSON 
 These objectives are controlled-target guardrails for a local RealWorld backend
 running on a GitHub-hosted Ubuntu runner. They are not production service SLOs
 and should not be compared to internet-facing latency targets. The reviewed
-baseline currently represents a 20 RPS full load profile with 100 max VUs; see
+baseline represents a 20-arrival-iterations/s journey profile with 100 max VUs; each
+iteration can make multiple HTTP requests. Historical `targetRps` fields contain
+iteration rates, not fixed request throughput. See
 the [human-openable load report](docs/reports/reviewed-load-report.md) for the
 source workflow, target commit, framework commit, and measured percentiles.
+
+Use `TARGET_ITERATIONS_PER_SECOND` to configure the existing journey. `TARGET_RPS`
+now fails with a migration message rather than silently changing units. For a
+separate one-request-per-arrival experiment, run `npm run load:500rps` against your
+owned local target; its report separates warm-up from achieved measurement load.
+See [workload units and verification](docs/workload-units.md). Neither a configured
+rate nor a passing counting fixture proves application capacity.
 
 | Endpoint group |       p95 |       p99 | Error rate |
 | -------------- | --------: | --------: | ---------: |
@@ -103,7 +114,7 @@ The hosted read-only smoke test uses wider network-facing guardrails defined sep
 
 ## Quick Start
 
-Prerequisites: Node.js 20+, npm 10.9.4, k6 2.0+, Docker Desktop, and Docker Compose.
+Prerequisites: Node.js 24.21.0 (see `.nvmrc`), npm 10.9.4, k6 2.0+, Docker Desktop, and Docker Compose.
 
 ```bash
 npx --yes npm@10.9.4 ci
@@ -186,7 +197,7 @@ for what each workflow is for and why it exists as a separate gate.
 - [Cross-commit regression demonstration](docs/cross-commit-regression.md)
 - [Visual performance evidence](docs/evidence.md)
 - [Baseline provenance and review decision](docs/baseline-provenance.md)
-- [Current verification record](docs/evidence/latest-verification.md)
+- [Latest run link and retained historical verification](docs/evidence/latest-verification.md)
 - [Real-service experiment guide](docs/enterprise-experiment-guide.md)
 - [Architecture decisions](docs/adr/README.md)
 - [Capability status](docs/capability-status.md)

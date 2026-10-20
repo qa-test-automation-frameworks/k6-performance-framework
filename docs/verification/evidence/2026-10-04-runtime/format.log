@@ -1,0 +1,6 @@
+
+> k6-performance-framework@0.4.0 format:check
+> prettier --check src tests config scripts .github package.json
+
+Checking formatting...
+All matched files use Prettier code style!

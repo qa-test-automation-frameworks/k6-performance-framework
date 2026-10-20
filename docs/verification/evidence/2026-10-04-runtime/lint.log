@@ -1,0 +1,4 @@
+
+> k6-performance-framework@0.4.0 lint
+> eslint src tests config --ext .ts
+

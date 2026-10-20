@@ -1,0 +1,8 @@
+{
+  "schema": "k6-history-selection-v1",
+  "disposition": "available",
+  "selectedRunId": "37189417711",
+  "previousFile": "reports/history/soak-summary.json",
+  "currentRunId": "0",
+  "candidateFile": "/tmp/portfolio-tools/k6-original-soak-inputs/candidate.json"
+}

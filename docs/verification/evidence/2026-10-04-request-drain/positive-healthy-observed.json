@@ -1,0 +1,39 @@
+{
+  "runtime": "k6 v2.0.0 (commit/8c3be52cc1, go1.26.3, linux/amd64)",
+  "sourceFilesSha256": {
+    "scripts/verify-request-rate.cjs": "671ddf6d0f9d4c2a6ddf6964273f52a2079e60c17ce43744c5cd98660c95faac",
+    "tests/load/request-rate-load.ts": "f036bc4fc7e1a360532fa4dfdf62c97bbd6489edad15d4db3f3b835fd1ac2ffa",
+    "config/workloads.ts": "ed8b828e319e260612041352882b653412a0895ce09278b67e23a5644854a825",
+    "src/helpers/achieved-load.ts": "49270fcdf4c6cbf9f905a98e50573ef0683a15719dccc8326acbf040c3419658",
+    "src/helpers/summary.ts": "ada3177a8c742a51c3836f856e47cef2510e343dcbf073aafa8a9e789116ea42"
+  },
+  "entryPoint": "dist/load/request-rate-load.js",
+  "entryPointSha256": "cd271e9787746663d1ddc7207bb4dae856775f7c30296e77ecc5d8d928b1e169",
+  "mode": "healthy",
+  "nativeExit": 0,
+  "signal": null,
+  "observed": {
+    "warmup": 501,
+    "measurement": 5001,
+    "other": 0,
+    "articles": 4001,
+    "tags": 1000
+  },
+  "achievedLoad": {
+    "valid": true,
+    "reasons": [],
+    "configuredRequestsPerSecond": 500,
+    "measurementSeconds": 10,
+    "minimumAchievedFraction": 0.98,
+    "completedIterations": 5001,
+    "startedRequests": 5001,
+    "requests": 5001,
+    "droppedIterations": 0,
+    "achievedIterationsPerSecond": 500.1,
+    "achievedRequestsPerSecond": 500.1
+  },
+  "failures": [],
+  "nominalMeasurementRequests": 5000,
+  "maximumMeasurementRequests": 5001,
+  "limitation": "Executor/count validation fixture; colocated generator and target; not application capacity evidence."
+}

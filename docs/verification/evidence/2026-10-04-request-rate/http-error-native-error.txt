@@ -1,0 +1,1 @@
+time="2026-10-04T11:27:45+05:30" level=error msg="thresholds on metrics 'checks{scenario:request_measurement}, http_req_failed{scenario:request_measurement}' have been crossed"

@@ -1,0 +1,5 @@
+2026-10-04T12:06:01.1118815Z   node-version-file: .nvmrc
+2026-10-04T12:06:18.5217883Z node: v24.21.0
+2026-10-04T12:06:19.8231268Z ##[group]Run npm install --global npm@10.9.4
+2026-10-04T12:06:19.8231536Z [36;1mnpm install --global npm@10.9.4[0m
+2026-10-04T12:06:55.3044804Z All matched files use Prettier code style!

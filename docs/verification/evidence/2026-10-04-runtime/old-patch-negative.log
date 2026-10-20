@@ -1,0 +1,1 @@
+This repository requires Node.js 24.21.0 or a newer patch/minor in the same major; detected 24.19.0. Install the version in .nvmrc before running npx --yes npm@10.9.4 ci.
