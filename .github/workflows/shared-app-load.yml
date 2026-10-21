@@ -43,11 +43,11 @@ jobs:
           ref: ${{ env.TARGET_COMMIT }}
           path: .reference-app
           persist-credentials: false
-      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version-file: .nvmrc
           cache: npm
-      - uses: grafana/setup-k6-action@70839b2df2ef373adf890a6ce75653774378bffc # v1.2.0
+      - uses: grafana/setup-k6-action@43b9fc21641a76002687994433dd586f56e791b1 # v1.2.2
         with:
           k6-version: 2.0.0
       - name: Capture k6 and experiment identity
