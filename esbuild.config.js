@@ -1,8 +1,8 @@
 const esbuild = require('esbuild');
-const glob = require('glob');
+const { globSync } = require('glob');
 const fs = require('node:fs');
 
-const entryPoints = glob.sync('tests/**/*.ts', {
+const entryPoints = globSync('tests/**/*.ts', {
   ignore: ['tests/unit/**', 'tests/**/*.test.ts', 'tests/**/*.spec.ts'],
 });
 
