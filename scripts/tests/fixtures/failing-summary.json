@@ -1,0 +1,6 @@
+{
+  "metrics": { "http_req_duration": { "p(95)": 123, "p(99)": 456 } },
+  "failures": ["Threshold failure: synthetic audit control"],
+  "achievedLoad": { "valid": false },
+  "metadata": { "targetId": "synthetic-audit-control", "profile": "validation" }
+}
