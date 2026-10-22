@@ -30,7 +30,11 @@ jobs:
         run: |
           source .github/scripts/start-realworld.sh
           for run_number in 1 2 3; do
-            SUMMARY_NAME="baseline-${run_number}" k6 run dist/load/articles-load.js
+            SUMMARY_NAME="baseline-${run_number}" \
+              K6_RUN_ID="${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}-${run_number}" \
+              WORKLOAD_NAME=load \
+              RUNNER_IMAGE="${ImageOS}-${ImageVersion}" \
+              k6 run dist/load/articles-load.js
           done
           TARGET_COMMIT=c8c66858a436a6e07f445fffe2253a65ff6dcb58 \
             FRAMEWORK_COMMIT="$GITHUB_SHA" \
