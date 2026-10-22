@@ -95,6 +95,11 @@ jobs:
             cat "$state_dir/stop-reason.txt"
             exit 1
           fi
+          if ! kill -0 "$monitor_pid" 2>/dev/null; then
+            cat reports/perf04/monitor.log
+            echo "PERF-04 resource monitor exited before the load started" >&2
+            exit 1
+          fi
           cpu_limit="$(node -e 'const fs=require("node:fs");const d=JSON.parse(fs.readFileSync(process.argv[1],"utf8"));if(Number.isFinite(d.cpuLimitCores))process.stdout.write(String(d.cpuLimitCores))' "$PERF04_RESOURCE_JSON")"
           memory_limit="$(node -e 'const fs=require("node:fs");const d=JSON.parse(fs.readFileSync(process.argv[1],"utf8"));if(Number.isSafeInteger(d.memoryLimitBytes))process.stdout.write(String(d.memoryLimitBytes))' "$PERF04_RESOURCE_JSON")"
           if [ -n "$cpu_limit" ]; then export CPU_LIMIT_CORES="$cpu_limit"; else unset CPU_LIMIT_CORES; fi
@@ -108,6 +113,14 @@ jobs:
           k6 run dist/load/articles-load.js >reports/perf04/full-profile-k6.log 2>&1 &
           load_pid=$!
           printf '%s\n' "$load_pid" >"$state_dir/load.pid"
+          while kill -0 "$load_pid" 2>/dev/null; do
+            if ! kill -0 "$monitor_pid" 2>/dev/null && [ ! -s "$state_dir/stop-reason.txt" ]; then
+              echo "PERF-04 resource monitor exited during the load" >"$state_dir/stop-reason.txt"
+              kill -INT "$load_pid" 2>/dev/null || true
+              break
+            fi
+            sleep 1
+          done
           set +e
           wait "$load_pid"
           load_status=$?
