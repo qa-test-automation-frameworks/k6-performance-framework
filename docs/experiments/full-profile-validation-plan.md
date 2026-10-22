@@ -1,6 +1,6 @@
 # Full-profile validation plan
 
-**Status:** prospective protocol; no samples were collected for this plan.
+**Status:** protocol executed with three healthy samples. See the [results and disposition](full-profile-validation-2026-10-22.md).
 
 ## Purpose and scope
 
