@@ -7,6 +7,7 @@ module.exports = defineConfig({
       ...configDefaults.exclude,
       '**/scripts/tests/report-disposition.test.cjs',
       '**/scripts/tests/baseline-provenance.test.cjs',
+      '**/scripts/tests/aggregate-baseline.test.cjs',
     ],
     environment: 'node',
     globals: true,
