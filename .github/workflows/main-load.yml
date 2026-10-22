@@ -77,7 +77,6 @@ jobs:
           }
           trap finish_monitor EXIT
 
-          echo "EVIDENCE_STARTED_AT_LOAD=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> "$GITHUB_ENV"
           source .github/scripts/start-realworld.sh
           actual_target="$(git -C "$RUNNER_TEMP/realworld-api" rev-parse HEAD)"
           test "$actual_target" = "$TARGET_COMMIT"
@@ -103,7 +102,9 @@ jobs:
           export RUNNER_IMAGE="${ImageOS:-unknown}-${ImageVersion:-unknown}"
           export K6_RUN_ID="${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}-full-profile"
           export WORKLOAD_NAME=load
-          echo "$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >"$state_dir/load-started-at.txt"
+          load_started_at="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+          echo "EVIDENCE_STARTED_AT_LOAD=$load_started_at" >>"$GITHUB_ENV"
+          echo "$load_started_at" >"$state_dir/load-started-at.txt"
           k6 run dist/load/articles-load.js >reports/perf04/full-profile-k6.log 2>&1 &
           load_pid=$!
           printf '%s\n' "$load_pid" >"$state_dir/load.pid"
