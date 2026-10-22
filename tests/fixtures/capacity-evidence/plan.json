@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "experiment_id": "fixture-target-cpu-pressure",
+  "source_kind": "fixture-only",
+  "sample_interval_seconds": 2,
+  "minimum_samples_per_condition": 3,
+  "baseline_condition": "baseline",
+  "challenger_condition": "cpu-limited",
+  "sole_intervention": {
+    "path": "controlled.target.cpu_limit_cores",
+    "baseline_value": 2,
+    "challenger_value": 1.5
+  },
+  "slo_thresholds": {
+    "p95_latency_ms": 200,
+    "error_rate_percent": 1
+  },
+  "resource_file": "resources.jsonl",
+  "sample_files": [
+    {
+      "path": "baseline-01.json",
+      "condition": "baseline"
+    },
+    {
+      "path": "baseline-02.json",
+      "condition": "baseline"
+    },
+    {
+      "path": "baseline-03.json",
+      "condition": "baseline"
+    },
+    {
+      "path": "cpu-limited-01.json",
+      "condition": "cpu-limited"
+    },
+    {
+      "path": "cpu-limited-02.json",
+      "condition": "cpu-limited"
+    },
+    {
+      "path": "cpu-limited-03.json",
+      "condition": "cpu-limited"
+    }
+  ]
+}
