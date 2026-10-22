@@ -66,3 +66,34 @@ must become `evidence-unavailable` rather than silently reusing this snapshot.
 These numbers describe a controlled local API path and are used to detect
 regressions against the reviewed baseline. They are not production service
 objectives, capacity claims, or internet-facing latency guarantees.
+
+## Generated Report Statuses
+
+The generated report site publishes `site/report-manifest.json` alongside its
+HTML page. Each row uses the same disposition object in both artifacts. The
+manifest records the source filename and SHA-256 so reviewers can identify the
+exact summary that was classified.
+
+| Status | Meaning |
+| --- | --- |
+| `PASS` | At least one native threshold was reported and passed, the producer explicitly emitted an empty `failures` array, the summary is structurally valid, and required achieved-load evidence is valid. |
+| `FAIL` | A native threshold failed or the producer emitted a nonempty failure string. |
+| `INVALID_LOAD` | The summary is structurally valid but its achieved-load evidence explicitly says the load experiment is invalid. |
+| `INCOMPLETE` | Required evidence is absent, including empty native threshold maps, a missing `failures` array or workload schema, or missing achieved-load evidence for a request-rate workload. |
+| `INVALID_INPUT` | The summary or a displayed metric is malformed, including non-boolean native threshold results and invalid JSON. |
+
+`thresholdStatus` is `PASS`, `FAIL`, `INCOMPLETE`, or `INVALID_INPUT` and
+describes the native threshold records only. `loadStatus` is `VALID`, `INVALID`,
+`MISSING`, `NOT_APPLICABLE`, or `INVALID_INPUT`. A journey workload with an
+explicit `achievedLoad: null` is `NOT_APPLICABLE`; request-rate workload schemas
+`single-request-arrival-v1` and `single-request-arrival-v2` require a valid
+achieved-load object. An older aggregate such as `baseline/load-summary.json`
+does not contain per-run native thresholds, so it is visibly marked as a
+historical aggregate and cannot receive `PASS` from this classifier. Its source
+provenance is reviewed separately in [`baseline-provenance.md`](../baseline-provenance.md).
+
+The report builder isolates parsing per file: invalid JSON appears as an
+`INVALID_INPUT` row with a diagnostic, while other summaries remain available.
+Summary text is escaped before it is placed in HTML. Displayed values are for
+review only; the classifier trusts the summary's native threshold `ok` values
+and does not recompute thresholds from rounded display metrics.
