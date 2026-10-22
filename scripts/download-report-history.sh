@@ -7,8 +7,8 @@ trap 'rm -rf "$temp_dir"' EXIT
 
 artifact_endpoint="repos/${GITHUB_REPOSITORY}/actions/artifacts?per_page=100"
 artifact_list="${temp_dir}/artifacts.tsv"
-gh api --paginate --slurp \
-  --jq '.[] | .artifacts[] | select(.name == "load-results" and .expired == false) | [.id, .workflow_run.id] | @tsv' \
+gh api --paginate \
+  --jq '.artifacts[] | select(.name == "load-results" and .expired == false) | [.id, .workflow_run.id] | @tsv' \
   "$artifact_endpoint" >"$artifact_list"
 
 imported=0
