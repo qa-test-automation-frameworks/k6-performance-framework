@@ -163,4 +163,5 @@ test('keeps the main load to one full-profile run and propagates comparator fail
   assert.match(workflow, /set -o pipefail\s+test -f baseline\/load-summary\.json/);
   assert.match(workflow, /sample_order:/);
   assert.match(workflow, /PERF04_SAMPLE_ORDER/);
+  assert.match(workflow, /resource monitor exited during the load/);
 });
