@@ -137,6 +137,7 @@ async function run() {
       WARMUP_SECONDS: '5',
       MEASUREMENT_SECONDS: '15',
       MINIMUM_ACHIEVED_FRACTION: '0.98',
+      WORKLOAD_NAME: 'd04-15rps-15s',
     };
     currentStage = 'running k6 ' + condition + ' sample ' + repetition;
     const result = spawnCaptured(k6Binary, ['run', '--quiet', 'dist/load/request-rate-load.js'], {
@@ -205,6 +206,7 @@ async function run() {
     path.join(reportDirectory, 'd04-experiment.json'),
     JSON.stringify(manifest, null, 2) + '\n',
   );
+  currentStage = 'aggregating healthy D04 samples';
   const aggregate = spawnCaptured(
     process.execPath,
     [

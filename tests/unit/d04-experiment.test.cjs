@@ -65,6 +65,7 @@ function createStudy() {
         k6Version: '2.0.0',
         runnerClass: 'Linux-X64',
         frameworkCommit: 'framework-sha',
+        workloadName: 'd04-15rps-15s',
         workloadSchema: 'single-request-arrival-v2',
         targetIterationsPerSecond: 15,
         targetRequestsPerSecond: 15,
