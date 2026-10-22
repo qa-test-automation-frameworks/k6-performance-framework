@@ -82,7 +82,7 @@ test('CLI writes a descriptive report for six retained fixture summaries', () =>
     assert.match(report, /fixture-target-6f5d1a2/u);
     assert.match(report, /memory unknown bytes/u);
     assert.match(report, /No causal conclusion is made/u);
-    assert.match(markdownReport(output), /Resource utilization is an observed association/u);
+    assert.match(markdownReport(output), /Target pressure is observed association, not proof/u);
   });
 });
 
