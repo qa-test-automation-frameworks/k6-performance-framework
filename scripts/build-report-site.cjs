@@ -4,6 +4,7 @@ const crypto = require('node:crypto');
 const fs = require('node:fs');
 const path = require('node:path');
 const { classifySummary } = require('./report-disposition.cjs');
+const { classifyBaselineProvenance } = require('./baseline-provenance.cjs');
 
 const output = 'site';
 fs.mkdirSync(output, { recursive: true });
@@ -48,33 +49,19 @@ const displayLoadStatus = (status) =>
     INVALID_INPUT: 'INVALID INPUT',
   })[status] ?? 'INVALID INPUT';
 const showMetric = (value, digits = 2) => (value === null ? 'unavailable' : value.toFixed(digits));
+const baselineProvenance = classifyBaselineProvenance(process.cwd(), {
+  sourceRef: process.env.GITHUB_SHA,
+});
 
 const candidates = fs.existsSync('reports')
   ? fs
       .readdirSync('reports')
       .filter((name) => name.endsWith('-summary.json'))
       .sort()
-      .map((name) => ({ name, sourcePath: path.join('reports', name), kind: 'run' }))
+      .map((name) => ({ name, sourcePath: path.join('reports', name) }))
   : [];
-if (fs.existsSync('baseline/load-summary.json')) {
-  let includeAggregate = true;
-  try {
-    const baseline = JSON.parse(fs.readFileSync('baseline/load-summary.json', 'utf8'));
-    includeAggregate =
-      baseline.metadata?.status === 'measured' && baseline.metadata?.sampleCount >= 3;
-  } catch {
-    // Keep an unreadable baseline visible as an invalid row instead of hiding the failure.
-  }
-  if (includeAggregate) {
-    candidates.push({
-      name: 'load-summary.json',
-      sourcePath: path.join('baseline', 'load-summary.json'),
-      kind: 'legacy-aggregate',
-    });
-  }
-}
 
-const reportData = candidates.map(({ name, sourcePath, kind }) => {
+const reportData = candidates.map(({ name, sourcePath }) => {
   let raw = '';
   let data;
   let parseError;
@@ -113,7 +100,6 @@ const reportData = candidates.map(({ name, sourcePath, kind }) => {
   return {
     name,
     sourcePath,
-    kind,
     sourceSha256: crypto.createHash('sha256').update(raw).digest('hex'),
     targetId: metadata && typeof metadata.targetId === 'string' ? metadata.targetId : 'unknown',
     profile: profile ?? 'unknown',
@@ -129,10 +115,10 @@ const reportData = candidates.map(({ name, sourcePath, kind }) => {
 const manifest = {
   schemaVersion: 1,
   generatedAt: new Date().toISOString(),
+  baseline: baselineProvenance,
   reports: reportData.map((report) => ({
     name: report.name,
     sourcePath: report.sourcePath,
-    kind: report.kind,
     sourceSha256: report.sourceSha256,
     disposition: report.disposition,
   })),
@@ -158,17 +144,32 @@ const rows = reportData
       throughput,
       droppedIterations,
       disposition,
-      kind,
     }) =>
-      `<tr><td>${escapeHtml(name)}${kind === 'legacy-aggregate' ? ' <small>(historical aggregate)</small>' : ''}</td><td>${escapeHtml(targetId)}</td><td>${escapeHtml(profile)}</td><td>${showMetric(p95)}</td><td>${showMetric(p99)}</td><td>${showMetric(errorRate, 4)}</td><td>${showMetric(throughput)}</td><td>${droppedIterations === null ? 'unavailable' : String(droppedIterations)}</td><td class="status status-${escapeHtml(disposition.status.toLowerCase())}">${escapeHtml(displayStatus(disposition.status))}</td><td>${escapeHtml(disposition.thresholdStatus)}</td><td>${escapeHtml(displayLoadStatus(disposition.loadStatus))}</td><td>${reasonCell(disposition.reasons)}</td></tr>`,
+      `<tr><td>${escapeHtml(name)}</td><td>${escapeHtml(targetId)}</td><td>${escapeHtml(profile)}</td><td>${showMetric(p95)}</td><td>${showMetric(p99)}</td><td>${showMetric(errorRate, 4)}</td><td>${showMetric(throughput)}</td><td>${droppedIterations === null ? 'unavailable' : String(droppedIterations)}</td><td class="status status-${escapeHtml(disposition.status.toLowerCase())}">${escapeHtml(displayStatus(disposition.status))}</td><td>${escapeHtml(disposition.thresholdStatus)}</td><td>${escapeHtml(displayLoadStatus(disposition.loadStatus))}</td><td>${reasonCell(disposition.reasons)}</td></tr>`,
   )
   .join('');
 const evidence =
   rows || '<tr><td colspan="12">No measured performance runs are published yet.</td></tr>';
+const baselineDate = baselineProvenance.generatedAt?.slice(0, 10) ?? 'unavailable';
+const baselineStatusClass =
+  baselineProvenance.status === 'PROVENANCE_INVALID' ? 'invalid_input' : 'incomplete';
+const baselineLimitations =
+  baselineProvenance.limitations.length > 0
+    ? `<ul>${baselineProvenance.limitations.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul>`
+    : '<p>No additional limitations were recorded.</p>';
+const baselineReasons =
+  baselineProvenance.reasons.length > 0
+    ? `<ul>${baselineProvenance.reasons.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul>`
+    : '';
+const baselineExplanation = baselineProvenance.explanationHref
+  ? `<a href="${escapeHtml(baselineProvenance.explanationHref)}" rel="noreferrer">Read the baseline provenance explanation</a>`
+  : '<span>Baseline provenance explanation is unavailable.</span>';
 const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>k6 Performance Reports</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
-<style>body{font:16px system-ui;max-width:1400px;margin:40px auto;padding:0 20px;color:#18212f}.chart{height:360px;margin:24px 0 36px;max-width:1000px}table{border-collapse:collapse;width:100%}th,td{padding:10px;border:1px solid #ccd3dc;text-align:left;vertical-align:top}th{background:#eef2f6}.status{font-weight:700}.status-pass{color:#166534}.status-fail,.status-invalid_load,.status-invalid_input{color:#991b1b}.status-incomplete{color:#854d0e}td ul{margin:0;padding-left:20px}</style></head>
+<style>body{font:16px system-ui;max-width:1400px;margin:40px auto;padding:0 20px;color:#18212f}.chart{height:360px;margin:24px 0 36px;max-width:1000px}table{border-collapse:collapse;width:100%}th,td{padding:10px;border:1px solid #ccd3dc;text-align:left;vertical-align:top}th{background:#eef2f6}.status{font-weight:700}.status-pass{color:#166534}.status-fail,.status-invalid_load,.status-invalid_input{color:#991b1b}.status-incomplete{color:#854d0e}td ul{margin:0;padding-left:20px}.baseline{border:1px solid #ccd3dc;padding:16px;margin:24px 0}.baseline dd{margin:0 0 8px;overflow-wrap:anywhere}</style></head>
 <body><h1>k6 Performance Reports</h1><p>Generated ${escapeHtml(manifest.generatedAt)}. Each status is based on native summary evidence; see <a href="report-manifest.json">the machine-readable report manifest</a>.</p>
+<section class="baseline" aria-labelledby="historical-baseline-title"><h2 id="historical-baseline-title">Historical performance baseline</h2><p class="status status-${baselineStatusClass}">${escapeHtml(baselineProvenance.status)}</p><dl><dt>Original aggregate date</dt><dd>${escapeHtml(baselineDate)}</dd><dt>Reported source count</dt><dd>${baselineProvenance.sampleCount === null ? 'unavailable' : `${baselineProvenance.sampleCount} (reported; sources not revalidated)`}</dd><dt>Target</dt><dd>${escapeHtml(baselineProvenance.targetId)} — ${escapeHtml(baselineProvenance.targetCommit)}</dd><dt>Framework revision</dt><dd>${escapeHtml(baselineProvenance.frameworkCommit)}</dd><dt>Workload schema</dt><dd>${escapeHtml(baselineProvenance.workloadSchema)}</dd><dt>Source inputs</dt><dd>${baselineProvenance.sourceInputsAvailable === true ? 'available and verified' : baselineProvenance.sourceInputsAvailable === false ? 'unavailable' : 'not verified'}</dd><dt>Explanation</dt><dd>${baselineExplanation}</dd></dl>${baselineLimitations}${baselineReasons}<p>This historical aggregate is reported separately and is excluded from current-run status and trend lines.</p></section>
+<p>The latency trend chart contains current run summaries only.</p>
 <div class="chart"><canvas id="latency-chart" role="img" aria-label="p95 and p99 latency by report"></canvas></div>
   <table><thead><tr><th>Run</th><th>Target</th><th>Profile</th><th>p95 ms</th><th>p99 ms</th><th>Error rate</th><th>Req/s</th><th>Dropped</th><th>Overall status</th><th>Native thresholds</th><th>Achieved load</th><th>Reasons</th></tr></thead><tbody>${evidence}</tbody></table>
 <script>

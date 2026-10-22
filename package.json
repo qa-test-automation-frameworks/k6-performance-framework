@@ -35,6 +35,7 @@
     "typecheck": "tsc --noEmit",
     "test:unit": "vitest run",
     "test:coverage": "vitest run --coverage",
+    "test:report": "node --test scripts/tests/report-disposition.test.cjs scripts/tests/baseline-provenance.test.cjs",
     "docker:up": "docker compose -f docker/docker-compose.yml up -d --build",
     "docker:down": "docker compose -f docker/docker-compose.yml down -v",
     "docker:health": "node scripts/wait-observability.cjs",

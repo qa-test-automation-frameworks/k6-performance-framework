@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "baselinePath": "baseline/load-summary.json",
+  "baselineSha256": "aee021503eebd5dede7b7c7f28a72d5a06b4e070d7a640a3ae14f7528190319f",
+  "disposition": "historical-inputs-unavailable",
+  "sourceInputsAvailable": false,
+  "sourceArtifacts": [],
+  "limitations": [
+    "The three raw source summaries named by the June aggregate were not present in the inspected repository or retained workflow artifacts.",
+    "The recorded source hashes identify expected inputs but do not prove that those inputs remain available or can be revalidated.",
+    "The aggregate values and original generated date are preserved, but per-run variability and source-run compatibility cannot be rechecked."
+  ],
+  "explanationPath": "docs/baseline-provenance.md"
+}

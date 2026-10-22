@@ -3,7 +3,11 @@ const path = require('node:path');
 
 module.exports = defineConfig({
   test: {
-    exclude: [...configDefaults.exclude, '**/scripts/tests/report-disposition.test.cjs'],
+    exclude: [
+      ...configDefaults.exclude,
+      '**/scripts/tests/report-disposition.test.cjs',
+      '**/scripts/tests/baseline-provenance.test.cjs',
+    ],
     environment: 'node',
     globals: true,
     setupFiles: ['./tests/unit/setup.ts'],

@@ -183,20 +183,17 @@ test('site build keeps valid reports visible beside malformed input and escapes 
     path.join(directory, 'reports', 'evil<img src=x onerror=alert(1)>-summary.json'),
     JSON.stringify(goodSummary({ failures: ['<svg onload=alert(1)>'] })),
   );
-  const legacyAggregate = goodSummary({
-    metadata: {
-      status: 'measured',
-      sampleCount: 3,
-      targetId: 'historical-target',
-      workload: { profile: 'full' },
-    },
-  });
-  delete legacyAggregate.thresholds;
-  delete legacyAggregate.failures;
-  delete legacyAggregate.achievedLoad;
-  fs.writeFileSync(
-    path.join(directory, 'baseline', 'load-summary.json'),
-    JSON.stringify(legacyAggregate),
+  fs.mkdirSync(path.join(directory, 'docs'));
+  const repositoryRoot = path.resolve(__dirname, '../..');
+  for (const file of ['load-summary.json', 'provenance.json']) {
+    fs.copyFileSync(
+      path.join(repositoryRoot, 'baseline', file),
+      path.join(directory, 'baseline', file),
+    );
+  }
+  fs.copyFileSync(
+    path.join(repositoryRoot, 'docs', 'baseline-provenance.md'),
+    path.join(directory, 'docs', 'baseline-provenance.md'),
   );
 
   const run = spawnSync('npm', ['run', 'report:site'], {
@@ -219,8 +216,9 @@ test('site build keeps valid reports visible beside malformed input and escapes 
   assert.match(byName['broken-summary.json'].disposition.reasons.join(' '), /Invalid JSON/);
   assert.equal(byName['failing-summary.json'].disposition.status, 'INVALID_LOAD');
   assert.notEqual(byName['failing-summary.json'].disposition.status, 'PASS');
-  assert.equal(byName['load-summary.json'].kind, 'legacy-aggregate');
-  assert.equal(byName['load-summary.json'].disposition.status, 'INCOMPLETE');
+  assert.equal(manifest.baseline.status, 'HISTORICAL — SOURCE INPUTS UNAVAILABLE');
+  assert.equal(manifest.baseline.sampleCount, 3);
+  assert.equal(manifest.baseline.sourceInputsAvailable, false);
   assert.match(
     byName['failing-summary.json'].disposition.reasons.join(' '),
     /Threshold failure: synthetic audit control/,
@@ -230,7 +228,10 @@ test('site build keeps valid reports visible beside malformed input and escapes 
   assert.match(html, /failing-summary\.json/);
   assert.match(html, /INVALID LOAD/);
   assert.match(html, /Threshold failure: synthetic audit control/);
-  assert.match(html, /historical aggregate/);
+  assert.match(html, /HISTORICAL — SOURCE INPUTS UNAVAILABLE/);
+  assert.match(html, /2026-06-14/);
+  assert.match(html, /not recorded in historical aggregate/);
+  assert.match(html, /baseline provenance explanation/);
   assert.match(html, /evil&lt;img src=x onerror=alert\(1\)&gt;-summary\.json/);
   assert.match(html, /&lt;svg onload=alert\(1\)&gt;/);
   assert.doesNotMatch(html, /<svg onload=alert\(1\)>/);
