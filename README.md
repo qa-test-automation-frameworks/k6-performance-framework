@@ -79,6 +79,15 @@ and stable metric names. Write-heavy tests reject non-local targets unless expli
 Use `npm run breakpoint:search` to run a binary-search capacity probe. Its JSON output reports
 `lastHealthyVus`, `firstUnhealthyVus`, and `toleranceVus`.
 
+To inspect retained summaries without starting a load test, run the offline diagnostics panel:
+
+```bash
+npm run capacity:analyze -- --plan tests/fixtures/capacity-evidence/plan.json --out /tmp/capacity-evidence
+```
+
+The included plan is authored fixture data. It demonstrates bounded target-pressure and missing-data
+handling; it is not a measured capacity claim. See [breakpoint evidence and limits](docs/performance-slos.md#breakpoint-evidence-and-limits).
+
 ## Controlled Load Service Objectives
 
 ### Scale and Scope

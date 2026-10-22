@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "run_id": "cpu-limited-03",
+  "condition": "cpu-limited",
+  "controlled": {
+    "target": {
+      "id": "fixture-claims-api",
+      "revision": "fixture-target-6f5d1a2",
+      "cpu_limit_cores": 1.5
+    },
+    "framework": {
+      "name": "k6",
+      "version": "2.0.0",
+      "revision": "fixture-framework-6f5d1a2"
+    },
+    "generator": {
+      "id": "fixture-generator-a",
+      "cpu_limit_cores": 4
+    },
+    "environment": {
+      "id": "fixture-ubuntu-24.04"
+    },
+    "workload": {
+      "mode": "request_rate",
+      "configured_arrival": {
+        "value": 20,
+        "unit": "requests_per_second"
+      }
+    }
+  },
+  "actual_throughput": {
+    "value": 19.7,
+    "unit": "requests_per_second"
+  },
+  "duration_seconds": 10,
+  "achieved_load": {
+    "valid": true
+  },
+  "native_failures": [],
+  "time_bounds": {
+    "start_at": "2026-10-01T10:05:00.000Z",
+    "end_at": "2026-10-01T10:05:10.000Z"
+  },
+  "slo_metrics": {
+    "p95_latency_ms": 165,
+    "error_rate_percent": 0.30000000000000004
+  }
+}

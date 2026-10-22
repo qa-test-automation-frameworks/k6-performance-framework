@@ -36,6 +36,36 @@ Smoke tests abort quickly when checks, latency, or request failure thresholds br
 enforce the primary p95 and p99 objectives; stress and breakpoint tests intentionally identify the
 point at which these objectives degrade.
 
+## Breakpoint Evidence And Limits
+
+`scripts/find-breakpoint.cjs` keeps its existing VU boundary output. For diagnosis, the separate
+`scripts/analyze-capacity-evidence.cjs` reads retained per-run summaries, a plan describing the
+controlled identities and sole intervention, and optional resource samples in JSONL. It never
+starts k6 or Docker and never changes resource limits.
+
+The plan records target, framework, generator, environment and workload identities; configured
+arrival units; actual request throughput; measurement duration and UTC bounds; achieved-load
+validity; native failures; and p95/error measurements. Resource rows use UTC timestamps and explicit
+CPU cores and memory bytes. They must fall inside the run window and align with the declared sample
+interval. A missing limit or observation stays unknown. VU workloads remain configured in VUs, with
+request throughput shown only as an observed value.
+
+The analyzer marks failed achieved load as `INVALID_GENERATOR` regardless of latency. It marks
+`TARGET_PRESSURE_OBSERVED` only when achieved load is valid, an SLO fails, resource coverage reaches
+80%, and target CPU or memory is at least 90% of its measured limit for at least half of the expected
+samples. Other incomplete or unsupported diagnoses are `UNDETERMINED`; passing SLO measurements are
+shown as `SLO_WITHIN_LIMITS`. These are observed associations and do not prove that a resource limit
+caused latency or errors. A causal claim needs a separately predeclared matched intervention.
+
+Run the authored, no-key example with:
+
+```bash
+npm run capacity:analyze -- --plan tests/fixtures/capacity-evidence/plan.json --out /tmp/capacity-evidence
+```
+
+The six summaries and resource samples are fixture-only controls, not a real capacity result. A
+real conclusion requires separately retained and reviewed measurements.
+
 ## Provenance And Ownership
 
 These objectives are engineering guardrails for the pinned RealWorld target, not contractual
