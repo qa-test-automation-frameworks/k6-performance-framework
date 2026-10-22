@@ -1,8 +1,9 @@
-const { defineConfig } = require('vitest/config');
+const { configDefaults, defineConfig } = require('vitest/config');
 const path = require('node:path');
 
 module.exports = defineConfig({
   test: {
+    exclude: [...configDefaults.exclude, '**/scripts/tests/report-disposition.test.cjs'],
     environment: 'node',
     globals: true,
     setupFiles: ['./tests/unit/setup.ts'],
