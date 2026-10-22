@@ -22,6 +22,7 @@ done
 case "$api_path" in
   */actions/artifacts\?per_page=100)
     case " $* " in
+      *" --slurp "*) echo "--slurp cannot be used with --jq" >&2; exit 1 ;;
       *" --paginate "*) ;;
       *) echo "artifact lookup did not paginate" >&2; exit 1 ;;
     esac
@@ -94,6 +95,6 @@ printf '%s\n' "$output"
 [[ ! -e "${work_dir}/reports/load-503-summary.json" ]]
 grep -q '"fixture":"root"' "${work_dir}/reports/load-501-summary.json"
 grep -q '"fixture":"nested"' "${work_dir}/reports/load-504-summary.json"
-grep -q -- '--paginate --slurp' "$GH_CALL_LOG"
+grep -q -- '--paginate' "$GH_CALL_LOG"
 
 printf 'All report-history download checks passed.\n'
