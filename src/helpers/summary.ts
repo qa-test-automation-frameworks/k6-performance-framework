@@ -59,6 +59,11 @@ export interface PerformanceSummary {
     warmupSeconds: number | null;
     minimumAchievedFraction: number | null;
     requestDrainSeconds: number | null;
+    runId: string;
+    workloadName: string;
+    runnerImage?: string;
+    cpuLimitCores?: number;
+    memoryLimitBytes?: number;
   };
   rootGroup: unknown;
   state: unknown;
@@ -176,6 +181,8 @@ export function createSummary(data: SummaryData): Record<string, string> {
       warmupSeconds: requestProfile?.warmupSeconds ?? null,
       minimumAchievedFraction: requestProfile?.minimumAchievedFraction ?? null,
       requestDrainSeconds: requestProfile ? REQUEST_DRAIN_SECONDS : null,
+      runId: __ENV.K6_RUN_ID ?? `local-${Date.now()}-${Math.floor(Math.random() * 1_000_000_000)}`,
+      workloadName: __ENV.WORKLOAD_NAME ?? 'load',
     },
     rootGroup: data.root_group,
     state: data.state,
@@ -185,6 +192,13 @@ export function createSummary(data: SummaryData): Record<string, string> {
         .map(([name, metric]) => [name, metric.thresholds ?? {}]),
     ),
   };
+  if (__ENV.RUNNER_IMAGE !== undefined) summary.metadata.runnerImage = __ENV.RUNNER_IMAGE;
+  if (__ENV.CPU_LIMIT_CORES !== undefined) {
+    summary.metadata.cpuLimitCores = Number(__ENV.CPU_LIMIT_CORES);
+  }
+  if (__ENV.MEMORY_LIMIT_BYTES !== undefined) {
+    summary.metadata.memoryLimitBytes = Number(__ENV.MEMORY_LIMIT_BYTES);
+  }
   const failedThresholds = Object.entries(summary.thresholds).flatMap(([metric, thresholds]) =>
     Object.entries(thresholds)
       .filter(([, result]) => !result.ok)

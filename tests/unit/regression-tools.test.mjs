@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
+import aggregateTools from '../../scripts/aggregate-baseline.cjs';
 import workloadTools from '../../scripts/workload-identity.cjs';
 
 function run(script, env, args = []) {
@@ -237,12 +238,35 @@ describe('performance comparison tools', () => {
 
   it('aggregates endpoint percentiles into a measured baseline', () => {
     const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'k6-baseline-'));
+    const reportsDirectory = path.join(directory, 'reports');
+    fs.mkdirSync(reportsDirectory);
     const inputs = [1, 2, 3].map((number) => {
-      const file = path.join(directory, `run-${number}.json`);
+      const file = path.join(reportsDirectory, `run-${number}-summary.json`);
       fs.writeFileSync(
         file,
         JSON.stringify({
-          metadata: { targetRps: 20, maxVus: 100, profile: 'full' },
+          thresholds: { http_req_duration: { 'p(95)<100': { ok: true } } },
+          failures: [],
+          achievedLoad: null,
+          metadata: {
+            runId: `fixture-run-${number}`,
+            targetId: 'fixture-target',
+            targetCommit: 'target-v1',
+            environment: 'local',
+            frameworkCommit: 'framework-v1',
+            k6Version: '2.0.0',
+            runnerClass: 'fixture-runner',
+            workloadName: 'load',
+            workloadSchema: 'journey-arrival-v1',
+            targetIterationsPerSecond: 20,
+            targetRequestsPerSecond: null,
+            measurementSeconds: null,
+            warmupSeconds: null,
+            minimumAchievedFraction: null,
+            requestDrainSeconds: null,
+            maxVus: 100,
+            profile: 'full',
+          },
           metrics: {
             http_req_duration: { 'p(95)': number, 'p(99)': number + 1 },
             'http_req_duration{name:GET /articles}': {
@@ -256,14 +280,18 @@ describe('performance comparison tools', () => {
           },
         }),
       );
-      return file;
+      return `reports/run-${number}-summary.json`;
     });
-    const output = path.join(directory, 'baseline.json');
+    const output = 'baseline.json';
 
-    const result = run('scripts/aggregate-baseline.cjs', { BASELINE_OUTPUT: output }, inputs);
-    const baseline = JSON.parse(fs.readFileSync(output, 'utf8'));
+    const baseline = aggregateTools.aggregateBaselineFiles(inputs, {
+      projectRoot: directory,
+      outputPath: output,
+    });
 
-    expect(result.status).toBe(0);
+    const written = JSON.parse(fs.readFileSync(path.join(directory, output), 'utf8'));
+    expect(written.metadata.sampleCount).toBe(3);
+    expect(baseline.metadata.sampleCount).toBe(3);
     expect(baseline.metrics['http_req_duration{name:GET /articles}']['p(95)']).toBe(4);
   });
 });
