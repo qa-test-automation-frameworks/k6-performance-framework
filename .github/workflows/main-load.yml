@@ -3,7 +3,28 @@ name: Main load
 on:
   push:
     branches: [main]
+    paths:
+      - '.github/scripts/start-realworld.sh'
+      - '.github/workflows/main-load.yml'
+      - 'bun.lock'
+      - 'config/**'
+      - 'package-lock.json'
+      - 'package.json'
+      - 'scripts/**'
+      - 'src/**'
+      - 'tests/load/**'
   workflow_dispatch:
+    inputs:
+      sample_order:
+        description: PERF-04 sample order when collecting the three-run cohort
+        required: false
+        type: choice
+        options:
+          - not-designated
+          - '1'
+          - '2'
+          - '3'
+        default: not-designated
 
 permissions:
   contents: read
@@ -14,6 +35,7 @@ jobs:
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        id: node-setup
         with:
           node-version-file: .nvmrc
           cache: npm
@@ -33,9 +55,92 @@ jobs:
       - run: npm run build
       - name: Run controlled load test
         run: |
-          echo "EVIDENCE_STARTED_AT_LOAD=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> "$GITHUB_ENV"
+          set -euo pipefail
+          mkdir -p reports/perf04
+          state_dir="${RUNNER_TEMP}/perf04-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          rm -rf "$state_dir"
+          mkdir -p "$state_dir"
+          export PERF04_STATE_DIR="$state_dir"
+          export PERF04_RESOURCE_CSV=reports/perf04/runner-resources.csv
+          export PERF04_RESOURCE_JSON=reports/perf04/runner-resources.json
+          export PERF04_NPM_CACHE_HIT="${{ steps.node-setup.outputs.cache-hit || 'unknown' }}"
+          export PERF04_SAMPLE_ORDER="${{ github.event.inputs.sample_order || 'not-designated' }}"
+          export PERF04_TARGET_HEALTH_URL=http://localhost:3000/api/articles?limit=1
+          node scripts/perf04-runner-monitor.cjs >reports/perf04/monitor.log 2>&1 &
+          monitor_pid=$!
+          monitor_waited=false
+          finish_monitor() {
+            touch "$state_dir/load-finished"
+            if [ "$monitor_waited" != true ]; then
+              wait "$monitor_pid" || true
+            fi
+          }
+          trap finish_monitor EXIT
+
           source .github/scripts/start-realworld.sh
-          k6 run dist/load/articles-load.js
+          actual_target="$(git -C "$RUNNER_TEMP/realworld-api" rev-parse HEAD)"
+          test "$actual_target" = "$TARGET_COMMIT"
+          printf '%s\n' "${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}" >"$state_dir/target-seed-suffix.txt"
+          cat >reports/perf04/target-state.json <<EOF
+          {
+            "targetCommit": "$actual_target",
+            "seedSuffix": "${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}",
+            "seededArticles": 5,
+            "applicationState": "freshly built and seeded; process starts cold and warms naturally",
+            "bunCache": "not configured"
+          }
+          EOF
+          touch "$state_dir/target-ready"
+          if [ -s "$state_dir/stop-reason.txt" ]; then
+            cat "$state_dir/stop-reason.txt"
+            exit 1
+          fi
+          if ! kill -0 "$monitor_pid" 2>/dev/null; then
+            cat reports/perf04/monitor.log
+            echo "PERF-04 resource monitor exited before the load started" >&2
+            exit 1
+          fi
+          cpu_limit="$(node -e 'const fs=require("node:fs");const d=JSON.parse(fs.readFileSync(process.argv[1],"utf8"));if(Number.isFinite(d.cpuLimitCores))process.stdout.write(String(d.cpuLimitCores))' "$PERF04_RESOURCE_JSON")"
+          memory_limit="$(node -e 'const fs=require("node:fs");const d=JSON.parse(fs.readFileSync(process.argv[1],"utf8"));if(Number.isSafeInteger(d.memoryLimitBytes))process.stdout.write(String(d.memoryLimitBytes))' "$PERF04_RESOURCE_JSON")"
+          if [ -n "$cpu_limit" ]; then export CPU_LIMIT_CORES="$cpu_limit"; else unset CPU_LIMIT_CORES; fi
+          if [ -n "$memory_limit" ]; then export MEMORY_LIMIT_BYTES="$memory_limit"; else unset MEMORY_LIMIT_BYTES; fi
+          export RUNNER_IMAGE="${ImageOS:-unknown}-${ImageVersion:-unknown}"
+          export K6_RUN_ID="${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}-full-profile"
+          export WORKLOAD_NAME=load
+          load_started_at="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+          echo "EVIDENCE_STARTED_AT_LOAD=$load_started_at" >>"$GITHUB_ENV"
+          echo "$load_started_at" >"$state_dir/load-started-at.txt"
+          k6 run dist/load/articles-load.js >reports/perf04/full-profile-k6.log 2>&1 &
+          load_pid=$!
+          printf '%s\n' "$load_pid" >"$state_dir/load.pid"
+          while kill -0 "$load_pid" 2>/dev/null; do
+            if ! kill -0 "$monitor_pid" 2>/dev/null && [ ! -s "$state_dir/stop-reason.txt" ]; then
+              echo "PERF-04 resource monitor exited during the load" >"$state_dir/stop-reason.txt"
+              kill -INT "$load_pid" 2>/dev/null || true
+              break
+            fi
+            sleep 1
+          done
+          set +e
+          wait "$load_pid"
+          load_status=$?
+          set -e
+          echo "$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >"$state_dir/load-ended-at.txt"
+          touch "$state_dir/load-finished"
+          set +e
+          wait "$monitor_pid"
+          monitor_status=$?
+          monitor_waited=true
+          set -e
+          cat reports/perf04/full-profile-k6.log
+          cat reports/perf04/monitor.log
+          if [ "$monitor_status" -ne 0 ]; then
+            cat "$state_dir/stop-reason.txt" || true
+            exit "$monitor_status"
+          fi
+          if [ "$load_status" -ne 0 ]; then
+            exit "$load_status"
+          fi
           echo "EVIDENCE_STARTED_AT_JOURNEY=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> "$GITHUB_ENV"
           TEST_PROFILE=validation SUMMARY_NAME=authenticated-validation \
             k6 run dist/load/user-journey-load.js
@@ -72,8 +177,18 @@ jobs:
         run: node scripts/validate-portfolio-evidence.cjs reports/evidence/k6.authenticated-journey.json
       - run: cat reports/load-summary.md >> "$GITHUB_STEP_SUMMARY"
         if: always()
+      - name: Summarize runner envelope
+        if: always()
+        run: |
+          if [ -f reports/perf04/runner-resources.json ]; then
+            echo '## PERF-04 runner envelope' >> "$GITHUB_STEP_SUMMARY"
+            cat reports/perf04/runner-resources.json >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo 'PERF-04 runner envelope was not produced.' >> "$GITHUB_STEP_SUMMARY"
+          fi
       - name: Baseline regression check
         run: |
+          set -o pipefail
           test -f baseline/load-summary.json
           CANDIDATE_FILE=reports/load-summary.json npm run baseline:compare | tee reports/regression-comparison.md
           cat reports/regression-comparison.md >> "$GITHUB_STEP_SUMMARY"
