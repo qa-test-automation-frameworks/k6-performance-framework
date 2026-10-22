@@ -26,6 +26,7 @@ jobs:
       - run: npm run test:coverage
       - run: npm run test:report
       - run: npm run test:baseline
+      - run: npm run test:report-history
       - run: npm run test:evidence
       - run: npm run build
       - uses: grafana/setup-k6-action@43b9fc21641a76002687994433dd586f56e791b1 # v1.2.2
