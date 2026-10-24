@@ -6,6 +6,8 @@ import { describe, expect, it } from 'vitest';
 import aggregateTools from '../../scripts/aggregate-baseline.cjs';
 import workloadTools from '../../scripts/workload-identity.cjs';
 
+const FIXTURE_PROVENANCE = 'tests/regression-fixtures/measured-baseline.provenance.json';
+
 function run(script, env, args = []) {
   return spawnSync(process.execPath, [script, ...args], {
     cwd: process.cwd(),
@@ -92,7 +94,7 @@ describe('performance comparison tools', () => {
     (script) => {
       for (const REGRESSION_TOLERANCE of ['NaN', 'Infinity', '-0.1']) {
         const result = run(`scripts/${script}`, { REGRESSION_TOLERANCE });
-        expect(result.status).toBe(1);
+        expect(result.status).toBe(script === 'compare-performance.cjs' ? 2 : 1);
         expect(result.stderr).toContain('finite non-negative');
       }
     },
@@ -138,6 +140,7 @@ describe('performance comparison tools', () => {
     fs.writeFileSync(file, JSON.stringify(candidate));
     const result = run('scripts/compare-performance.cjs', {
       BASELINE_FILE: 'tests/regression-fixtures/measured-baseline.json',
+      BASELINE_PROVENANCE_FILE: FIXTURE_PROVENANCE,
       CANDIDATE_FILE: file,
     });
     expect(result.status).toBe(0);
@@ -162,10 +165,11 @@ describe('performance comparison tools', () => {
       fs.writeFileSync(file, JSON.stringify(candidate));
       const result = run(`scripts/${script}`, {
         BASELINE_FILE: 'tests/regression-fixtures/measured-baseline.json',
+        BASELINE_PROVENANCE_FILE: FIXTURE_PROVENANCE,
         PREVIOUS_FILE: 'tests/regression-fixtures/healthy-candidate.json',
         CANDIDATE_FILE: file,
       });
-      expect(result.status).toBe(1);
+      expect(result.status).toBe(script === 'compare-performance.cjs' ? 2 : 1);
       expect(result.stderr).toContain('Incompatible workload');
     },
   );
@@ -181,6 +185,7 @@ describe('performance comparison tools', () => {
   it('rejects an endpoint regression when aggregate latency is healthy', () => {
     const result = run('scripts/compare-performance.cjs', {
       BASELINE_FILE: 'tests/regression-fixtures/measured-baseline.json',
+      BASELINE_PROVENANCE_FILE: FIXTURE_PROVENANCE,
       CANDIDATE_FILE: 'tests/regression-fixtures/endpoint-regression-candidate.json',
     });
 
@@ -293,5 +298,94 @@ describe('performance comparison tools', () => {
     expect(written.metadata.sampleCount).toBe(3);
     expect(baseline.metadata.sampleCount).toBe(3);
     expect(baseline.metrics['http_req_duration{name:GET /articles}']['p(95)']).toBe(4);
+  });
+});
+
+describe('baseline refusal and advisory gate', () => {
+  const scratch = fs.mkdtempSync(path.join(os.tmpdir(), 'k6-gate-'));
+  const gateMode = (mode) => {
+    const file = path.join(scratch, `${mode}-gate.json`);
+    fs.writeFileSync(
+      file,
+      JSON.stringify({
+        schemaVersion: 1,
+        mode,
+        since: '2026-10-24',
+        reason: 'baseline sources unavailable.',
+        exitCriteria: 'recalibration.',
+      }),
+    );
+    return file;
+  };
+  const base = {
+    BASELINE_FILE: 'tests/regression-fixtures/measured-baseline.json',
+    CANDIDATE_FILE: 'tests/regression-fixtures/healthy-candidate.json',
+  };
+  const provenance = (changes) => {
+    const file = path.join(scratch, `provenance-${Math.random().toString(16).slice(2)}.json`);
+    fs.writeFileSync(
+      file,
+      JSON.stringify({ ...JSON.parse(fs.readFileSync(FIXTURE_PROVENANCE)), ...changes }),
+    );
+    return file;
+  };
+
+  it('refuses the committed historical baseline before reading a candidate', () => {
+    const result = run('scripts/compare-performance.cjs', {
+      CANDIDATE_FILE: path.join(scratch, 'does-not-exist.json'),
+    });
+    expect(result.status).toBe(3);
+    expect(result.stderr).toContain(
+      'provenance disposition "historical-inputs-unavailable" is not an accepted measured state (expected "measured-retained")',
+    );
+  });
+
+  it('refuses a baseline whose hash differs from its provenance', () => {
+    const result = run('scripts/compare-performance.cjs', {
+      ...base,
+      BASELINE_PROVENANCE_FILE: provenance({ baselineSha256: '0'.repeat(64) }),
+    });
+    expect(result.status).toBe(3);
+    expect(result.stderr).toContain('baseline hash differs from provenance');
+  });
+
+  it('accepts a retained baseline with a healthy candidate and rejects a regression', () => {
+    const env = { ...base, BASELINE_PROVENANCE_FILE: FIXTURE_PROVENANCE };
+    expect(run('scripts/compare-performance.cjs', env).status).toBe(0);
+    const regression = run('scripts/compare-performance.cjs', {
+      ...env,
+      CANDIDATE_FILE: 'tests/regression-fixtures/regression-candidate.json',
+    });
+    expect(regression.status).toBe(1);
+  });
+
+  it('turns a refusal into a visible advisory only in advisory mode', () => {
+    const advisory = run('scripts/regression-gate.cjs', { GATE_MODE_FILE: gateMode('advisory') });
+    expect(advisory.status).toBe(0);
+    expect(advisory.stdout).toContain('ADVISORY');
+    const blocking = run('scripts/regression-gate.cjs', { GATE_MODE_FILE: gateMode('blocking') });
+    expect(blocking.status).toBe(3);
+  });
+
+  it('does not let advisory mode hide a broken comparison input', () => {
+    const result = run('scripts/regression-gate.cjs', {
+      ...base,
+      BASELINE_PROVENANCE_FILE: FIXTURE_PROVENANCE,
+      CANDIDATE_FILE: path.join(scratch, 'missing-candidate.json'),
+      GATE_MODE_FILE: gateMode('advisory'),
+    });
+    expect(result.status).toBe(2);
+  });
+
+  it('rejects a malformed gate mode file', () => {
+    const file = path.join(scratch, 'bad-gate.json');
+    fs.writeFileSync(file, JSON.stringify({ schemaVersion: 1, mode: 'sometimes' }));
+    expect(run('scripts/regression-gate.cjs', { GATE_MODE_FILE: file }).status).toBe(2);
+  });
+
+  it('ships the committed gate mode as advisory with a reason', () => {
+    const committed = JSON.parse(fs.readFileSync('baseline/gate-mode.json', 'utf8'));
+    expect(committed.mode).toBe('advisory');
+    expect(committed.reason.length).toBeGreaterThan(20);
   });
 });

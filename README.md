@@ -35,7 +35,7 @@ OpenTelemetry, and six distinct workload models for the RealWorld API.
 | Engineering question | Implemented answer |
 | --- | --- |
 | How is unsafe load prevented? | Public targets are read-only; sustained and write-heavy workloads require a controlled target and explicit override. |
-| How are regressions distinguished from noise? | Reviewed three-run baselines, p95/p99 comparisons, tolerance rules, and compatible-run selection. |
+| How are regressions distinguished from noise? | Not reliably yet: the PR comparison is advisory (`baseline/gate-mode.json`) because the committed baseline's source inputs are unavailable and same-commit spread on shared runners exceeded its 20% tolerance. Recalibration is planned under `docs/experiments/`. |
 | How is performance made diagnosable? | Tagged metrics, JSON and Markdown summaries, Grafana/InfluxDB dashboards, and OpenTelemetry export. |
 | How does the suite model different risks? | Smoke, load, stress, spike, soak, and breakpoint workloads with separate intent and thresholds. |
 | How does CI remain credible? | Quality, security, main-load, reports, scheduled-soak, and release gates publish durable evidence. |
@@ -183,8 +183,10 @@ that pool, avoiding a single-account bottleneck. Full non-local workloads also r
 
 - PR smoke posts an aggregate Markdown summary to same-repository pull requests.
 - Main load, regression, and advanced workload workflows provision a pinned RealWorld backend.
-- Load regression checks compare aggregate, endpoint, and business-metric p95/p99 values with a
-  reviewed three-run baseline. Full advanced runs compare with their latest compatible retained run.
+- Load regression checks compare aggregate, endpoint, and business-metric p95/p99 values with the
+  committed baseline, but the comparator refuses a baseline without accepted provenance, and the
+  comparison is advisory (`baseline/gate-mode.json`): it prints an ADVISORY line and a warning
+  instead of failing. Full advanced runs compare with their latest compatible retained run.
 - Release publication waits for full stress, spike, soak, and breakpoint evidence.
 - GitHub-hosted segmented validation proves partition wiring; the manual distributed workflow is
   reserved for authorized self-hosted runners and a shared controlled target.

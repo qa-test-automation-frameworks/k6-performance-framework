@@ -46,6 +46,7 @@
     "load:observed": "npm run build && node scripts/platform-runner.cjs observed",
     "observability:capture": "node scripts/capture-grafana-evidence.cjs",
     "baseline:compare": "node scripts/compare-performance.cjs",
+    "baseline:gate": "node scripts/regression-gate.cjs",
     "capacity:compare": "node scripts/compare-capacity.cjs",
     "history:compare": "node scripts/compare-history.cjs",
     "baseline:aggregate": "node scripts/aggregate-baseline.cjs",
