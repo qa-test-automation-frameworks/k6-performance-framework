@@ -3,10 +3,10 @@ name: Scheduled failure listener
 on:
   workflow_run:
     workflows:
-      - "Main load"
-      - "PR smoke"
-      - "Scheduled soak"
-      - "Shared reference app load"
+      - 'Main load'
+      - 'PR smoke'
+      - 'Scheduled soak'
+      - 'Shared reference app load'
     types: [completed]
 
 permissions:
