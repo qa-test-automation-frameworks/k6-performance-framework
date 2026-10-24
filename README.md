@@ -25,7 +25,7 @@ OpenTelemetry, and six distinct workload models for the RealWorld API.
 | Repository activity | [Default-branch commits](https://github.com/qa-test-automation-frameworks/k6-performance-framework/commits/main/) · [Pull requests](https://github.com/qa-test-automation-frameworks/k6-performance-framework/pulls?q=is%3Apr) |
 | Architecture and decisions | [Architecture](docs/architecture.md) · [ADR index](docs/adr/README.md) |
 | Failure evidence | [Threshold failure example](docs/images/threshold-failure-example.svg) · [Interpretation guide](docs/results-interpretation.md) |
-| Controlled latency study | [D04 experiment protocol and artifact workflow](docs/verification/2026-10-16-d04-performance-study.md) · [D04 CI runs](https://github.com/qa-test-automation-frameworks/k6-performance-framework/actions/workflows/d04-performance-study.yml) |
+| Controlled latency study | [Controlled latency experiment protocol and artifact workflow](docs/verification/2026-10-16-d04-performance-study.md) · [Controlled latency CI runs](https://github.com/qa-test-automation-frameworks/k6-performance-framework/actions/workflows/d04-performance-study.yml) |
 | Reviewed baseline report | [Human-openable load report](docs/reports/reviewed-load-report.md) |
 
 ![Performance framework evidence overview](docs/images/performance-overview-example.svg)

@@ -23,7 +23,7 @@ baseline-comparison dispositions, not two samples collected by this protocol.
 The cause remains **undetermined**. Preserve both results; do not choose only
 the passing result or change a threshold to make either result pass.
 
-The D04 study is a separate 15-request/s, 15-second controlled-latency
+The controlled latency study is a separate 15-request/s, 15-second controlled-latency
 experiment. It does not calibrate this eight-minute journey profile and must
 not be converted into an eight-minute production claim.
 
@@ -117,7 +117,7 @@ or workload settings after seeing sample results.
 5. Do not run a degraded full-profile cohort in this first study. Mark it
    **not collected**. If a later degraded cohort is affordable, write a separate
    prospective amendment, state the single intended intervention, and
-   interleave healthy controls with degraded runs. D04 results are not those
+   interleave healthy controls with degraded runs. Controlled latency results are not those
    controls.
 
 The stop rules protect the validity of the measurement; they do not redefine
@@ -162,5 +162,5 @@ historical aggregate from this study alone.
 - [Endpoint mix](../../src/fixtures/browse-behaviors.json) and [journey implementation](../../src/scenarios/browse-articles.ts)
 - [Unchanged load thresholds](../../config/thresholds/load.ts)
 - [Main-load workflow](../../.github/workflows/main-load.yml) and [pinned target build](../../.github/scripts/start-realworld.sh)
-- [D04 bounded experiment](../verification/2026-10-16-d04-performance-study.md)
+- [Bounded latency experiment](../verification/2026-10-16-d04-performance-study.md)
 - [Historical full-profile outcomes](../capability-status.md)

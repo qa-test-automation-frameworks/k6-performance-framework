@@ -30,4 +30,4 @@ npm run load:shared-app
 docker compose -f docker/shared-app.compose.yaml down --volumes --remove-orphans
 ```
 
-If the run is interrupted, remove only its unique Compose project and volume. Never reuse the namespace for a second experiment. The shared-target profile is intentionally a small read-dominated service profile; it is not the D04 saturation study, and no cross-run capacity conclusion should be drawn from one hosted-runner sample.
+If the run is interrupted, remove only its unique Compose project and volume. Never reuse the namespace for a second experiment. The shared-target profile is intentionally a small read-dominated service profile; it is not the controlled latency saturation study, and no cross-run capacity conclusion should be drawn from one hosted-runner sample.

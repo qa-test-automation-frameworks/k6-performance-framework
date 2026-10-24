@@ -1,0 +1,4 @@
+scripts/check-local-identifiers.sh # Scanner patterns include rejected identifiers; explicit roadmap self-exclusion.
+docs/verification/evidence/2026-10-04-observability-integrity/observability-negative.log # Dated observability negative-control output; preserve original evidence bytes and source paths.
+docs/verification/evidence/2026-10-04-runtime/coverage.log # Dated runtime coverage output; preserve original evidence bytes and source paths.
+docs/verification/evidence/2026-10-04-security/k6-security-osv.stderr # Dated security scanner stderr; preserve original evidence bytes and source paths.
