@@ -5,12 +5,13 @@ const { assertCompatibleWorkloads } = require('./workload-identity.cjs');
 const baselinePath = process.env.BASELINE_FILE || 'baseline/load-summary.json';
 const provenancePath = process.env.BASELINE_PROVENANCE_FILE || 'baseline/provenance.json';
 const candidatePath = process.env.CANDIDATE_FILE || 'reports/load-summary.json';
-const tolerance = Number(process.env.REGRESSION_TOLERANCE || '0.20');
+const tolerancePath = process.env.TOLERANCE_FILE || 'baseline/tolerance.json';
+const legacyTolerance = Number(process.env.REGRESSION_TOLERANCE || '0.20');
 const errorRateLimit = Number(process.env.ERROR_RATE_LIMIT || '0.02');
 function assertLimits() {
   if (
-    !Number.isFinite(tolerance) ||
-    tolerance < 0 ||
+    !Number.isFinite(legacyTolerance) ||
+    legacyTolerance < 0 ||
     !Number.isFinite(errorRateLimit) ||
     errorRateLimit < 0 ||
     errorRateLimit > 1
@@ -34,6 +35,8 @@ function assertAcceptedBaseline() {
   const sha256 = crypto.createHash('sha256').update(baselineBytes).digest('hex');
   const sampleCount = JSON.parse(baselineBytes).metadata?.sampleCount;
   const problems = [];
+  if (!Number.isSafeInteger(sampleCount) || sampleCount < (provenance.schemaVersion === 2 ? 5 : 3))
+    problems.push('baseline sample count must be an integer of at least three');
   if (provenance.baselinePath !== baselinePath)
     problems.push(`provenance describes ${provenance.baselinePath}, not ${baselinePath}`);
   if (provenance.baselineSha256 !== sha256) problems.push('baseline hash differs from provenance');
@@ -44,6 +47,10 @@ function assertAcceptedBaseline() {
   if (provenance.sourceInputsAvailable !== true) problems.push('source inputs are unavailable');
   if (!Array.isArray(provenance.sourceArtifacts) || provenance.sourceArtifacts.length < sampleCount)
     problems.push('fewer retained source artifacts than the baseline sample count');
+  if (provenance.schemaVersion === 2) {
+    const verified = require('./baseline-provenance.cjs').classifyBaselineProvenance(process.cwd());
+    if (verified.reasons.length) problems.push(...verified.reasons);
+  }
   if (problems.length) {
     throw Object.assign(
       new Error(`Baseline refused: ${problems.join('; ')}; see ${provenancePath}`),
@@ -99,7 +106,30 @@ function compare() {
       .map((key) => [metric, key, value(baseline, metric, key), value(candidate, metric, key)]),
   );
   if (comparisons.length === 0) throw new Error('No comparable percentile metrics found');
-  const failures = comparisons.filter(([, , before, after]) => after > before * (1 + tolerance));
+  let tolerances;
+  try {
+    tolerances = read(tolerancePath);
+    if (tolerances.schemaVersion !== 1) throw new Error('unsupported tolerance schema');
+    for (const [metric, key] of comparisons) {
+      const limits = tolerances.perMetric?.[`${metric}.${key}`];
+      if (
+        !limits ||
+        !Number.isFinite(limits.relative) ||
+        limits.relative < 0 ||
+        !Number.isFinite(limits.absoluteMs) ||
+        limits.absoluteMs < 0
+      )
+        throw new Error(`missing or invalid tolerance for ${metric}.${key}`);
+    }
+  } catch (error) {
+    throw Object.assign(new Error(`Baseline refused: ${error.message}; see ${tolerancePath}`), {
+      refused: true,
+    });
+  }
+  const failures = comparisons.filter(([metric, key, before, after]) => {
+    const limits = tolerances.perMetric[`${metric}.${key}`];
+    return after > before * (1 + limits.relative) && after - before > limits.absoluteMs;
+  });
   const failureRates = Object.entries(baseline.metrics ?? {})
     .filter(([metric, values]) => metric.includes('failed') && typeof values.rate === 'number')
     .map(([metric]) => [metric, value(candidate, metric, 'rate')]);

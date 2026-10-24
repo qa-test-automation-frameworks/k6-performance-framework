@@ -1,0 +1,131 @@
+name: Noise calibration
+
+on:
+  workflow_dispatch:
+    inputs:
+      arm:
+        type: choice
+        options: [aa, degraded]
+        default: aa
+      delay_ms:
+        type: number
+        default: 0
+      samples:
+        type: number
+        default: 5
+      cohort_label:
+        type: string
+        required: true
+
+permissions:
+  contents: read
+
+env:
+  CALIBRATION_ARM: ${{ inputs.arm }}
+  CALIBRATION_DELAY_MS: ${{ inputs.delay_ms }}
+  CALIBRATION_SAMPLES: ${{ inputs.samples }}
+  CALIBRATION_LABEL: ${{ inputs.cohort_label }}
+  WORKFLOW_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+jobs:
+  configure:
+    runs-on: ubuntu-latest
+    outputs:
+      samples: ${{ steps.matrix.outputs.samples }}
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version-file: .nvmrc
+      - id: matrix
+        run: node scripts/calibration-cohort.cjs matrix
+
+  sample:
+    needs: configure
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        sample: ${{ fromJSON(needs.configure.outputs.samples) }}
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6
+        with:
+          bun-version: 1.2.15
+      - uses: grafana/setup-k6-action@43b9fc21641a76002687994433dd586f56e791b1 # v1.2.2
+        with:
+          k6-version: 2.0.0
+      - run: npm install --global npm@10.9.4
+      - run: npm ci
+      - run: npm run build
+      - name: Measure one independent runner
+        shell: bash
+        run: |
+          source .github/scripts/start-realworld.sh
+          mkdir -p reports
+          ENABLE_LATENCY_PROXY=1 DELAY_MS="$CALIBRATION_DELAY_MS" \
+            PROXY_STATS_FILE="reports/sample-${SAMPLE}-stats.json" \
+            node scripts/latency-proxy.cjs > reports/latency-proxy.log 2>&1 &
+          proxy_pid=$!
+          trap 'kill -TERM "$proxy_pid"; wait "$proxy_pid"' EXIT
+          ready=false
+          for attempt in {1..30}; do
+            if curl --fail --silent http://127.0.0.1:3001/api/articles?limit=1 >/dev/null; then ready=true; break; fi
+            sleep 1
+          done
+          test "$ready" = true
+          set +e
+          RUNNER_IMAGE="${ImageOS}-${ImageVersion}" k6 run dist/load/articles-load.js
+          native_status=$?
+          set -e
+          echo "$native_status" > "reports/sample-${SAMPLE}-native-exit.txt"
+          # Retain failed native experiments too; aggregation refuses invalid evidence.
+          test "$native_status" -eq 0
+        env:
+          SAMPLE: ${{ matrix.sample }}
+          SUMMARY_NAME: sample-${{ matrix.sample }}
+          K6_RUN_ID: ${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.sample }}
+          WORKLOAD_NAME: load
+          TARGET_ENV: local
+          BASE_URL: http://127.0.0.1:3001/api
+          TEST_PROFILE: full
+          TARGET_ID: realworld-local-proxied
+          TARGET_COMMIT: c8c66858a436a6e07f445fffe2253a65ff6dcb58
+          FRAMEWORK_COMMIT: ${{ github.sha }}
+          K6_VERSION: 2.0.0
+          RUNNER_CLASS: github-hosted
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        if: always()
+        with:
+          name: calibration-${{ inputs.cohort_label }}-${{ matrix.sample }}
+          path: reports/
+          retention-days: 90
+          if-no-files-found: error
+
+  aggregate:
+    needs: sample
+    if: always() && needs.sample.result == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version-file: .nvmrc
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        with:
+          pattern: calibration-${{ inputs.cohort_label }}-*
+          path: reports/calibration-inputs
+          merge-multiple: true
+      - run: node scripts/calibration-cohort.cjs reports/calibration-inputs reports/calibration-output
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        if: always()
+        with:
+          name: calibration-result-${{ inputs.cohort_label }}
+          path: reports/calibration-output/
+          retention-days: 90
+          if-no-files-found: error
