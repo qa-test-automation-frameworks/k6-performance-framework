@@ -28,15 +28,25 @@ jobs:
       - name: Run regression candidate
         run: |
           source .github/scripts/start-realworld.sh
-          k6 run dist/load/articles-load.js
+          mkdir -p reports
+          ENABLE_LATENCY_PROXY=1 DELAY_MS=0 node scripts/latency-proxy.cjs > reports/latency-proxy.log 2>&1 &
+          proxy_pid=$!
+          trap 'kill -TERM "$proxy_pid"; wait "$proxy_pid"' EXIT
+          ready=false
+          for attempt in {1..30}; do
+            if curl --fail --silent http://127.0.0.1:3001/api/articles?limit=1 >/dev/null; then ready=true; break; fi
+            sleep 1
+          done
+          test "$ready" = true
+          RUNNER_IMAGE="${ImageOS}-${ImageVersion}" WORKLOAD_NAME=load k6 run dist/load/articles-load.js
           TEST_PROFILE=validation SUMMARY_NAME=authenticated-validation \
             k6 run dist/load/user-journey-load.js
         env:
           TARGET_ENV: local
-          BASE_URL: http://localhost:3000/api
+          BASE_URL: http://127.0.0.1:3001/api
           TEST_PROFILE: full
           SUMMARY_NAME: load
-          TARGET_ID: realworld-local
+          TARGET_ID: realworld-local-proxied
           TARGET_COMMIT: c8c66858a436a6e07f445fffe2253a65ff6dcb58
           FRAMEWORK_COMMIT: ${{ github.sha }}
           K6_VERSION: 2.0.0

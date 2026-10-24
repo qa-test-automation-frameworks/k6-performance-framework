@@ -12,7 +12,7 @@ function run(script, env, args = []) {
   return spawnSync(process.execPath, [script, ...args], {
     cwd: process.cwd(),
     encoding: 'utf8',
-    env: { ...process.env, ...env },
+    env: { ...process.env, TOLERANCE_FILE: 'tests/regression-fixtures/tolerance.json', ...env },
   });
 }
 
@@ -387,5 +387,40 @@ describe('baseline refusal and advisory gate', () => {
     const committed = JSON.parse(fs.readFileSync('baseline/gate-mode.json', 'utf8'));
     expect(committed.mode).toBe('advisory');
     expect(committed.reason.length).toBeGreaterThan(20);
+  });
+});
+
+describe('measured per-metric tolerances', () => {
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'k6-tolerances-'));
+  const env = {
+    BASELINE_FILE: 'tests/regression-fixtures/measured-baseline.json',
+    BASELINE_PROVENANCE_FILE: FIXTURE_PROVENANCE,
+    CANDIDATE_FILE: 'tests/regression-fixtures/endpoint-regression-candidate.json',
+  };
+  it('requires both the relative and absolute limits to be exceeded', () => {
+    const original = JSON.parse(fs.readFileSync('tests/regression-fixtures/tolerance.json'));
+    for (const [relative, absoluteMs, status] of [
+      [0.2, 2, 0],
+      [1, 0.2, 0],
+      [0.2, 0.2, 1],
+    ]) {
+      const limits = structuredClone(original);
+      for (const value of Object.values(limits.perMetric))
+        Object.assign(value, { relative, absoluteMs });
+      const file = path.join(directory, 'limits.json');
+      fs.writeFileSync(file, JSON.stringify(limits));
+      expect(run('scripts/compare-performance.cjs', { ...env, TOLERANCE_FILE: file }).status).toBe(
+        status,
+      );
+    }
+  });
+  it('refuses missing or invalid metric tolerances', () => {
+    for (const perMetric of [{}, { 'http_req_duration.p(95)': { relative: -1, absoluteMs: 1 } }]) {
+      const file = path.join(directory, 'invalid.json');
+      fs.writeFileSync(file, JSON.stringify({ schemaVersion: 1, perMetric }));
+      const result = run('scripts/compare-performance.cjs', { ...env, TOLERANCE_FILE: file });
+      expect(result.status).toBe(3);
+      expect(result.stderr).toContain('missing or invalid tolerance');
+    }
   });
 });
