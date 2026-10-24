@@ -77,6 +77,7 @@ test('tolerance derivation follows the measured relative and absolute formulas',
 test('cohort inputs reject insufficient samples, unsafe labels, and a mislabeled arm', () => {
   const { inputs } = require('../calibration-cohort.cjs');
   const base = {
+    CALIBRATION_EXPECTED_IMAGE: 'ubuntu24-20261023.334.3',
     CALIBRATION_ARM: 'aa',
     CALIBRATION_SAMPLES: '5',
     CALIBRATION_DELAY_MS: '0',
@@ -84,6 +85,8 @@ test('cohort inputs reject insufficient samples, unsafe labels, and a mislabeled
   };
   assert.equal(inputs(base).samples, 5);
   for (const changes of [
+    { CALIBRATION_EXPECTED_IMAGE: '' },
+    { CALIBRATION_EXPECTED_IMAGE: 'unbounded' },
     { CALIBRATION_SAMPLES: '4' },
     { CALIBRATION_SAMPLES: 'NaN' },
     { CALIBRATION_LABEL: '../path' },
@@ -91,4 +94,12 @@ test('cohort inputs reject insufficient samples, unsafe labels, and a mislabeled
     { CALIBRATION_ARM: 'degraded' },
   ])
     assert.throws(() => inputs({ ...base, ...changes }), /Invalid calibration/);
+});
+
+test('image preflight accepts the declared identity and rejects a different or missing image', () => {
+  const { verifyRunnerImage } = require('../calibration-cohort.cjs');
+  const image = 'ubuntu24-20261023.334.3';
+  assert.doesNotThrow(() => verifyRunnerImage(image, image));
+  assert.throws(() => verifyRunnerImage(image, 'ubuntu24-20261012.334.1'), /Runner image mismatch/);
+  assert.throws(() => verifyRunnerImage(image, undefined), /Runner image mismatch/);
 });

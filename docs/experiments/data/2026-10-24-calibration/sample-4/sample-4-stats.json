@@ -1,0 +1,7 @@
+{
+  "delayMs": 0,
+  "pathRegex": "^/api/articles(\\?|$)",
+  "matched": 9601,
+  "delayed": 0,
+  "forwarded": 32251
+}
