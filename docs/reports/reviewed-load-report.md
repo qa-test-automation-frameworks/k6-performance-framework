@@ -1,6 +1,6 @@
 # Reviewed Load Report
 
-This report summarizes the committed three-run reviewed baseline in
+This report summarizes the historical June 2026 aggregate (source inputs unavailable; see baseline provenance) in
 [`baseline/load-summary.json`](../../baseline/load-summary.json). It is intended
 as a human-openable evidence artifact; generated run outputs remain ignored
 under `reports/`.

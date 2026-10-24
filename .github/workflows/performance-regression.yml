@@ -46,7 +46,7 @@ jobs:
         run: |
           set -o pipefail
           test -f baseline/load-summary.json
-          npm run baseline:compare 2>&1 | tee regression.md
+          node scripts/regression-gate.cjs 2>&1 | tee regression.md
       - run: cat regression.md >> "$GITHUB_STEP_SUMMARY"
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         if: always()
