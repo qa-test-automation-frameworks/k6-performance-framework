@@ -3,16 +3,8 @@ name: Main load
 on:
   push:
     branches: [main]
-    paths:
-      - '.github/scripts/start-realworld.sh'
-      - '.github/workflows/main-load.yml'
-      - 'bun.lock'
-      - 'config/**'
-      - 'package-lock.json'
-      - 'package.json'
-      - 'scripts/**'
-      - 'src/**'
-      - 'tests/load/**'
+  schedule:
+    - cron: '7 3 * * *'
   workflow_dispatch:
     inputs:
       sample_order:

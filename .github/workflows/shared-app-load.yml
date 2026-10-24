@@ -1,6 +1,10 @@
 name: Shared reference app load
 
 on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '47 3 * * *'
   pull_request:
     paths:
       - .github/workflows/shared-app-load.yml

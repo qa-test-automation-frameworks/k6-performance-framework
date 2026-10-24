@@ -93,8 +93,22 @@ function measurementsFrom(summary) {
   return measurements;
 }
 
+function parseJunit(text) {
+  if (typeof text !== 'string' || !/<testsuites?\b/.test(text))
+    fail('JUnit input has no testsuite root');
+  const cases = [...text.matchAll(/<testcase\b[^>]*?(?:\/>|>[\s\S]*?<\/testcase>)/g)].map(
+    (match) => match[0],
+  );
+  if (cases.length === 0) fail('JUnit input contains no testcases');
+  const failed = cases.filter((item) => /<(?:failure|error)\b/.test(item)).length;
+  const skipped = cases.filter((item) => /<skipped\b/.test(item)).length;
+  return { selected: cases.length, failed, skipped };
+}
+
 function makeRecord({
   summary,
+  junit,
+  controlCheckCounts = false,
   env = process.env,
   scope,
   unavailableReason,
@@ -126,6 +140,9 @@ function makeRecord({
   const branch = env.GITHUB_REF_NAME ?? 'unknown';
   const start = env.EVIDENCE_STARTED_AT;
   const runUrl = `https://github.com/${repository}/actions/runs/${runId}`;
+  if (controlCheckCounts && !summary) fail('--control-check-counts requires --summary');
+  if (junit && (summary || unavailableReason))
+    fail('--junit cannot be combined with --summary or --unavailable-reason');
   const recordedK6Version = summary?.metadata?.k6Version ?? env.K6_VERSION;
   if (!unavailableReason && (!env.K6_VERSION || !env.GITHUB_WORKFLOW_REF)) {
     fail('attempted execution is missing the actual k6 version or workflow identity');
@@ -165,6 +182,36 @@ function makeRecord({
       measurements: [],
       shards: { expected: [scope], received: [] },
     };
+  } else if (junit) {
+    const startedAt = iso(env.EVIDENCE_STARTED_AT, 'EVIDENCE_STARTED_AT');
+    const completedAt = iso(env.EVIDENCE_COMPLETED_AT, 'EVIDENCE_COMPLETED_AT');
+    if (Date.parse(completedAt) < Date.parse(startedAt)) fail('completion precedes recorded start');
+    const executed = junit.selected - junit.skipped;
+    const passed = executed - junit.failed;
+    const disposition = junit.failed === 0 && executed > 0 ? 'passed' : 'failed';
+    execution = {
+      disposition,
+      reason:
+        disposition === 'failed'
+          ? `${junit.failed} of ${junit.selected} verifier test cases failed or none executed`
+          : null,
+      startedAt,
+      completedAt,
+      integrity: 'complete',
+      counts: {
+        unit: 'test_case',
+        selected: junit.selected,
+        executed,
+        passed,
+        failed: junit.failed,
+        skipped: junit.skipped,
+        retried: null,
+        semantics:
+          'node:test JUnit test cases from the failure-control verdict test; skipped cases are not executed.',
+      },
+      measurements: [],
+      shards: { expected: [scope], received: [scope] },
+    };
   } else {
     if (!summary || typeof summary !== 'object') fail('summary is missing');
     const startedAt = iso(start, 'EVIDENCE_STARTED_AT');
@@ -175,6 +222,33 @@ function makeRecord({
     const failures = Array.isArray(summary.failures) ? summary.failures : null;
     if (!failures) fail('summary failures must be an array');
     const disposition = failures.length ? 'failed' : 'passed';
+    let counts = {
+      unit: 'not_applicable',
+      selected: null,
+      executed: null,
+      passed: null,
+      failed: null,
+      skipped: null,
+      retried: null,
+      semantics:
+        'Performance workload; virtual users, iterations, and requests are represented by native measurements, not test-case counts.',
+    };
+    if (controlCheckCounts) {
+      const { passes, fails } = summary.metrics?.checks ?? {};
+      if (!Number.isSafeInteger(passes) || passes < 0 || !Number.isSafeInteger(fails) || fails < 0)
+        fail('--control-check-counts requires non-negative integer checks.passes and checks.fails');
+      counts = {
+        unit: 'test_case',
+        selected: passes + fails,
+        executed: passes + fails,
+        passed: passes,
+        failed: fails,
+        skipped: 0,
+        retried: null,
+        semantics:
+          'Single deliberate k6 check in the failure-control script; counts are k6 native checks.passes/fails. Used only for the control-pair raw scope.',
+      };
+    }
     execution = {
       disposition,
       reason:
@@ -184,17 +258,7 @@ function makeRecord({
       startedAt,
       completedAt,
       integrity: 'complete',
-      counts: {
-        unit: 'not_applicable',
-        selected: null,
-        executed: null,
-        passed: null,
-        failed: null,
-        skipped: null,
-        retried: null,
-        semantics:
-          'Performance workload; virtual users, iterations, and requests are represented by native measurements, not test-case counts.',
-      },
+      counts,
       measurements,
       shards: { expected: [scope], received: [scope] },
     };
@@ -203,10 +267,14 @@ function makeRecord({
     schemaVersion: 3,
     repository,
     sourceSha,
-    limitations: [
-      'Performance metrics are workload measurements, not test-case outcomes.',
-      'Threshold outcomes are derived from the framework summary; raw k6 output must be retained separately for full reanalysis.',
-    ],
+    limitations: junit
+      ? [
+          'Counts are node:test JUnit test cases from the failure-control verdict test; no performance workload ran in this scope.',
+        ]
+      : [
+          'Performance metrics are workload measurements, not test-case outcomes.',
+          'Threshold outcomes are derived from the framework summary; raw k6 output must be retained separately for full reanalysis.',
+        ],
     kind: 'execution',
     workflow: {
       id: env.GITHUB_WORKFLOW_REF ?? `${repository}/.github/workflows/unknown`,
@@ -227,7 +295,7 @@ function makeRecord({
       reportUrl: null,
       artifacts: [],
     },
-    generator: { name: 'k6-portfolio-evidence', version: '1.0.0' },
+    generator: { name: 'k6-portfolio-evidence', version: '1.1.0' },
   };
 }
 
@@ -243,11 +311,17 @@ function parseArgs(args) {
         '--output',
         '--class',
         '--optional',
+        '--control-check-counts',
+        '--junit',
       ].includes(key)
     )
       fail(`unknown argument ${key}`);
     if (key === '--optional') {
       options.required = false;
+      continue;
+    }
+    if (key === '--control-check-counts') {
+      options.controlCheckCounts = true;
       continue;
     }
     const value = args[i + 1];
@@ -262,16 +336,20 @@ function main() {
   const options = parseArgs(process.argv.slice(2));
   if (
     !options.scope ||
-    (!options.summary && !options['unavailable-reason']) ||
-    (options.summary && options['unavailable-reason'])
+    [options.summary, options['unavailable-reason'], options.junit].filter(Boolean).length !== 1
   ) {
     fail(
-      'Usage: node scripts/emit-portfolio-evidence.cjs --scope <id> (--summary <file> | --unavailable-reason <text>) [--class <class>] [--optional] [--output <file>]',
+      'Usage: node scripts/emit-portfolio-evidence.cjs --scope <id> (--summary <file> [--control-check-counts] | --unavailable-reason <text> | --junit <file>) [--class <class>] [--optional] [--output <file>]',
     );
   }
+  if (options.controlCheckCounts && !options.summary)
+    fail('--control-check-counts is valid only with --summary');
   const summary = options.summary ? JSON.parse(fs.readFileSync(options.summary, 'utf8')) : null;
+  const junit = options.junit ? parseJunit(fs.readFileSync(options.junit, 'utf8')) : undefined;
   const record = makeRecord({
     summary,
+    junit,
+    controlCheckCounts: options.controlCheckCounts ?? false,
     scope: options.scope,
     evidenceClass: options.class ?? 'scheduled_load',
     required: options.required ?? true,
@@ -284,7 +362,7 @@ function main() {
   if (record.execution.disposition === 'unavailable') process.exitCode = 1;
 }
 
-module.exports = { makeRecord, measurementsFrom };
+module.exports = { makeRecord, measurementsFrom, parseJunit };
 if (require.main === module) {
   try {
     main();
