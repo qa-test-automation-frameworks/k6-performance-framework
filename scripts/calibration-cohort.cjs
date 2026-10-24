@@ -12,7 +12,9 @@ function inputs(env = process.env) {
   const samples = Number(env.CALIBRATION_SAMPLES);
   const delayMs = Number(env.CALIBRATION_DELAY_MS);
   const label = env.CALIBRATION_LABEL;
+  const expectedImage = env.CALIBRATION_EXPECTED_IMAGE;
   if (
+    !/^ubuntu[0-9]+-[0-9]{8}\.[0-9]+\.[0-9]+$/.test(expectedImage || '') ||
     !['aa', 'degraded'].includes(arm) ||
     !Number.isInteger(samples) ||
     samples < (arm === 'aa' ? 5 : 3) ||
@@ -25,7 +27,7 @@ function inputs(env = process.env) {
     !/^[a-zA-Z0-9_-]{1,60}$/.test(label || '')
   )
     throw new Error('Invalid calibration arm, sample count, delay, or cohort label');
-  return { arm, samples, delayMs, label };
+  return { arm, samples, delayMs, label, expectedImage };
 }
 
 function aggregate(directory, output, config = inputs()) {
@@ -52,6 +54,8 @@ function aggregate(directory, output, config = inputs()) {
     )
       throw new Error(`Proxy arm not proven for sample ${index}`);
     const bytes = fs.readFileSync(path.join(directory, file));
+    if (JSON.parse(bytes).metadata?.runnerImage !== config.expectedImage)
+      throw new Error(`Unexpected runner image for sample ${index}`);
     return {
       path: `baseline/sources/${file}`,
       bytes,

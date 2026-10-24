@@ -77,6 +77,7 @@ test('tolerance derivation follows the measured relative and absolute formulas',
 test('cohort inputs reject insufficient samples, unsafe labels, and a mislabeled arm', () => {
   const { inputs } = require('../calibration-cohort.cjs');
   const base = {
+    CALIBRATION_EXPECTED_IMAGE: 'ubuntu24-20261023.334.3',
     CALIBRATION_ARM: 'aa',
     CALIBRATION_SAMPLES: '5',
     CALIBRATION_DELAY_MS: '0',
@@ -84,6 +85,8 @@ test('cohort inputs reject insufficient samples, unsafe labels, and a mislabeled
   };
   assert.equal(inputs(base).samples, 5);
   for (const changes of [
+    { CALIBRATION_EXPECTED_IMAGE: '' },
+    { CALIBRATION_EXPECTED_IMAGE: 'unbounded' },
     { CALIBRATION_SAMPLES: '4' },
     { CALIBRATION_SAMPLES: 'NaN' },
     { CALIBRATION_LABEL: '../path' },

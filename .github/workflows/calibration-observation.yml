@@ -1,0 +1,36 @@
+name: Calibration observation
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/report-calibration-observation.cjs'
+      - 'docs/experiments/data/2026-10-24-calibration/**'
+      - 'docs/experiments/noise-calibration-2026-10-24.md'
+      - '.github/workflows/calibration-observation.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/report-calibration-observation.cjs'
+      - 'docs/experiments/data/2026-10-24-calibration/**'
+      - 'docs/experiments/noise-calibration-2026-10-24.md'
+      - '.github/workflows/calibration-observation.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  calibration-report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+      - run: node scripts/report-calibration-observation.cjs
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: rejected-calibration-observation
+          path: |
+            docs/experiments/noise-calibration-2026-10-24.md
+            docs/experiments/data/2026-10-24-calibration/SHA256SUMS
+          if-no-files-found: error
