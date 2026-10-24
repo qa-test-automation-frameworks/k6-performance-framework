@@ -95,3 +95,11 @@ test('cohort inputs reject insufficient samples, unsafe labels, and a mislabeled
   ])
     assert.throws(() => inputs({ ...base, ...changes }), /Invalid calibration/);
 });
+
+test('image preflight accepts the declared identity and rejects a different or missing image', () => {
+  const { verifyRunnerImage } = require('../calibration-cohort.cjs');
+  const image = 'ubuntu24-20261023.334.3';
+  assert.doesNotThrow(() => verifyRunnerImage(image, image));
+  assert.throws(() => verifyRunnerImage(image, 'ubuntu24-20261012.334.1'), /Runner image mismatch/);
+  assert.throws(() => verifyRunnerImage(image, undefined), /Runner image mismatch/);
+});

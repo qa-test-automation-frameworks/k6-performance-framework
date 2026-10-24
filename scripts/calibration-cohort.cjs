@@ -30,6 +30,11 @@ function inputs(env = process.env) {
   return { arm, samples, delayMs, label, expectedImage };
 }
 
+function verifyRunnerImage(expected, actual) {
+  if (actual !== expected)
+    throw new Error(`Runner image mismatch: ${actual}; expected ${expected}`);
+}
+
 function aggregate(directory, output, config = inputs()) {
   const files = fs
     .readdirSync(directory)
@@ -54,8 +59,7 @@ function aggregate(directory, output, config = inputs()) {
     )
       throw new Error(`Proxy arm not proven for sample ${index}`);
     const bytes = fs.readFileSync(path.join(directory, file));
-    if (JSON.parse(bytes).metadata?.runnerImage !== config.expectedImage)
-      throw new Error(`Unexpected runner image for sample ${index}`);
+    verifyRunnerImage(config.expectedImage, JSON.parse(bytes).metadata?.runnerImage);
     return {
       path: `baseline/sources/${file}`,
       bytes,
@@ -143,7 +147,13 @@ function aggregate(directory, output, config = inputs()) {
 }
 
 if (require.main === module) {
-  if (process.argv[2] === 'matrix') {
+  if (process.argv[2] === 'preflight') {
+    const config = inputs();
+    const actual = process.env.ACTUAL_RUNNER_IMAGE;
+    fs.mkdirSync('reports', { recursive: true });
+    fs.writeFileSync('reports/runner-image.txt', `${actual}\n`);
+    verifyRunnerImage(config.expectedImage, actual);
+  } else if (process.argv[2] === 'matrix') {
     const config = inputs();
     fs.appendFileSync(
       process.env.GITHUB_OUTPUT,
@@ -152,4 +162,4 @@ if (require.main === module) {
   } else aggregate(process.argv[2], process.argv[3]);
 }
 
-module.exports = { inputs, aggregate };
+module.exports = { inputs, aggregate, verifyRunnerImage };
