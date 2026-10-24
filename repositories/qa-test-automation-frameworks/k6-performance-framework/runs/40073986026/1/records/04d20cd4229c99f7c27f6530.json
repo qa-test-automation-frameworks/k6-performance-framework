@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 3,
+  "repository": "qa-test-automation-frameworks/k6-performance-framework",
+  "sourceSha": "ab037921eea236fd6c4d6b9912bebb26e534f474",
+  "limitations": [
+    "Counts are node:test JUnit test cases from the failure-control verdict test; no performance workload ran in this scope."
+  ],
+  "kind": "execution",
+  "workflow": {
+    "id": "qa-test-automation-frameworks/k6-performance-framework/.github/workflows/pr-smoke.yml@refs/heads/main",
+    "name": "PR smoke",
+    "runId": "40073986026",
+    "attempt": 1,
+    "url": "https://github.com/qa-test-automation-frameworks/k6-performance-framework/actions/runs/40073986026",
+    "trigger": "push",
+    "branch": "main"
+  },
+  "scope": {
+    "id": "k6.evidence-failure-control-verification",
+    "evidenceClass": "hermetic",
+    "required": true,
+    "freshnessPolicy": "daily_gate_v1"
+  },
+  "target": {
+    "identity": "k6-evidence-failure-fixture",
+    "revision": null,
+    "fixtureVersion": null,
+    "environment": "local",
+    "profile": null,
+    "tools": {
+      "k6": "2.0.0",
+      "node": "v24.21.0"
+    }
+  },
+  "execution": {
+    "disposition": "passed",
+    "reason": null,
+    "startedAt": "2026-10-24T07:25:00.000Z",
+    "completedAt": "2026-10-24T07:25:00.000Z",
+    "integrity": "complete",
+    "counts": {
+      "unit": "test_case",
+      "selected": 1,
+      "executed": 1,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0,
+      "retried": null,
+      "semantics": "node:test JUnit test cases from the failure-control verdict test; skipped cases are not executed."
+    },
+    "measurements": [],
+    "shards": {
+      "expected": [
+        "k6.evidence-failure-control-verification"
+      ],
+      "received": [
+        "k6.evidence-failure-control-verification"
+      ]
+    }
+  },
+  "publication": {
+    "disposition": "pending",
+    "reason": "E03 durable publication is not implemented for this repository.",
+    "publishedAt": null,
+    "reportUrl": null,
+    "artifacts": []
+  },
+  "generator": {
+    "name": "k6-portfolio-evidence",
+    "version": "1.1.0"
+  }
+}

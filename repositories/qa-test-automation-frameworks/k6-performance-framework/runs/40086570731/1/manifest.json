@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "repository": "qa-test-automation-frameworks/k6-performance-framework",
+  "run": {
+    "id": "40086570731",
+    "attempt": 1,
+    "sourceSha": "1eb12f5a2e621b30bd7328e9afc43ffb3c2ed117",
+    "event": "push",
+    "branch": "main",
+    "workflowName": "Shared reference app load",
+    "conclusion": "success",
+    "completedAt": "2026-10-24T10:38:21.000Z",
+    "url": "https://github.com/qa-test-automation-frameworks/k6-performance-framework/actions/runs/40086570731"
+  },
+  "records": [
+    {
+      "scope": "k6.shared-app-load",
+      "evidenceClass": "scheduled_load",
+      "execution": "passed",
+      "integrity": "complete",
+      "path": "records/089fa665d3420a7b7d90fbdb.json",
+      "sha256": "ce6ea7598575985e7b3405c73db1d691c84054b0b26d2fe1d7b1ce06c90982b4"
+    }
+  ]
+}

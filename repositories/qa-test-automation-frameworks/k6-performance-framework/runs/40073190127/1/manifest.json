@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "repository": "qa-test-automation-frameworks/k6-performance-framework",
+  "run": {
+    "id": "40073190127",
+    "attempt": 1,
+    "sourceSha": "3ce218e58e8ceb667976266b73a81fe5e220e058",
+    "event": "push",
+    "branch": "main",
+    "workflowName": "Main load",
+    "conclusion": "success",
+    "completedAt": "2026-10-24T07:20:49.000Z",
+    "url": "https://github.com/qa-test-automation-frameworks/k6-performance-framework/actions/runs/40073190127"
+  },
+  "records": [
+    {
+      "scope": "k6.articles-load",
+      "evidenceClass": "scheduled_load",
+      "execution": "passed",
+      "integrity": "complete",
+      "path": "records/919cac634b9d4f641a53441a.json",
+      "sha256": "12a83e19549ac8c17f8b4695732c02787cdb33acc0f84f0d18a2d44434a5dd29"
+    },
+    {
+      "scope": "k6.authenticated-journey",
+      "evidenceClass": "scheduled_load",
+      "execution": "passed",
+      "integrity": "complete",
+      "path": "records/58a04c2b77a34777c176a4ec.json",
+      "sha256": "b4a18310b5f3105085249282f10cdba95ab3bfb26a9a3ac54bd4b23212498e39"
+    }
+  ]
+}

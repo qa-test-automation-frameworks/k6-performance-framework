@@ -1,0 +1,795 @@
+{
+  "schemaVersion": 3,
+  "repository": "qa-test-automation-frameworks/k6-performance-framework",
+  "sourceSha": "80de0102cb171b464440cb69300abaea6277f706",
+  "limitations": [
+    "Performance metrics are workload measurements, not test-case outcomes.",
+    "Threshold outcomes are derived from the framework summary; raw k6 output must be retained separately for full reanalysis."
+  ],
+  "kind": "execution",
+  "workflow": {
+    "id": "qa-test-automation-frameworks/k6-performance-framework/.github/workflows/main-load.yml@refs/heads/main",
+    "name": "Main load",
+    "runId": "39366556340",
+    "attempt": 1,
+    "url": "https://github.com/qa-test-automation-frameworks/k6-performance-framework/actions/runs/39366556340",
+    "trigger": "push",
+    "branch": "main"
+  },
+  "scope": {
+    "id": "k6.authenticated-journey",
+    "evidenceClass": "scheduled_load",
+    "required": true,
+    "freshnessPolicy": "daily_gate_v1"
+  },
+  "target": {
+    "identity": "realworld-local",
+    "revision": "c8c66858a436a6e07f445fffe2253a65ff6dcb58",
+    "fixtureVersion": null,
+    "environment": "local",
+    "profile": "validation",
+    "tools": {
+      "k6": "2.0.0",
+      "node": "v24.21.0"
+    }
+  },
+  "execution": {
+    "disposition": "passed",
+    "reason": null,
+    "startedAt": "2026-10-20T04:01:02.000Z",
+    "completedAt": "2026-10-20T04:01:13.350Z",
+    "integrity": "complete",
+    "counts": {
+      "unit": "not_applicable",
+      "selected": null,
+      "executed": null,
+      "passed": null,
+      "failed": null,
+      "skipped": null,
+      "retried": null,
+      "semantics": "Performance workload; virtual users, iterations, and requests are represented by native measurements, not test-case counts."
+    },
+    "measurements": [
+      {
+        "name": "http_req_duration_name:PUT_/articles/:slug_.average",
+        "value": 7.455319800000001,
+        "unit": "ms",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric http_req_duration{name:PUT /articles/:slug} average; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_req_duration_name:PUT_/articles/:slug_.median",
+        "value": 5.171556,
+        "unit": "ms",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric http_req_duration{name:PUT /articles/:slug} median; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_req_duration_name:PUT_/articles/:slug_.p90",
+        "value": 11.957207799999999,
+        "unit": "ms",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric http_req_duration{name:PUT /articles/:slug} p90; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_req_duration_name:PUT_/articles/:slug_.p95",
+        "value": 14.010921399999997,
+        "unit": "ms",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric http_req_duration{name:PUT /articles/:slug} p95; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_req_duration_name:PUT_/articles/:slug_.p99",
+        "value": 15.653892279999997,
+        "unit": "ms",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric http_req_duration{name:PUT /articles/:slug} p99; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_req_duration_name:PUT_/articles/:slug_.minimum",
+        "value": 5.098569,
+        "unit": "ms",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric http_req_duration{name:PUT /articles/:slug} minimum; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_req_duration_name:PUT_/articles/:slug_.maximum",
+        "value": 16.064635,
+        "unit": "ms",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric http_req_duration{name:PUT /articles/:slug} maximum; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_req_failed_name:PUT_/articles/:slug_.rate",
+        "value": 0,
+        "unit": "per_second",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric http_req_failed{name:PUT /articles/:slug} rate; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_req_failed_name:PUT_/articles/:slug_.passes",
+        "value": 0,
+        "unit": "count",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric http_req_failed{name:PUT /articles/:slug} passes; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_req_failed_name:PUT_/articles/:slug_.fails",
+        "value": 5,
+        "unit": "count",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric http_req_failed{name:PUT /articles/:slug} fails; sampleCount is the metric's native count."
+      },
+      {
+        "name": "checks.rate",
+        "value": 1,
+        "unit": "ratio",
+        "sampleCount": 35,
+        "semantics": "Native k6 summary metric checks rate; sampleCount is the metric's native count."
+      },
+      {
+        "name": "checks.passes",
+        "value": 35,
+        "unit": "count",
+        "sampleCount": 35,
+        "semantics": "Native k6 summary metric checks passes; sampleCount is the metric's native count."
+      },
+      {
+        "name": "checks.fails",
+        "value": 0,
+        "unit": "count",
+        "sampleCount": 35,
+        "semantics": "Native k6 summary metric checks fails; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_reqs_name:PUT_/articles/:slug_.rate",
+        "value": 0.4553623632410499,
+        "unit": "per_second",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric http_reqs{name:PUT /articles/:slug} rate; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_reqs_name:PUT_/articles/:slug_.count",
+        "value": 5,
+        "unit": "count",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric http_reqs{name:PUT /articles/:slug} count; sampleCount is the metric's native count."
+      },
+      {
+        "name": "data_received.rate",
+        "value": 1933.1953769035533,
+        "unit": "per_second",
+        "sampleCount": 21227,
+        "semantics": "Native k6 summary metric data_received rate; sampleCount is the metric's native count."
+      },
+      {
+        "name": "data_received.count",
+        "value": 21227,
+        "unit": "count",
+        "sampleCount": 21227,
+        "semantics": "Native k6 summary metric data_received count; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_reqs_name:POST_/users_.rate",
+        "value": 0.4553623632410499,
+        "unit": "per_second",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric http_reqs{name:POST /users} rate; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_reqs_name:POST_/users_.count",
+        "value": 5,
+        "unit": "count",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric http_reqs{name:POST /users} count; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_req_duration_name:POST_/articles/:slug/comments_.average",
+        "value": 6.105766,
+        "unit": "ms",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric http_req_duration{name:POST /articles/:slug/comments} average; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_req_duration_name:POST_/articles/:slug/comments_.median",
+        "value": 4.24955,
+        "unit": "ms",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric http_req_duration{name:POST /articles/:slug/comments} median; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_req_duration_name:POST_/articles/:slug/comments_.p90",
+        "value": 9.513916,
+        "unit": "ms",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric http_req_duration{name:POST /articles/:slug/comments} p90; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_req_duration_name:POST_/articles/:slug/comments_.p95",
+        "value": 10.405978,
+        "unit": "ms",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric http_req_duration{name:POST /articles/:slug/comments} p95; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_req_duration_name:POST_/articles/:slug/comments_.p99",
+        "value": 11.119627600000001,
+        "unit": "ms",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric http_req_duration{name:POST /articles/:slug/comments} p99; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_req_duration_name:POST_/articles/:slug/comments_.minimum",
+        "value": 3.946461,
+        "unit": "ms",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric http_req_duration{name:POST /articles/:slug/comments} minimum; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_req_duration_name:POST_/articles/:slug/comments_.maximum",
+        "value": 11.29804,
+        "unit": "ms",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric http_req_duration{name:POST /articles/:slug/comments} maximum; sampleCount is the metric's native count."
+      },
+      {
+        "name": "iteration_duration.average",
+        "value": 1039.2458816,
+        "unit": "ms",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric iteration_duration average; sampleCount is the metric's native count."
+      },
+      {
+        "name": "iteration_duration.median",
+        "value": 1033.160285,
+        "unit": "ms",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric iteration_duration median; sampleCount is the metric's native count."
+      },
+      {
+        "name": "iteration_duration.p90",
+        "value": 1052.2024262,
+        "unit": "ms",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric iteration_duration p90; sampleCount is the metric's native count."
+      },
+      {
+        "name": "iteration_duration.p95",
+        "value": 1057.9195406000001,
+        "unit": "ms",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric iteration_duration p95; sampleCount is the metric's native count."
+      },
+      {
+        "name": "iteration_duration.p99",
+        "value": 1062.4932321200001,
+        "unit": "ms",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric iteration_duration p99; sampleCount is the metric's native count."
+      },
+      {
+        "name": "iteration_duration.minimum",
+        "value": 1031.363434,
+        "unit": "ms",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric iteration_duration minimum; sampleCount is the metric's native count."
+      },
+      {
+        "name": "iteration_duration.maximum",
+        "value": 1063.636655,
+        "unit": "ms",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric iteration_duration maximum; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_req_duration.average",
+        "value": 27.49586805714286,
+        "unit": "ms",
+        "sampleCount": 35,
+        "semantics": "Native k6 summary metric http_req_duration average; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_req_duration.median",
+        "value": 5.796067,
+        "unit": "ms",
+        "sampleCount": 35,
+        "semantics": "Native k6 summary metric http_req_duration median; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_req_duration.p90",
+        "value": 87.845728,
+        "unit": "ms",
+        "sampleCount": 35,
+        "semantics": "Native k6 summary metric http_req_duration p90; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_req_duration.p95",
+        "value": 88.850058,
+        "unit": "ms",
+        "sampleCount": 35,
+        "semantics": "Native k6 summary metric http_req_duration p95; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_req_duration.p99",
+        "value": 310.85778133999884,
+        "unit": "ms",
+        "sampleCount": 35,
+        "semantics": "Native k6 summary metric http_req_duration p99; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_req_duration.minimum",
+        "value": 3.322795,
+        "unit": "ms",
+        "sampleCount": 35,
+        "semantics": "Native k6 summary metric http_req_duration minimum; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_req_duration.maximum",
+        "value": 424.220088,
+        "unit": "ms",
+        "sampleCount": 35,
+        "semantics": "Native k6 summary metric http_req_duration maximum; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_req_duration_name:DELETE_/articles/:slug_.average",
+        "value": 4.5766448,
+        "unit": "ms",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric http_req_duration{name:DELETE /articles/:slug} average; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_req_duration_name:DELETE_/articles/:slug_.median",
+        "value": 4.712109,
+        "unit": "ms",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric http_req_duration{name:DELETE /articles/:slug} median; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_req_duration_name:DELETE_/articles/:slug_.p90",
+        "value": 5.666629,
+        "unit": "ms",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric http_req_duration{name:DELETE /articles/:slug} p90; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_req_duration_name:DELETE_/articles/:slug_.p95",
+        "value": 5.707631,
+        "unit": "ms",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric http_req_duration{name:DELETE /articles/:slug} p95; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_req_duration_name:DELETE_/articles/:slug_.p99",
+        "value": 5.7404326,
+        "unit": "ms",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric http_req_duration{name:DELETE /articles/:slug} p99; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_req_duration_name:DELETE_/articles/:slug_.minimum",
+        "value": 3.322795,
+        "unit": "ms",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric http_req_duration{name:DELETE /articles/:slug} minimum; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_req_duration_name:DELETE_/articles/:slug_.maximum",
+        "value": 5.748633,
+        "unit": "ms",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric http_req_duration{name:DELETE /articles/:slug} maximum; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_reqs_name:POST_/articles/:slug/comments_.rate",
+        "value": 0.4553623632410499,
+        "unit": "per_second",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric http_reqs{name:POST /articles/:slug/comments} rate; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_reqs_name:POST_/articles/:slug/comments_.count",
+        "value": 5,
+        "unit": "count",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric http_reqs{name:POST /articles/:slug/comments} count; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_req_failed_name:POST_/articles/:slug/favorite_.rate",
+        "value": 0,
+        "unit": "per_second",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric http_req_failed{name:POST /articles/:slug/favorite} rate; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_req_failed_name:POST_/articles/:slug/favorite_.passes",
+        "value": 0,
+        "unit": "count",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric http_req_failed{name:POST /articles/:slug/favorite} passes; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_req_failed_name:POST_/articles/:slug/favorite_.fails",
+        "value": 5,
+        "unit": "count",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric http_req_failed{name:POST /articles/:slug/favorite} fails; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_reqs.rate",
+        "value": 3.1875365426873494,
+        "unit": "per_second",
+        "sampleCount": 35,
+        "semantics": "Native k6 summary metric http_reqs rate; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_reqs.count",
+        "value": 35,
+        "unit": "count",
+        "sampleCount": 35,
+        "semantics": "Native k6 summary metric http_reqs count; sampleCount is the metric's native count."
+      },
+      {
+        "name": "iterations.rate",
+        "value": 0.4553623632410499,
+        "unit": "per_second",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric iterations rate; sampleCount is the metric's native count."
+      },
+      {
+        "name": "iterations.count",
+        "value": 5,
+        "unit": "count",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric iterations count; sampleCount is the metric's native count."
+      },
+      {
+        "name": "custom_comment_success_rate.rate",
+        "value": 1,
+        "unit": "per_second",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric custom_comment_success_rate rate; sampleCount is the metric's native count."
+      },
+      {
+        "name": "custom_comment_success_rate.passes",
+        "value": 5,
+        "unit": "count",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric custom_comment_success_rate passes; sampleCount is the metric's native count."
+      },
+      {
+        "name": "custom_comment_success_rate.fails",
+        "value": 0,
+        "unit": "count",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric custom_comment_success_rate fails; sampleCount is the metric's native count."
+      },
+      {
+        "name": "data_sent.rate",
+        "value": 1180.2992455208014,
+        "unit": "per_second",
+        "sampleCount": 12960,
+        "semantics": "Native k6 summary metric data_sent rate; sampleCount is the metric's native count."
+      },
+      {
+        "name": "data_sent.count",
+        "value": 12960,
+        "unit": "count",
+        "sampleCount": 12960,
+        "semantics": "Native k6 summary metric data_sent count; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_req_duration_name:POST_/articles_.average",
+        "value": 6.2385292,
+        "unit": "ms",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric http_req_duration{name:POST /articles} average; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_req_duration_name:POST_/articles_.median",
+        "value": 6.082511,
+        "unit": "ms",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric http_req_duration{name:POST /articles} median; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_req_duration_name:POST_/articles_.p90",
+        "value": 6.7046314,
+        "unit": "ms",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric http_req_duration{name:POST /articles} p90; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_req_duration_name:POST_/articles_.p95",
+        "value": 6.8762032,
+        "unit": "ms",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric http_req_duration{name:POST /articles} p95; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_req_duration_name:POST_/articles_.p99",
+        "value": 7.01346064,
+        "unit": "ms",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric http_req_duration{name:POST /articles} p99; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_req_duration_name:POST_/articles_.minimum",
+        "value": 5.824114,
+        "unit": "ms",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric http_req_duration{name:POST /articles} minimum; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_req_duration_name:POST_/articles_.maximum",
+        "value": 7.047775,
+        "unit": "ms",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric http_req_duration{name:POST /articles} maximum; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_req_duration_name:POST_/users_.average",
+        "value": 155.7444764,
+        "unit": "ms",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric http_req_duration{name:POST /users} average; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_req_duration_name:POST_/users_.median",
+        "value": 88.013709,
+        "unit": "ms",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric http_req_duration{name:POST /users} median; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_req_duration_name:POST_/users_.p90",
+        "value": 290.8526684,
+        "unit": "ms",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric http_req_duration{name:POST /users} p90; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_req_duration_name:POST_/users_.p95",
+        "value": 357.53637819999994,
+        "unit": "ms",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric http_req_duration{name:POST /users} p95; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_req_duration_name:POST_/users_.p99",
+        "value": 410.88334604,
+        "unit": "ms",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric http_req_duration{name:POST /users} p99; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_req_duration_name:POST_/users_.minimum",
+        "value": 87.832498,
+        "unit": "ms",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric http_req_duration{name:POST /users} minimum; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_req_duration_name:POST_/users_.maximum",
+        "value": 424.220088,
+        "unit": "ms",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric http_req_duration{name:POST /users} maximum; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_reqs_name:POST_/articles_.rate",
+        "value": 0.4553623632410499,
+        "unit": "per_second",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric http_reqs{name:POST /articles} rate; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_reqs_name:POST_/articles_.count",
+        "value": 5,
+        "unit": "count",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric http_reqs{name:POST /articles} count; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_req_failed_name:DELETE_/articles/:slug/favorite_.rate",
+        "value": 0,
+        "unit": "per_second",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric http_req_failed{name:DELETE /articles/:slug/favorite} rate; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_req_failed_name:DELETE_/articles/:slug/favorite_.passes",
+        "value": 0,
+        "unit": "count",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric http_req_failed{name:DELETE /articles/:slug/favorite} passes; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_req_failed_name:DELETE_/articles/:slug/favorite_.fails",
+        "value": 5,
+        "unit": "count",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric http_req_failed{name:DELETE /articles/:slug/favorite} fails; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_req_failed_name:POST_/articles_.rate",
+        "value": 0,
+        "unit": "per_second",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric http_req_failed{name:POST /articles} rate; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_req_failed_name:POST_/articles_.passes",
+        "value": 0,
+        "unit": "count",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric http_req_failed{name:POST /articles} passes; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_req_failed_name:POST_/articles_.fails",
+        "value": 5,
+        "unit": "count",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric http_req_failed{name:POST /articles} fails; sampleCount is the metric's native count."
+      },
+      {
+        "name": "custom_article_write_success_rate.rate",
+        "value": 1,
+        "unit": "per_second",
+        "sampleCount": 25,
+        "semantics": "Native k6 summary metric custom_article_write_success_rate rate; sampleCount is the metric's native count."
+      },
+      {
+        "name": "custom_article_write_success_rate.passes",
+        "value": 25,
+        "unit": "count",
+        "sampleCount": 25,
+        "semantics": "Native k6 summary metric custom_article_write_success_rate passes; sampleCount is the metric's native count."
+      },
+      {
+        "name": "custom_article_write_success_rate.fails",
+        "value": 0,
+        "unit": "count",
+        "sampleCount": 25,
+        "semantics": "Native k6 summary metric custom_article_write_success_rate fails; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_req_failed_name:DELETE_/articles/:slug_.rate",
+        "value": 0,
+        "unit": "per_second",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric http_req_failed{name:DELETE /articles/:slug} rate; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_req_failed_name:DELETE_/articles/:slug_.passes",
+        "value": 0,
+        "unit": "count",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric http_req_failed{name:DELETE /articles/:slug} passes; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_req_failed_name:DELETE_/articles/:slug_.fails",
+        "value": 5,
+        "unit": "count",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric http_req_failed{name:DELETE /articles/:slug} fails; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_reqs_name:DELETE_/articles/:slug_.rate",
+        "value": 0.4553623632410499,
+        "unit": "per_second",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric http_reqs{name:DELETE /articles/:slug} rate; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_reqs_name:DELETE_/articles/:slug_.count",
+        "value": 5,
+        "unit": "count",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric http_reqs{name:DELETE /articles/:slug} count; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_req_failed.rate",
+        "value": 0,
+        "unit": "ratio",
+        "sampleCount": 35,
+        "semantics": "Native k6 summary metric http_req_failed rate; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_req_failed.passes",
+        "value": 0,
+        "unit": "count",
+        "sampleCount": 35,
+        "semantics": "Native k6 summary metric http_req_failed passes; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_req_failed.fails",
+        "value": 35,
+        "unit": "count",
+        "sampleCount": 35,
+        "semantics": "Native k6 summary metric http_req_failed fails; sampleCount is the metric's native count."
+      },
+      {
+        "name": "custom_auth_success_rate.rate",
+        "value": 1,
+        "unit": "per_second",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric custom_auth_success_rate rate; sampleCount is the metric's native count."
+      },
+      {
+        "name": "custom_auth_success_rate.passes",
+        "value": 5,
+        "unit": "count",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric custom_auth_success_rate passes; sampleCount is the metric's native count."
+      },
+      {
+        "name": "custom_auth_success_rate.fails",
+        "value": 0,
+        "unit": "count",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric custom_auth_success_rate fails; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_req_failed_name:POST_/articles/:slug/comments_.rate",
+        "value": 0,
+        "unit": "per_second",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric http_req_failed{name:POST /articles/:slug/comments} rate; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_req_failed_name:POST_/articles/:slug/comments_.passes",
+        "value": 0,
+        "unit": "count",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric http_req_failed{name:POST /articles/:slug/comments} passes; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_req_failed_name:POST_/articles/:slug/comments_.fails",
+        "value": 5,
+        "unit": "count",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric http_req_failed{name:POST /articles/:slug/comments} fails; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_req_failed_name:POST_/users_.rate",
+        "value": 0,
+        "unit": "per_second",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric http_req_failed{name:POST /users} rate; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_req_failed_name:POST_/users_.passes",
+        "value": 0,
+        "unit": "count",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric http_req_failed{name:POST /users} passes; sampleCount is the metric's native count."
+      },
+      {
+        "name": "http_req_failed_name:POST_/users_.fails",
+        "value": 5,
+        "unit": "count",
+        "sampleCount": 5,
+        "semantics": "Native k6 summary metric http_req_failed{name:POST /users} fails; sampleCount is the metric's native count."
+      }
+    ],
+    "shards": {
+      "expected": [
+        "k6.authenticated-journey"
+      ],
+      "received": [
+        "k6.authenticated-journey"
+      ]
+    }
+  },
+  "publication": {
+    "disposition": "pending",
+    "reason": "E03 durable publication is not implemented for this repository.",
+    "publishedAt": null,
+    "reportUrl": null,
+    "artifacts": []
+  },
+  "generator": {
+    "name": "k6-portfolio-evidence",
+    "version": "1.0.0"
+  }
+}

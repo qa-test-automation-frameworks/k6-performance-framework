@@ -1,0 +1,158 @@
+{
+  "schemaVersion": 3,
+  "repository": "qa-test-automation-frameworks/k6-performance-framework",
+  "sourceSha": "ab037921eea236fd6c4d6b9912bebb26e534f474",
+  "limitations": [
+    "Performance metrics are workload measurements, not test-case outcomes.",
+    "Threshold outcomes are derived from the framework summary; raw k6 output must be retained separately for full reanalysis."
+  ],
+  "kind": "execution",
+  "workflow": {
+    "id": "qa-test-automation-frameworks/k6-performance-framework/.github/workflows/pr-smoke.yml@refs/heads/main",
+    "name": "PR smoke",
+    "runId": "40073986026",
+    "attempt": 1,
+    "url": "https://github.com/qa-test-automation-frameworks/k6-performance-framework/actions/runs/40073986026",
+    "trigger": "push",
+    "branch": "main"
+  },
+  "scope": {
+    "id": "k6.evidence-failure-control",
+    "evidenceClass": "hermetic",
+    "required": false,
+    "freshnessPolicy": "daily_gate_v1"
+  },
+  "target": {
+    "identity": "k6-evidence-failure-fixture",
+    "revision": "ab037921eea236fd6c4d6b9912bebb26e534f474",
+    "fixtureVersion": null,
+    "environment": "local",
+    "profile": "controlled-negative",
+    "tools": {
+      "k6": "2.0.0",
+      "node": "v24.21.0"
+    }
+  },
+  "execution": {
+    "disposition": "failed",
+    "reason": "Threshold: checks: expected rate>0.99; actual 0; Checks: 1 failed",
+    "startedAt": "2026-10-24T07:25:00.000Z",
+    "completedAt": "2026-10-24T07:25:00.245Z",
+    "integrity": "complete",
+    "counts": {
+      "unit": "test_case",
+      "selected": 1,
+      "executed": 1,
+      "passed": 0,
+      "failed": 1,
+      "skipped": 0,
+      "retried": null,
+      "semantics": "Single deliberate k6 check in the failure-control script; counts are k6 native checks.passes/fails. Used only for the control-pair raw scope."
+    },
+    "measurements": [
+      {
+        "name": "iteration_duration.average",
+        "value": 0.028813,
+        "unit": "ms",
+        "sampleCount": 1,
+        "semantics": "Native k6 summary metric iteration_duration average; sampleCount is the metric's native count."
+      },
+      {
+        "name": "iteration_duration.median",
+        "value": 0.028813,
+        "unit": "ms",
+        "sampleCount": 1,
+        "semantics": "Native k6 summary metric iteration_duration median; sampleCount is the metric's native count."
+      },
+      {
+        "name": "iteration_duration.p90",
+        "value": 0.028813,
+        "unit": "ms",
+        "sampleCount": 1,
+        "semantics": "Native k6 summary metric iteration_duration p90; sampleCount is the metric's native count."
+      },
+      {
+        "name": "iteration_duration.p95",
+        "value": 0.028813,
+        "unit": "ms",
+        "sampleCount": 1,
+        "semantics": "Native k6 summary metric iteration_duration p95; sampleCount is the metric's native count."
+      },
+      {
+        "name": "iteration_duration.p99",
+        "value": 0.028813,
+        "unit": "ms",
+        "sampleCount": 1,
+        "semantics": "Native k6 summary metric iteration_duration p99; sampleCount is the metric's native count."
+      },
+      {
+        "name": "iteration_duration.minimum",
+        "value": 0.028813,
+        "unit": "ms",
+        "sampleCount": 1,
+        "semantics": "Native k6 summary metric iteration_duration minimum; sampleCount is the metric's native count."
+      },
+      {
+        "name": "iteration_duration.maximum",
+        "value": 0.028813,
+        "unit": "ms",
+        "sampleCount": 1,
+        "semantics": "Native k6 summary metric iteration_duration maximum; sampleCount is the metric's native count."
+      },
+      {
+        "name": "iterations.rate",
+        "value": 10469.669367841365,
+        "unit": "per_second",
+        "sampleCount": 1,
+        "semantics": "Native k6 summary metric iterations rate; sampleCount is the metric's native count."
+      },
+      {
+        "name": "iterations.count",
+        "value": 1,
+        "unit": "count",
+        "sampleCount": 1,
+        "semantics": "Native k6 summary metric iterations count; sampleCount is the metric's native count."
+      },
+      {
+        "name": "checks.rate",
+        "value": 0,
+        "unit": "ratio",
+        "sampleCount": 1,
+        "semantics": "Native k6 summary metric checks rate; sampleCount is the metric's native count."
+      },
+      {
+        "name": "checks.passes",
+        "value": 0,
+        "unit": "count",
+        "sampleCount": 1,
+        "semantics": "Native k6 summary metric checks passes; sampleCount is the metric's native count."
+      },
+      {
+        "name": "checks.fails",
+        "value": 1,
+        "unit": "count",
+        "sampleCount": 1,
+        "semantics": "Native k6 summary metric checks fails; sampleCount is the metric's native count."
+      }
+    ],
+    "shards": {
+      "expected": [
+        "k6.evidence-failure-control"
+      ],
+      "received": [
+        "k6.evidence-failure-control"
+      ]
+    }
+  },
+  "publication": {
+    "disposition": "pending",
+    "reason": "E03 durable publication is not implemented for this repository.",
+    "publishedAt": null,
+    "reportUrl": null,
+    "artifacts": []
+  },
+  "generator": {
+    "name": "k6-portfolio-evidence",
+    "version": "1.1.0"
+  }
+}

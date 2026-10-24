@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "repository": "qa-test-automation-frameworks/k6-performance-framework",
+  "run": {
+    "id": "40085739565",
+    "attempt": 1,
+    "sourceSha": "b5ac7be2e2baf6eeeb417041929158d18032a123",
+    "event": "push",
+    "branch": "main",
+    "workflowName": "PR smoke",
+    "conclusion": "success",
+    "completedAt": "2026-10-24T10:25:21.000Z",
+    "url": "https://github.com/qa-test-automation-frameworks/k6-performance-framework/actions/runs/40085739565"
+  },
+  "records": [
+    {
+      "scope": "k6.evidence-failure-control-verification",
+      "evidenceClass": "hermetic",
+      "execution": "passed",
+      "integrity": "complete",
+      "path": "records/04d20cd4229c99f7c27f6530.json",
+      "sha256": "9362400f6e674ca11d570b9e358c41130f1e6aff4f45a3f99f0f77334dfecec7"
+    },
+    {
+      "scope": "k6.evidence-failure-control",
+      "evidenceClass": "hermetic",
+      "execution": "failed",
+      "integrity": "complete",
+      "path": "records/d9b3a86e10e2f84bc991e6ab.json",
+      "sha256": "44e4b4fa7d742bbb7165fcfb10f5604eccf886fe3c05c03e6eeb65546d815055"
+    },
+    {
+      "scope": "k6.pr-smoke",
+      "evidenceClass": "controlled",
+      "execution": "passed",
+      "integrity": "complete",
+      "path": "records/8fd3f43c3ab0869f3979b85e.json",
+      "sha256": "d63f82bd6a41a11a6560edd5bbafabd8bac6e24d1c2ad595979027d20be35b4b"
+    }
+  ]
+}
