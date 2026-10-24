@@ -25,6 +25,16 @@ jobs:
       - run: npm run format:check
       - run: npm run test:coverage
       - run: npm run test:report
+      - name: Verify and retain the published variance calculation
+        run: |
+          node --test scripts/tests/variance-cohort-checks.cjs
+          node scripts/derive-variance-cohort.cjs docs/experiments/data/2026-10-22/39739132415 docs/experiments/data/2026-10-22/39740373441 docs/experiments/data/2026-10-22/39742063368
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: retained-variance-calculation
+          path: |
+            docs/experiments/data/2026-10-22/cohort.json
+            docs/experiments/data/2026-10-22/SHA256SUMS
       - run: node --test scripts/tests/noise-calibration-checks.cjs
       - run: npm run test:baseline
       - run: npm run test:capacity-evidence

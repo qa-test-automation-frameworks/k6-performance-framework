@@ -55,4 +55,20 @@ The samples are compatible with the declared cohort: all three used the same wor
 | 2      | `12408784991` | `5a3b4fd4f8c15fff539a5f577fa1125d590526275fcbad731ad6008623e59a90` |
 | 3      | `12409634010` | `d54612282d02ca77da375d9f636a506c31965b082641ef943cae53f971e087d3` |
 
-Each artifact is attached to its linked workflow run. The downloaded archives, extracted summaries, runner logs, and cohort calculation are retained locally under `work/audit-2026-10-21/PERF-04/logs/`.
+Each artifact is attached to its linked workflow run. The original summary JSON bytes
+are retained in `docs/experiments/data/2026-10-22/<run-id>/load-summary.json`.
+`cohort.json` contains their SHA-256 digests and the descriptive calculation;
+`SHA256SUMS` provides a plain manifest. These are summary-file digests, distinct
+from the artifact archive digests above. Runner logs remain in the linked artifacts.
+
+Regenerate and check the unchanged published table with:
+
+```bash
+node scripts/derive-variance-cohort.cjs \
+  docs/experiments/data/2026-10-22/39739132415 \
+  docs/experiments/data/2026-10-22/39740373441 \
+  docs/experiments/data/2026-10-22/39742063368
+```
+
+The command refuses missing inputs, missing metrics and any discrepancy with the
+published table. No requests are pooled and no new cross-run percentile is inferred.
