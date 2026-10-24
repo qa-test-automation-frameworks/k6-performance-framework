@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "baselinePath": "tests/regression-fixtures/measured-baseline.json",
+  "baselineSha256": "100d4e7b1ee3dc1ce597749728956291d3d46f7c34ce8ae6c58a35663eba389f",
+  "disposition": "measured-retained",
+  "sourceInputsAvailable": true,
+  "sourceArtifacts": [
+    { "name": "fixture-run-1" },
+    { "name": "fixture-run-2" },
+    { "name": "fixture-run-3" }
+  ],
+  "limitations": ["Test fixture only; not a real baseline."]
+}

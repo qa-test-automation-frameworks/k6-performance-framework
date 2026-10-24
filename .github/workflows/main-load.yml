@@ -190,7 +190,7 @@ jobs:
         run: |
           set -o pipefail
           test -f baseline/load-summary.json
-          CANDIDATE_FILE=reports/load-summary.json npm run baseline:compare | tee reports/regression-comparison.md
+          CANDIDATE_FILE=reports/load-summary.json npm run baseline:gate | tee reports/regression-comparison.md
           cat reports/regression-comparison.md >> "$GITHUB_STEP_SUMMARY"
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         if: always()

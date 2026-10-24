@@ -2,6 +2,8 @@
 
 ## Current disposition
 
+The PR and main-load comparisons run in advisory mode (`gate-mode.json`): `scripts/compare-performance.cjs` refuses this baseline (exit 3) because its provenance is not `measured-retained`, and `scripts/regression-gate.cjs` reports that as an ADVISORY warning instead of failing. Switch `mode` to `blocking` only after a new measured baseline is accepted.
+
 As of 2026-10-21, `load-summary.json` is a historical June aggregate. Its three
 source summaries are unavailable, so the aggregate cannot be reproduced or
 used as evidence of run-to-run variability. Keep that record unchanged. A new
