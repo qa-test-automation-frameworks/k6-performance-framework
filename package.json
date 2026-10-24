@@ -63,7 +63,7 @@
     "verify:request-rate": "node scripts/verify-request-rate.cjs",
     "run:d04": "node scripts/run-d04-experiment.cjs",
     "verify:d04": "node scripts/verify-d04-experiment.cjs",
-    "test:evidence": "node scripts/tests/emit-portfolio-evidence-checks.cjs",
+    "test:evidence": "node --test scripts/tests/emit-portfolio-evidence-checks.cjs scripts/tests/failure-control-verdict-unit.test.cjs",
     "validate:evidence": "node scripts/validate-portfolio-evidence.cjs"
   },
   "devDependencies": {

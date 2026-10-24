@@ -2,6 +2,10 @@ name: PR smoke
 
 on:
   pull_request:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '27 3 * * *'
   workflow_dispatch:
 
 permissions:
@@ -73,13 +77,43 @@ jobs:
         if: always()
         run: |
           if [ -f reports/evidence-failure-control-summary.json ]; then
-            EVIDENCE_STARTED_AT="$EVIDENCE_STARTED_AT_CONTROL" node scripts/emit-portfolio-evidence.cjs --summary reports/evidence-failure-control-summary.json --scope k6.evidence-failure-control --class hermetic
+            EVIDENCE_STARTED_AT="$EVIDENCE_STARTED_AT_CONTROL" node scripts/emit-portfolio-evidence.cjs --summary reports/evidence-failure-control-summary.json --scope k6.evidence-failure-control --class hermetic --optional --control-check-counts
           else
-            EVIDENCE_STARTED_AT="$EVIDENCE_STARTED_AT_CONTROL" node scripts/emit-portfolio-evidence.cjs --unavailable-reason "k6 failure-control summary was not produced" --scope k6.evidence-failure-control --class hermetic
+            EVIDENCE_STARTED_AT="$EVIDENCE_STARTED_AT_CONTROL" node scripts/emit-portfolio-evidence.cjs --unavailable-reason "k6 failure-control summary was not produced" --scope k6.evidence-failure-control --class hermetic --optional
           fi
       - name: Validate intentional-failure evidence
         if: always()
         run: node scripts/validate-portfolio-evidence.cjs reports/evidence/k6.evidence-failure-control.json
+      - name: Verify the raw failure in a separate process
+        if: always()
+        run: |
+          mkdir -p reports/evidence/native
+          echo "EVIDENCE_STARTED_AT_VERIFIER=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> "$GITHUB_ENV"
+          set +e
+          node --test --test-reporter=junit \
+            --test-reporter-destination=reports/evidence/native/failure-control-verification.xml \
+            scripts/tests/failure-control-verdict.test.cjs
+          status=$?
+          set -e
+          echo "EVIDENCE_COMPLETED_AT_VERIFIER=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> "$GITHUB_ENV"
+          exit "$status"
+      - name: Emit required verifier evidence
+        if: always()
+        env:
+          TARGET_ID: k6-evidence-failure-fixture
+          TARGET_ENV: local
+        run: |
+          if [ -s reports/evidence/native/failure-control-verification.xml ]; then
+            EVIDENCE_STARTED_AT="$EVIDENCE_STARTED_AT_VERIFIER" EVIDENCE_COMPLETED_AT="$EVIDENCE_COMPLETED_AT_VERIFIER" \
+              node scripts/emit-portfolio-evidence.cjs --junit reports/evidence/native/failure-control-verification.xml \
+              --scope k6.evidence-failure-control-verification --class hermetic
+          else
+            node scripts/emit-portfolio-evidence.cjs --unavailable-reason "Verifier did not produce native JUnit results" \
+              --scope k6.evidence-failure-control-verification --class hermetic
+          fi
+      - name: Validate verifier evidence
+        if: always()
+        run: node scripts/validate-portfolio-evidence.cjs reports/evidence/k6.evidence-failure-control-verification.json
       - name: Publish smoke summary
         run: |
           if [ -f reports/smoke-summary.md ]; then

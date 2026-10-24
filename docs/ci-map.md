@@ -2,7 +2,7 @@
 
 | Workflow | Trigger | Purpose | Required for PR |
 | --- | --- | --- | --- |
-| `pr-smoke.yml` | Pull request | Fast build, typecheck, unit, and smoke validation | Yes |
+| `pr-smoke.yml` | Pull request, push to `main`, daily schedule | Fast build, typecheck, unit, and smoke validation | Yes |
 | `quality.yml` | Pull request and push | Static checks, package governance, release metadata | Yes |
 | `security.yml` | Pull request and schedule | Secret scan, dependency review, SBOM/security checks | Yes |
 | `segmented-validation.yml` | Pull request and push | Bounded validation runs by workload tier | Yes |

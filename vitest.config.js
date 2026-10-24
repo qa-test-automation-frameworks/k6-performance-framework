@@ -9,6 +9,8 @@ module.exports = defineConfig({
       '**/scripts/tests/baseline-provenance.test.cjs',
       '**/scripts/tests/aggregate-baseline.test.cjs',
       '**/scripts/tests/analyze-capacity-evidence.test.cjs',
+      '**/scripts/tests/failure-control-verdict.test.cjs',
+      '**/scripts/tests/failure-control-verdict-unit.test.cjs',
     ],
     environment: 'node',
     globals: true,
