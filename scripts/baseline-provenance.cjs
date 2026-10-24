@@ -163,8 +163,8 @@ function classifyBaselineProvenance(projectRoot, options = {}) {
     return output;
   }
 
-  if (provenance.schemaVersion !== 1) {
-    addReason('Unsupported provenance schemaVersion; expected 1.');
+  if (![1, 2].includes(provenance.schemaVersion)) {
+    addReason('Unsupported provenance schemaVersion; expected 1 or 2.');
   }
   if (provenance.baselinePath !== BASELINE_PATH) {
     addReason(`baselinePath must be ${BASELINE_PATH}.`);
@@ -175,7 +175,11 @@ function classifyBaselineProvenance(projectRoot, options = {}) {
     addReason('Baseline summary digest does not match baselineSha256.');
   }
 
-  const allowedDispositions = new Set(['historical-inputs-unavailable', 'reproducible-measured']);
+  const allowedDispositions = new Set([
+    'historical-inputs-unavailable',
+    'reproducible-measured',
+    'measured-retained',
+  ]);
   if (!allowedDispositions.has(provenance.disposition)) {
     addReason('Unsupported provenance disposition.');
   }
@@ -202,12 +206,18 @@ function classifyBaselineProvenance(projectRoot, options = {}) {
     }
   }
   if (
-    provenance.disposition === 'reproducible-measured' &&
+    ['reproducible-measured', 'measured-retained'].includes(provenance.disposition) &&
     provenance.sourceInputsAvailable !== true
   ) {
     addReason('Reproducible measured provenance must set sourceInputsAvailable to true.');
   }
 
+  if (
+    provenance.disposition === 'measured-retained' &&
+    (provenance.schemaVersion !== 2 || output.sampleCount < 5)
+  ) {
+    addReason('Measured-retained provenance requires schema 2 and at least five samples.');
+  }
   const explanationPath = provenance.explanationPath;
   const explanationFile = safeRepoFile(projectRoot, explanationPath, 'docs');
   if (!explanationFile || explanationPath !== EXPLANATION_PATH) {
@@ -273,7 +283,7 @@ function classifyBaselineProvenance(projectRoot, options = {}) {
     sha256: digest,
   }));
 
-  if (provenance.disposition === 'reproducible-measured') {
+  if (['reproducible-measured', 'measured-retained'].includes(provenance.disposition)) {
     const sourceFiles = metadata.sourceFiles;
     const sourceDigestMap = metadata.sourceSha256;
     const expectedCount = output.sampleCount;
@@ -335,10 +345,9 @@ function classifyBaselineProvenance(projectRoot, options = {}) {
   }
 
   if (reasons.length === 0) {
-    output.status =
-      provenance.disposition === 'reproducible-measured'
-        ? 'REPRODUCIBLE — SOURCE INPUTS VERIFIED'
-        : 'HISTORICAL — SOURCE INPUTS UNAVAILABLE';
+    output.status = ['reproducible-measured', 'measured-retained'].includes(provenance.disposition)
+      ? 'REPRODUCIBLE — SOURCE INPUTS VERIFIED'
+      : 'HISTORICAL — SOURCE INPUTS UNAVAILABLE';
   }
   output.reasons = reasons;
   return output;

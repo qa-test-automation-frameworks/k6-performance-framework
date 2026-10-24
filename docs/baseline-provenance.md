@@ -37,3 +37,29 @@ verifies the files, hashes, source count, aggregate identity, workload, and this
 explanation path. A missing file, digest mismatch, unsupported schema version,
 or absent explanation makes the provenance `PROVENANCE_INVALID`; hashes alone
 never upgrade the historical record.
+
+
+## Calibration workflow
+
+`Noise calibration` supersedes the removed `Capture performance baseline` workflow.
+It runs each full-profile sample on a separate hosted runner through an explicitly
+enabled loopback proxy. A/A requires at least five zero-delay samples; the degraded
+arm requires at least three samples and a positive delay. Both use
+`TARGET_ID=realworld-local-proxied`, as does the regression candidate.
+
+The aggregate artifact contains original summaries, SHA-256 digests, measured
+median aggregate, per-metric tolerance derivation, schema-v2 provenance and run URL.
+Only latency metrics used by the comparator enter the derivation. Native load
+thresholds remain active; failed native experiments cannot become a baseline.
+The comparator requires both the relative and absolute measured limits to be
+exceeded, refuses missing tolerance entries with exit 3, and preserves the
+error-rate check. Fixture tolerances in tests are synthetic and are not evidence.
+
+The gate remains advisory. First retain a five-sample calibration cohort in a
+separate PR, moving the June baseline and provenance unchanged into history.
+Then run an independent five-sample A/A cohort and three degraded samples against
+that committed baseline. All five clean samples must pass and all three degraded
+samples must fail naming the article-list p95; proxy counters must prove injection.
+Only a later reviewed PR with the real results can enable blocking. A failed
+validation leaves advisory mode in place and requires an owner decision on the
+next measurement strategy. No calibration result is claimed by this tooling PR.

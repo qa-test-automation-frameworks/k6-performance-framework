@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "perMetric": {
+    "http_req_duration.p(95)": {
+      "relative": 0.2,
+      "absoluteMs": 0.2
+    },
+    "http_req_duration.p(99)": {
+      "relative": 0.2,
+      "absoluteMs": 0.2
+    },
+    "http_req_duration{name:GET /articles}.p(95)": {
+      "relative": 0.2,
+      "absoluteMs": 0.2
+    },
+    "http_req_duration{name:GET /articles}.p(99)": {
+      "relative": 0.2,
+      "absoluteMs": 0.2
+    }
+  }
+}
