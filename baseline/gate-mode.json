@@ -1,0 +1,7 @@
+{
+  "schemaVersion": 1,
+  "mode": "advisory",
+  "since": "2026-10-24",
+  "reason": "The committed June 2026 baseline's source inputs are unavailable (baseline/provenance.json), and same-commit p95 spread measured on 2026-10-22 exceeded the 20% tolerance (docs/experiments/full-profile-validation-2026-10-22.md).",
+  "exitCriteria": "WP-17: at least 5 retained A/A runs, a derived per-metric tolerance, and a degraded cohort rejected 3 out of 3."
+}

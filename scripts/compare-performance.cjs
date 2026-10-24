@@ -45,9 +45,10 @@ function assertAcceptedBaseline() {
   if (!Array.isArray(provenance.sourceArtifacts) || provenance.sourceArtifacts.length < sampleCount)
     problems.push('fewer retained source artifacts than the baseline sample count');
   if (problems.length) {
-    throw Object.assign(new Error(`Baseline refused: ${problems.join('; ')}; see ${provenancePath}`), {
-      refused: true,
-    });
+    throw Object.assign(
+      new Error(`Baseline refused: ${problems.join('; ')}; see ${provenancePath}`),
+      { refused: true },
+    );
   }
 }
 
@@ -61,7 +62,6 @@ function value(summary, metric, key) {
     throw new Error(`Missing or invalid ${metric}.${key}`);
   return result;
 }
-
 
 function compare() {
   assertLimits();

@@ -12,6 +12,7 @@ reports/*
 !reports/.gitkeep
 baseline/*.json
 !baseline/load-summary.json
+!baseline/gate-mode.json
 sbom.json
 artifacts/
 site/
