@@ -4,7 +4,10 @@ function assertControlVerdict({ record, summary, env }) {
     if (!condition) problems.push(message);
   };
   const counts = record?.execution?.counts ?? {};
-  check(record?.scope?.id === 'k6.evidence-failure-control', 'record scope is not the failure control');
+  check(
+    record?.scope?.id === 'k6.evidence-failure-control',
+    'record scope is not the failure control',
+  );
   check(record?.scope?.required === false, 'raw failure-control record must not be required');
   check(record?.execution?.disposition === 'failed', 'raw record disposition must be failed');
   check(record?.execution?.integrity === 'complete', 'raw record integrity must be complete');
